@@ -95,7 +95,33 @@ section[id]{scroll-margin-top:calc(var(--head) + 24px)}
 .intro-on .hero-name .w span{transform:translateY(105%)}
 .hero-screen.flying{position:fixed;inset:auto;z-index:120}
 .hero-screen.flying.land{transition:top 1s cubic-bezier(.75,0,.2,1),left 1s cubic-bezier(.75,0,.2,1),width 1s cubic-bezier(.75,0,.2,1),height 1s cubic-bezier(.75,0,.2,1)}
-.intro-on #slides{animation:expose 1.75s cubic-bezier(.35,0,.25,1) both}
+.intro-on #slides{filter:blur(20px) brightness(.5) saturate(.9);transform:scale(1.05)}
+.intro-on.t-out #slides{filter:none;transform:none}
+.v-c.intro-on.t-out #slides{transition-duration:.5s}
+
+/* títol de la intro, sobre el reel */
+.intro-title{position:absolute;inset:0;z-index:4;display:none;place-items:center;pointer-events:none;text-align:center;padding:0 6vw}
+.intro-on .intro-title{display:grid}
+.it-wrap{display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2vw,24px)}
+.it-name{font-family:var(--f-display);font-weight:800;text-transform:uppercase;line-height:.84;font-size:clamp(3.4rem,13vw,12.5rem);color:#f3eee6;letter-spacing:-.005em;text-shadow:0 6px 60px rgba(0,0,0,.35)}
+.it-name .ln{display:block}
+.it-tag{color:rgba(255,255,255,.82);letter-spacing:.18em}
+/* Intro · Obturador: el nom es tanca d'espaiat i s'obre en dues meitats amb un flaix */
+.v-c .it-wrap{opacity:0;transition:opacity 1s ease}
+.v-c.t-in .it-wrap,.v-c.t-out .it-wrap{opacity:1}
+.v-c .it-name{position:relative;letter-spacing:.22em;transition:letter-spacing 1.6s cubic-bezier(.2,.8,.2,1)}
+.v-c.t-in .it-name,.v-c.t-out .it-name{letter-spacing:-.005em}
+.v-c .half{display:block;transition:transform .75s cubic-bezier(.75,0,.25,1)}
+.v-c .half.top{clip-path:inset(0 0 50% 0)}
+.v-c .half.bot{position:absolute;inset:0;clip-path:inset(50% 0 0 0)}
+.v-c.t-out .half.top{transform:translateY(-80vh)}
+.v-c.t-out .half.bot{transform:translateY(80vh)}
+.v-c.t-out .it-tag{opacity:0;transition:opacity .15s}
+.shutter-flash{position:absolute;inset:0;z-index:5;background:#fff;opacity:0;pointer-events:none}
+.v-c.t-out .shutter-flash{animation:sflash .35s ease-out}
+@keyframes sflash{0%{opacity:.5}100%{opacity:0}}
+
+
 @keyframes expose{
   0%{filter:brightness(0) blur(26px)}
   30%{filter:brightness(.35) blur(20px)}
@@ -110,12 +136,11 @@ section[id]{scroll-margin-top:calc(var(--head) + 24px)}
 .vf-cross::before,.vf-cross::after{content:"";position:absolute;background:rgba(255,255,255,.6)}
 .vf-cross::before{left:50%;top:0;bottom:0;width:1px}.vf-cross::after{top:50%;left:0;right:0;height:1px}
 .vf-safe{position:absolute;inset:10% 8%;border:1px solid rgba(255,255,255,.12);z-index:3;opacity:0;transition:opacity .35s;pointer-events:none}
-.intro-on:not(.settle) .vf-data,.intro-on:not(.settle) .vf-cross,.intro-on:not(.settle) .vf-safe{opacity:1}
 @media (max-width:600px){.vf-data .hs{display:none}}
 .skip{position:fixed;z-index:130;left:50%;transform:translateX(-50%);top:max(18px,calc(env(safe-area-inset-top,0px) + 14px));padding:8px 12px;border:1px solid rgba(255,255,255,.35);color:#fff;background:rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .3s}
 .intro-on:not(.settle) .skip{opacity:1;pointer-events:auto}
 .skip:hover{background:#fff;color:#000}
-#slides{position:absolute;inset:0}
+#slides{position:absolute;inset:0;transition:filter 1s cubic-bezier(.4,0,.2,1),transform .6s ease-out}
 .slide{position:absolute;inset:-3%;opacity:0;transition:opacity 1.3s ease}
 .slide.on{opacity:1}
 .slide .frame{position:absolute;inset:0;height:100%;transform:scale(1.06);transition:transform 6s ease-out}
@@ -365,6 +390,7 @@ footer button:hover{color:var(--paper)}
       <div class="hero-slot" id="heroSlot">
       <div class="screen hero-screen corners" id="heroScreen" role="button" tabindex="0" data-cursor="view">
         <div id="slides"></div>
+        <div class="intro-title" id="introTitle" aria-hidden="true"></div><div class="shutter-flash" aria-hidden="true"></div>
         <div class="vf-safe" aria-hidden="true"></div><div class="vf-cross" aria-hidden="true"></div>
         <div class="vf-data mono" aria-hidden="true"><span>ISO <b>800</b></span><span class="hs"><b>5600</b>K</span><span class="hs"><b>180</b>°</span><span><b id="vfT">T22</b></span><span>⌀ <b id="vfF">∞</b></span></div>
         <div class="hud">
@@ -717,11 +743,10 @@ heroScreen.addEventListener("keydown",e=>{
   if(e.key==="ArrowRight")goSlide(heroI+1); if(e.key==="ArrowLeft")goSlide(heroI-1);
 });
 /* paral·laxi suau dins el reel */
-heroScreen.addEventListener("mousemove",e=>{if(reduce)return;const r=heroScreen.getBoundingClientRect();
+heroScreen.addEventListener("mousemove",e=>{if(reduce||introRunning)return;const r=heroScreen.getBoundingClientRect();
   const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
   slidesEl.style.transform=`translate(${(-x*16).toFixed(1)}px,${(-y*10).toFixed(1)}px)`});
 heroScreen.addEventListener("mouseleave",()=>slidesEl.style.transform="");
-slidesEl.style.transition="transform .4s ease-out";
 
 /* timecode a 25 fps */
 const tcEl=document.getElementById("tc"); const t0=performance.now(); let lastF=-1;
@@ -945,10 +970,18 @@ document.querySelector(".lang").addEventListener("click",e=>{const b=e.target.cl
 /* ============ INTRO (dins la portada) ============ */
 const heroEl=document.getElementById("heroScreen"), vfT=document.getElementById("vfT"), vfF=document.getElementById("vfF");
 let introTimers=[], introRunning=false;
+const introTitle=document.getElementById("introTitle");
+const variant="c";
+function buildTitle(){
+  const tag=`<p class="it-tag mono">${t("hero.roles")}</p>`;
+  const plain=`<span class="ln">Boi Vidal</span><span class="ln">Albert</span>`;
+  introTitle.innerHTML=`<div class="it-wrap"><div class="it-name"><span class="half top">${plain}</span><span class="half bot">${plain}</span></div>${tag}</div>`;
+}
 function endIntro(){
   introTimers.forEach(clearTimeout); introTimers=[]; introRunning=false;
   heroEl.classList.remove("flying","land"); ["top","left","width","height"].forEach(p=>heroEl.style[p]="");
-  document.body.classList.remove("intro-on","settle");
+  document.body.classList.remove("intro-on","settle","t-in","t-out");
+  introTitle.innerHTML="";
   document.documentElement.style.overflow=(sheet.hidden&&lb.hidden)?"":"hidden";
   document.body.classList.add("go"); startHero();
 }
@@ -956,18 +989,21 @@ function playIntro(){
   if(reduce){ endIntro(); return; }
   introTimers.forEach(clearTimeout); introTimers=[]; introRunning=true; stopHero();
   scrollTo({top:0,behavior:"instant"}); document.documentElement.style.overflow="hidden";
-  document.body.classList.remove("go","settle"); document.body.classList.add("intro-on");
-  slidesEl.style.animation="none"; void slidesEl.offsetWidth; slidesEl.style.animation="";
+  const bc=document.body.classList;
+  bc.remove("go","settle","t-in","t-out","v-a","v-b","v-c"); bc.add("v-"+variant,"intro-on");
+  slidesEl.style.transform="";
+  buildTitle();
   heroEl.classList.remove("land"); heroEl.classList.add("flying");
   Object.assign(heroEl.style,{top:"0px",left:"0px",width:innerWidth+"px",height:innerHeight+"px"});
-  ["T22","T16","T11","T8","T5.6","T4","T2.8","T2.0"].forEach((v,i)=>introTimers.push(setTimeout(()=>vfT.textContent=v,110*i)));
-  ["∞","12 m","6 m","3.5 m","2.6 m","2.0 m","2.2 m","2.1 m"].forEach((v,i)=>introTimers.push(setTimeout(()=>vfF.textContent=v,180*i+120)));
+  void introTitle.offsetWidth;
+  introTimers.push(setTimeout(()=>bc.add("t-in"),120));
+  introTimers.push(setTimeout(()=>{bc.remove("t-in");bc.add("t-out")},2400));
   introTimers.push(setTimeout(()=>{
     const r=document.getElementById("heroSlot").getBoundingClientRect();
-    document.body.classList.add("settle"); heroEl.classList.add("land");
+    bc.add("settle"); heroEl.classList.add("land");
     Object.assign(heroEl.style,{top:r.top+"px",left:r.left+"px",width:r.width+"px",height:r.height+"px"});
-  },1950));
-  introTimers.push(setTimeout(endIntro,2980));
+  },3450));
+  introTimers.push(setTimeout(endIntro,4500));
 }
 document.getElementById("skipIntro").addEventListener("click",e=>{e.stopPropagation();endIntro()});
 addEventListener("resize",()=>{if(introRunning)endIntro()});
