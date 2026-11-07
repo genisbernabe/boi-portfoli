@@ -388,7 +388,7 @@ footer button:hover{color:var(--paper)}
 .sub-head h3{font-family:var(--f-display);font-size:clamp(1.8rem,4vw,3rem);text-transform:uppercase}
 .stills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
 .stills figure{margin:0}
-.stills figure:first-child{grid-column:1/-1}
+.stills figure:first-child,.stills figure:last-child:nth-child(even){grid-column:1/-1}
 .stills button{display:block;width:100%}
 .stills figcaption{margin-top:6px}
 @media (max-width:700px){.stills{grid-template-columns:1fr}.sheet-info{grid-template-columns:1fr}}
@@ -709,7 +709,7 @@ const PROJECTS = [
         en:"Two friends, one night and the city at their feet. Dusk light and dark interiors."},
    video:"media/primera-noche-loop.mp4",
    sheetVideo:"media/primera-noche-loop-2.mp4", sheetPoster:"media/primera-noche-poster-2.jpg",
-   stills:["img/primera-noche-03.jpg","img/primera-noche-01.jpg","img/primera-noche-02.jpg","img/primera-noche-03.jpg"],
+   stills:["img/primera-noche-03.jpg","img/primera-noche-01.jpg","img/primera-noche-02.jpg","img/primera-noche-03.jpg","img/primera-noche-04.jpg","img/primera-noche-05.jpg","img/primera-noche-06.jpg","img/primera-noche-07.jpg","img/primera-noche-08.jpg","img/primera-noche-09.jpg","img/primera-noche-10.jpg"],
    pal:["#0e1014","#3a4552","#e9d9a8","#c7843e"]},
   {id:"el-nino-de-las-flores", title:"El niño de las flores", year:2026, type:"ficcio", roles:["DOP"],
    length:{ca:"Curtmetratge",es:"Cortometraje",en:"Short film"},
