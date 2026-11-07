@@ -116,6 +116,9 @@ html,body{overflow-x:clip}
 .hero-video{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;object-position:55% 50%;pointer-events:none;background:#000}
 .blur-layer video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:55% 50%}
 .has-video .reel-tabs{display:none}
+/* portada amb vídeo: a tot l'ample i fins a baix de la pantalla (sota la capçalera) */
+.has-video .hero{padding-top:0}
+.has-video .hero-slot{width:100vw;max-width:none;margin-inline:calc(50% - 50vw);aspect-ratio:auto;height:calc(100svh - var(--head) - env(safe-area-inset-top,0px));min-height:320px}
 
 /* títol de la intro: capa fixa a sobre, fora del monitor (no s'escala) */
 .intro-stage{position:fixed;inset:0;z-index:125;display:none;place-items:center;pointer-events:none;text-align:center;padding:0 6vw;contain:layout paint}
@@ -719,6 +722,9 @@ const PROJECTS = [
    log:{ca:"Un noi, una flor vermella i el record de qui ja no hi és. Llum suau d'estiu i colors apagats.",
         es:"Un chico, una flor roja y el recuerdo de quien ya no está. Luz suave de verano y colores apagados.",
         en:"A boy, a red flower and the memory of someone who is gone. Soft summer light and muted colours."},
+   stripVideo:"media/nino-flores-loop-3.mp4", stripPoster:"media/nino-flores-poster-3.jpg",
+   sheetVideo:"media/nino-flores-loop-2.mp4", sheetPoster:"media/nino-flores-poster-2.jpg",
+   reelVideo:"media/nino-flores-loop-1.mp4", reelPoster:"media/nino-flores-poster-1.jpg",
    stills:["img/nino-flores-01.jpg","img/nino-flores-02.jpg","img/nino-flores-03.jpg","img/nino-flores-04.jpg","img/nino-flores-05.jpg","img/nino-flores-06.jpg","img/nino-flores-07.jpg","img/nino-flores-08.jpg","img/nino-flores-09.jpg","img/nino-flores-10.jpg","img/nino-flores-11.jpg"],
    pal:["#0f2a28","#2f6a62","#e6dcc0","#c8203a"]},
   {id:"faena", title:"Faena", year:2025, type:"ficcio", roles:["DOP"],
@@ -920,7 +926,7 @@ const STILLS_N=4;
 const ST={x:0,vel:0,target:null,drag:false,lastX:0,moved:0,loopW:0,step:0,n:0,raf:0,visible:false,hover:false,captured:false,center:null,centerI:-1};
 const sfHTML=(p,i)=>{
   const tall=p.ar<16/9?" tall":"";
-  const frames=p.video ? frame(p.pal,stillSeed(p,0),{img:p.stripPoster||stillImg(p,0),video:p.stripVideo||p.video,cls:"on"})
+  const frames=(p.stripVideo||p.video) ? frame(p.pal,stillSeed(p,0),{img:p.stripPoster||stillImg(p,0),video:p.stripVideo||p.video,cls:"on"})
     : Array.from({length:p.stills?Math.min(p.stills.length,STILLS_N):STILLS_N},(_,k)=>frame(p.pal,stillSeed(p,k),{img:stillImg(p,k),cls:k?"":"on"})).join("");
   return `<div class="sf" data-open="${p.id}" data-cursor="view">
   <div class="sf-edge"><span>▸ ${12+i*2}A</span><span class="live"><span class="rec" aria-hidden="true"></span><span class="ltc">${tcFrom(hash(p.id+"tc0"))}</span></span><span class="yr">BVA · ${p.year}</span><span>${p.ratio}</span></div>
