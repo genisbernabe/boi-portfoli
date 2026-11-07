@@ -701,6 +701,14 @@ const I18N = {
    Imatges reals: afegir `stills: ["img/faena-01.jpg", ...]` i `bts: [...]`.
    ============================================================ */
 const PROJECTS = [
+  {id:"la-primera-noche", title:"La primera noche", year:2026, type:"ficcio", roles:["DOP"],
+   length:{ca:"Curtmetratge · 17 min",es:"Cortometraje · 17 min",en:"Short film · 17 min"},
+   director:"Nom Cognom", prod:"Productora", camera:"—", lenses:"—", format:"4K", ratio:"2.39:1", ar:2.39,
+   log:{ca:"Dos amics, una nit i la ciutat als peus. Llum de capvespre i interiors foscos.",
+        es:"Dos amigos, una noche y la ciudad a sus pies. Luz de atardecer e interiores oscuros.",
+        en:"Two friends, one night and the city at their feet. Dusk light and dark interiors."},
+   stills:["img/primera-noche-03.jpg","img/primera-noche-01.jpg","img/primera-noche-02.jpg","img/primera-noche-03.jpg"],
+   pal:["#0e1014","#3a4552","#e9d9a8","#c7843e"]},
   {id:"faena", title:"Faena", year:2025, type:"ficcio", roles:["DOP"],
    length:{ca:"Curtmetratge · 14 min",es:"Cortometraje · 14 min",en:"Short film · 14 min"},
    director:"Nom Cognom", prod:"ESCAC", camera:"ARRI Alexa Mini", lenses:"Cooke S4/i", format:"ARRIRAW 3.4K", ratio:"2.39:1", ar:2.39,
@@ -761,6 +769,9 @@ const PROJECTS = [
 const TYPE_KEYS=["ficcio","documental","outdoor","publi"], ROLES=["Operador","DOP","1AC","2AC"];
 
 const PHOTOS = [
+  {kind:"digital", title:"La primera noche", meta:"Fotograma · 2.39:1", ar:2.39, img:"img/primera-noche-01.jpg", pal:["#1a1a1c","#5a5f66","#e9d9a8","#c7843e"]},
+  {kind:"digital", title:"La primera noche", meta:"Fotograma · 2.39:1", ar:2.39, img:"img/primera-noche-02.jpg", pal:["#0a0a0c","#3a2a24","#cfc6b0","#8a2a22"]},
+  {kind:"digital", title:"La primera noche", meta:"Fotograma · 2.39:1", ar:2.39, img:"img/primera-noche-03.jpg", pal:["#0e1014","#3a4552","#e9d9a8","#c7843e"]},
   {kind:"analog", title:"Port de Llançà", meta:"35 mm · Portra 400", ar:3/2, pal:["#1b130c","#7a5a3a","#f2d4a0","#c47a4a"]},
   {kind:"digital", title:"Montserrat", meta:"Digital", ar:4/5, pal:["#0b0d10","#3a4350","#b9c3cc","#6b7f8f"]},
   {kind:"analog", title:"Cadí, 6:12 h", meta:"120 · HP5 push 800", ar:1, pal:["#101010","#4a4a4a","#d8d8d8","#888888"]},
@@ -817,6 +828,10 @@ function frame(pal, seed, opts={}){
 }
 const stillSeed=(p,k)=> k===0 ? hash(p.id+"hero") : hash(p.id+"s"+(k-1));
 const stillImg=(p,k)=> p.stills && p.stills[k];
+/* fitxa: amb fotos reals es mostren totes (sense repetir), sense reals 5 de mostra */
+const realStills=p=>p.stills?[...new Set(p.stills)]:null;
+const nStills=p=>realStills(p)?realStills(p).length:5;
+const sheetStill=(p,k)=>realStills(p)?realStills(p)[k]:stillImg(p,k+1);
 const byId=id=>PROJECTS.find(p=>p.id===id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -843,9 +858,9 @@ function startHero(){ if(heroVideo){ setVideoCap(); return; } renderTabs(); setC
 function stopHero(){ clearTimeout(heroTimer); }
 tabsEl.addEventListener("click",e=>{const b=e.target.closest("[data-slide]");if(b)goSlide(+b.dataset.slide)});
 const heroScreen=document.getElementById("heroScreen");
-heroScreen.addEventListener("click",()=>{ if(introRunning) return endIntro(); openProject(featured[heroI].id) });
+heroScreen.addEventListener("click",()=>{ if(introRunning) return endIntro(); openProject(heroVideo?"la-primera-noche":featured[heroI].id) });
 heroScreen.addEventListener("keydown",e=>{
-  if(e.key==="Enter"||e.key===" "){e.preventDefault();openProject(featured[heroI].id)}
+  if(e.key==="Enter"||e.key===" "){e.preventDefault();openProject(heroVideo?"la-primera-noche":featured[heroI].id)}
   if(e.key==="ArrowRight")goSlide(heroI+1); if(e.key==="ArrowLeft")goSlide(heroI-1);
 });
 /* paral·laxi suau dins el reel */
@@ -890,7 +905,7 @@ const STILLS_N=4;
 const ST={x:0,vel:0,target:null,drag:false,lastX:0,moved:0,loopW:0,step:0,n:0,raf:0,visible:false,hover:false,captured:false,center:null,centerI:-1};
 const sfHTML=(p,i)=>{
   const tall=p.ar<16/9?" tall":"";
-  const frames=Array.from({length:STILLS_N},(_,k)=>frame(p.pal,stillSeed(p,k),{img:stillImg(p,k),cls:k?"":"on"})).join("");
+  const frames=Array.from({length:p.stills?Math.min(p.stills.length,STILLS_N):STILLS_N},(_,k)=>frame(p.pal,stillSeed(p,k),{img:stillImg(p,k),cls:k?"":"on"})).join("");
   return `<div class="sf" data-open="${p.id}" data-cursor="view">
   <div class="sf-edge"><span>▸ ${12+i*2}A</span><span class="live"><span class="rec" aria-hidden="true"></span><span class="ltc">${tcFrom(hash(p.id+"tc0"))}</span></span><span class="yr">BVA · ${p.year}</span><span>${p.ratio}</span></div>
   <div class="screen"><div class="stack${tall}" style="aspect-ratio:${p.ar}">${frames}</div></div>
@@ -1131,7 +1146,7 @@ const sheet=document.getElementById("sheet"); let lastFocus=null, currentId=null
 function openProject(id){
   const p=byId(id); if(!p) return; currentId=id;
   const i=PROJECTS.indexOf(p), next=PROJECTS[(i+1)%PROJECTS.length];
-  const stills=Array.from({length:5},(_,k)=>`<figure><button data-still="${k+1}" data-cursor="zoom" aria-label="Still ${k+1}">${frame(p.pal,stillSeed(p,k+1),{ar:p.ar,img:stillImg(p,k+1),tag:"STILL "+pad(k+1)})}</button>
+  const stills=Array.from({length:nStills(p)},(_,k)=>`<figure><button data-still="${k+1}" data-cursor="zoom" aria-label="Still ${k+1}">${frame(p.pal,stillSeed(p,k+1),{ar:p.ar,img:sheetStill(p,k),tag:"STILL "+pad(k+1)})}</button>
       <figcaption class="mono muted">TC ${tcFrom(hash(p.id+"tc"+(k+1)))}</figcaption></figure>`).join("");
   const mk=Array.from({length:4},(_,k)=>`<figure data-cursor="color">${frame(p.pal,hash(p.id+"mk"+k),{img:p.bts&&p.bts[k]})}</figure>`).join("");
   sheet.innerHTML=`
@@ -1175,7 +1190,7 @@ sheet.addEventListener("click",e=>{
   if(e.target.closest("#closeSheet")) return closeSheet();
   const n=e.target.closest("[data-next]"); if(n){e.stopPropagation(); openProject(n.dataset.next); return;}
   const s=e.target.closest("[data-still]"); if(s){const p=byId(currentId);
-    openLb(Array.from({length:5},(_,k)=>({pal:p.pal,seed:stillSeed(p,k+1),ar:p.ar,img:stillImg(p,k+1),title:`${p.title} · Still ${pad(k+1)}`,meta:"TC "+tcFrom(hash(p.id+"tc"+(k+1)))})),+s.dataset.still-1)}
+    openLb(Array.from({length:nStills(p)},(_,k)=>({pal:p.pal,seed:stillSeed(p,k+1),ar:p.ar,img:sheetStill(p,k),title:`${p.title} · Still ${pad(k+1)}`,meta:"TC "+tcFrom(hash(p.id+"tc"+(k+1)))})),+s.dataset.still-1)}
 });
 
 /* ============ LIGHTBOX ============ */
