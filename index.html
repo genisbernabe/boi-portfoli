@@ -99,6 +99,9 @@ section[id]{scroll-margin-top:calc(var(--head) + 24px)}
 .intro-on .reel-tabs,.intro-on .hero-meta,.intro-on main>section:not(.hero),.intro-on footer{opacity:0}
 .intro-on .hero-name .w span{transform:translateY(105%)}
 /* l'animació del monitor és un FLIP: només transform (GPU), sense recalcular mides cada fotograma */
+/* el monitor ampliat no pot eixamplar la pàgina (al mòbil desplaçava tot cap a la dreta) */
+html,body{overflow-x:clip}
+.hero{overflow-x:clip}
 .intro-on .hero-screen{z-index:120;transform-origin:0 0}
 .hero-screen.landing{transition:transform 1s cubic-bezier(.75,0,.2,1)}
 .hud,.hero-screen::before,.hero-screen::after{transition:opacity .5s ease}
