@@ -709,6 +709,8 @@ const PROJECTS = [
         en:"Two friends, one night and the city at their feet. Dusk light and dark interiors."},
    video:"media/primera-noche-loop.mp4",
    sheetVideo:"media/primera-noche-loop-2.mp4", sheetPoster:"media/primera-noche-poster-2.jpg",
+   stripVideo:"media/primera-noche-loop-3.mp4", stripPoster:"media/primera-noche-poster-3.jpg",
+   reelVideo:"media/primera-noche-loop-3.mp4", reelPoster:"media/primera-noche-poster-3.jpg",
    stills:["img/primera-noche-03.jpg","img/primera-noche-01.jpg","img/primera-noche-02.jpg","img/primera-noche-03.jpg","img/primera-noche-04.jpg","img/primera-noche-05.jpg","img/primera-noche-06.jpg","img/primera-noche-07.jpg","img/primera-noche-08.jpg","img/primera-noche-09.jpg","img/primera-noche-10.jpg"],
    pal:["#0e1014","#3a4552","#e9d9a8","#c7843e"]},
   {id:"el-nino-de-las-flores", title:"El niño de las flores", year:2026, type:"ficcio", roles:["DOP"],
@@ -717,7 +719,7 @@ const PROJECTS = [
    log:{ca:"Un noi, una flor vermella i el record de qui ja no hi és. Llum suau d'estiu i colors apagats.",
         es:"Un chico, una flor roja y el recuerdo de quien ya no está. Luz suave de verano y colores apagados.",
         en:"A boy, a red flower and the memory of someone who is gone. Soft summer light and muted colours."},
-   stills:["img/nino-flores-01.jpg","img/nino-flores-02.jpg","img/nino-flores-03.jpg"],
+   stills:["img/nino-flores-01.jpg","img/nino-flores-02.jpg","img/nino-flores-03.jpg","img/nino-flores-04.jpg","img/nino-flores-05.jpg","img/nino-flores-06.jpg","img/nino-flores-07.jpg","img/nino-flores-08.jpg","img/nino-flores-09.jpg","img/nino-flores-10.jpg","img/nino-flores-11.jpg"],
    pal:["#0f2a28","#2f6a62","#e6dcc0","#c8203a"]},
   {id:"faena", title:"Faena", year:2025, type:"ficcio", roles:["DOP"],
    length:{ca:"Curtmetratge · 14 min",es:"Cortometraje · 14 min",en:"Short film · 14 min"},
@@ -918,7 +920,7 @@ const STILLS_N=4;
 const ST={x:0,vel:0,target:null,drag:false,lastX:0,moved:0,loopW:0,step:0,n:0,raf:0,visible:false,hover:false,captured:false,center:null,centerI:-1};
 const sfHTML=(p,i)=>{
   const tall=p.ar<16/9?" tall":"";
-  const frames=p.video ? frame(p.pal,stillSeed(p,0),{img:stillImg(p,0),video:p.video,cls:"on"})
+  const frames=p.video ? frame(p.pal,stillSeed(p,0),{img:p.stripPoster||stillImg(p,0),video:p.stripVideo||p.video,cls:"on"})
     : Array.from({length:p.stills?Math.min(p.stills.length,STILLS_N):STILLS_N},(_,k)=>frame(p.pal,stillSeed(p,k),{img:stillImg(p,k),cls:k?"":"on"})).join("");
   return `<div class="sf" data-open="${p.id}" data-cursor="view">
   <div class="sf-edge"><span>▸ ${12+i*2}A</span><span class="live"><span class="rec" aria-hidden="true"></span><span class="ltc">${tcFrom(hash(p.id+"tc0"))}</span></span><span class="yr">BVA · ${p.year}</span><span>${p.ratio}</span></div>
@@ -1175,7 +1177,7 @@ function openProject(id){
       <div class="sheet-info">
         <div>
           <p class="lede">${esc(L(p.log))}</p>
-          <div class="reel"><div class="screen">${frame(p.pal,hash(p.id+"reel"))}
+          <div class="reel"><div class="screen">${frame(p.pal,hash(p.id+"reel"),{img:p.reelPoster,video:p.reelVideo})}
             <a class="play mono" href="${p.vimeo||"https://vimeo.com/"}" target="_blank" rel="noopener"><i aria-hidden="true"></i>${t("sheet.trailer")}</a></div></div>
         </div>
         <dl class="spec">
