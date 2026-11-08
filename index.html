@@ -853,20 +853,23 @@ function renderWork(){
 
 const STILLS_N=4;
 const ST={x:0,vel:0,target:null,drag:false,lastX:0,moved:0,loopW:0,step:0,n:0,raf:0,visible:false,hover:false,captured:false,center:null,centerI:-1};
-const sfHTML=(p,i)=>{
+/* cada loop és un fotograma propi de la cinta (k = índex del loop; -1 si el projecte no en té) */
+const sfHTML=(c,i)=>{
+  const p=c.p, sv=c.k>=0&&p.stripVideos[c.k];
   const tall=p.ar<16/9?" tall":"";
-  const frames=p.stripVideos ? p.stripVideos.map(([v,img],k)=>frame(p.pal,stillSeed(p,k),{img,video:v,cls:k?"":"on"})).join("")
+  const frames=sv ? frame(p.pal,stillSeed(p,c.k),{img:sv[1],video:sv[0],cls:"on"})
     : p.video ? frame(p.pal,stillSeed(p,0),{img:stillImg(p,0),video:p.video,cls:"on"})
     : Array.from({length:p.stills?Math.min(p.stills.length,STILLS_N):STILLS_N},(_,k)=>frame(p.pal,stillSeed(p,k),{img:stillImg(p,k),cls:k?"":"on"})).join("");
-  return `<div class="sf" data-open="${p.id}"${p.stripVideos?" data-vids":""} data-cursor="view">
-  <div class="sf-edge"><span>▸ ${12+i*2}A</span><span class="live"><span class="rec" aria-hidden="true"></span><span class="ltc">${tcFrom(hash(p.id+"tc0"))}</span></span><span class="yr">BVA · ${p.year}</span><span>${p.ratio}</span></div>
+  return `<div class="sf" data-open="${p.id}"${sv?" data-vids":""} data-cursor="view">
+  <div class="sf-edge"><span>▸ ${12+i*2}A</span><span class="live"><span class="rec" aria-hidden="true"></span><span class="ltc">${tcFrom(hash(p.id+"tc"+Math.max(0,c.k)))}</span></span><span class="yr">BVA · ${p.year}</span><span>${p.ratio}</span></div>
   <div class="screen"><div class="stack${tall}" style="aspect-ratio:${p.ar}">${frames}</div></div>
   <div class="sf-cap"><b>${esc(p.title)}</b><span class="mono">${typeName(p.type)} · ${rolesTxt(p)}</span></div></div>`;
 };
 const centerX=()=>stripEl.clientWidth/2-ST.step/2;
 function renderStrip(){ _renderStrip(); syncStripVideos(); }
 function _renderStrip(){
-  ST.n=viewItems.length; const one=viewItems.map(sfHTML).join("");
+  ST.cards=viewItems.flatMap(p=>p.stripVideos?p.stripVideos.map((_,k)=>({p,k})):[{p,k:-1}]);
+  ST.n=ST.cards.length; const one=ST.cards.map(sfHTML).join("");
   stripTrack.innerHTML=one;
   ST.step=stripTrack.firstElementChild.getBoundingClientRect().width||600;
   ST.loopW=ST.step*ST.n;
@@ -894,7 +897,7 @@ function paintStrip(){
     if(ST.center){ ST.center.classList.remove("center"); if(!ST.center.hasAttribute("data-vids")) ST.center.querySelectorAll(".stack .frame").forEach((f,k)=>f.classList.toggle("on",k===0)); }
     ST.center=best; if(best) best.classList.add("center");
     const i=bi%ST.n; ST.centerI=i;
-    stripCount.textContent=`FRAME ${pad(i+1)} / ${pad(ST.n)} · ${viewItems[i].title}`;
+    stripCount.textContent=`FRAME ${pad(i+1)} / ${pad(ST.n)} · ${ST.cards[i].p.title}`;
   }
 }
 function stripTick(){
@@ -928,16 +931,10 @@ stripEl.addEventListener("keydown",e=>{ if(e.key==="ArrowRight"){e.preventDefaul
   if(e.key==="Enter"&&ST.center){e.preventDefault();openProject(ST.center.dataset.open)} });
 document.getElementById("stripPrev").addEventListener("click",()=>snapTo(-1));
 document.getElementById("stripNext").addEventListener("click",()=>snapTo(1));
-/* targetes amb vídeo: van alternant els seus 3 loops; només es reprodueix el que es veu */
-function syncStripVideos(){ document.querySelectorAll('.sf[data-vids] .stack .frame').forEach(f=>{ const v=f.querySelector("video"); if(!v) return;
-  if(f.classList.contains("on")){ if(v.paused) v.play().catch(()=>{}); } else if(!v.paused) v.pause(); }); }
-setInterval(()=>{
-  if(reduce||stripView.hidden) return;
-  document.querySelectorAll('.sf[data-vids]').forEach(card=>{
-    const fr=card.querySelectorAll(".stack .frame"); let k=[...fr].findIndex(f=>f.classList.contains("on")); k=(k+1)%fr.length;
-    fr.forEach((f,j)=>f.classList.toggle("on",j===k)); });
-  syncStripVideos();
-},4500);
+/* vídeos de la cinta: només es reprodueixen els que es veuen */
+const stripIO=("IntersectionObserver" in window)?new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;
+  if(e.isIntersecting){ if(v.paused) v.play().catch(()=>{}); } else if(!v.paused) v.pause(); }),{root:null,threshold:.05}):null;
+function syncStripVideos(){ document.querySelectorAll('.sf[data-vids] video').forEach(v=>{ if(stripIO) stripIO.observe(v); }); }
 /* el fotograma central "reprodueix": va passant els seus stills amb timecode */
 setInterval(()=>{
   if(reduce||!ST.visible||!ST.center||ST.drag||stripView.hidden||ST.center.hasAttribute("data-vids")) return;
