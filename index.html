@@ -244,6 +244,60 @@ html,body{overflow-x:clip}
 .ctl-btns .btn{padding:10px 16px}
 
 
+
+/* ===================== TREBALLS · MOVIOLA (només escriptori) ===================== */
+html{scroll-snap-type:y proximity}
+.pin-wrap{position:relative;margin-inline:calc(50% - 50vw)}
+.pin-snap{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;pointer-events:none}
+.pin{position:sticky;top:calc(var(--head) + env(safe-area-inset-top,0px));height:calc(100svh - var(--head) - env(safe-area-inset-top,0px));min-height:520px;overflow:hidden;background:var(--ink)}
+.pin-stage{position:absolute;inset:0}
+.pin-stage::before,.pin-stage::after{content:"";position:absolute;top:0;bottom:0;width:16px;z-index:3;pointer-events:none;
+  background:repeating-linear-gradient(180deg,transparent 0 9px,rgba(242,234,218,.8) 9px 21px,transparent 21px 30px);background-position:0 var(--perf,0px)}
+.pin-stage::before{left:calc(50% - var(--fw)/2 - 30px)}
+.pin-stage::after{left:calc(50% + var(--fw)/2 + 14px)}
+.strip-bg{position:absolute;top:0;bottom:0;left:calc(50% - var(--fw)/2 - 40px);width:calc(var(--fw) + 80px);background:#0b0907;border-inline:1px solid #000}
+.pc{position:absolute;left:50%;top:50%;will-change:transform;cursor:pointer}
+.pc video,.pc .ph-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+.pc .shade{position:absolute;inset:0;background:#000;pointer-events:none;opacity:var(--o,0)}
+.pc .edge{position:absolute;left:100%;top:0;margin-left:34px;writing-mode:vertical-rl;font-family:var(--f-mono);font-size:.56rem;letter-spacing:.22em;color:#d9893a;white-space:nowrap}
+/* fotograma de títol entre projectes (cua d'inici de bobina) */
+.pc.tc-card{background:#060605;border:1px solid rgba(235,228,216,.18);display:grid;place-items:center;text-align:center}
+.tc-in{display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 6%}
+.tc-in .mono{color:var(--tungsten)}
+.tc-in b{font-family:var(--f-display);font-weight:800;text-transform:uppercase;font-size:clamp(2.2rem,4.6vw,4.6rem);line-height:.9;text-wrap:balance}
+.tc-in .meta{color:var(--muted)}
+.tc-in .down{margin-top:6px;color:var(--paper);display:flex;align-items:center;gap:10px}
+.tc-in .down i{display:inline-flex;gap:4px}
+.tc-in .down i::before,.tc-in .down i::after,.tc-in .down i span{content:"";width:14px;height:9px;border:1px solid var(--paper)}
+.tc-cross{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(rgba(235,228,216,.08),rgba(235,228,216,.08)) 50% 0/1px 100% no-repeat,linear-gradient(rgba(235,228,216,.08),rgba(235,228,216,.08)) 0 50%/100% 1px no-repeat}
+/* columna esquerra: projecte actual */
+.pj-col{position:absolute;left:var(--gut-l);top:50%;transform:translateY(-50%);z-index:4;width:calc(50% - var(--fw)/2 - 70px - var(--gut-l));min-width:0}
+.pj-num{color:var(--tungsten);margin-bottom:10px;font-variant-numeric:tabular-nums}
+.pj-roll{height:2.7em;overflow:hidden;font-family:var(--f-display);font-weight:800;text-transform:uppercase;font-size:clamp(1.5rem,2.6vw,2.6rem);line-height:1.05}
+.pj-roll .roll-in{will-change:transform}
+.pj-roll .roll-in>div{height:2.7em;display:flex;align-items:center;text-wrap:balance}
+.pj-meta{margin-top:12px;color:var(--muted);line-height:1.8}
+/* columna dreta: projectes + loops */
+.lp-col{position:absolute;left:calc(50% + var(--fw)/2 + 74px);top:50%;transform:translateY(-50%);z-index:4;display:flex;flex-direction:column;gap:26px}
+.lp-list button{display:flex;gap:12px;align-items:baseline;color:var(--muted);text-align:left;font-size:.98rem;line-height:1.7;transition:color .3s}
+.lp-list button .mono{font-size:.62rem}
+.lp-list button.on{color:var(--paper)}
+.lp-list button.on .mono{color:var(--tungsten)}
+.loops{display:flex;flex-direction:column;gap:9px}
+.loops-bars{display:flex;gap:6px}
+.loops-bars i{width:30px;height:3px;background:var(--line);position:relative;overflow:hidden}
+.loops-bars i::after{content:"";position:absolute;inset:0;background:var(--paper);transform-origin:0 50%;transform:scaleX(var(--s,0))}
+.loops .mono{color:var(--muted);font-variant-numeric:tabular-nums}
+.pin-hud{position:absolute;left:var(--gut-l);right:var(--gut-r);bottom:18px;z-index:4;display:flex;justify-content:space-between;gap:16px;color:var(--muted);font-variant-numeric:tabular-nums;pointer-events:none}
+.pin-hud .rec{display:inline-block;margin-right:8px;vertical-align:middle}
+.pin-bar{position:absolute;left:var(--gut-l);right:var(--gut-r);bottom:44px;height:1px;background:var(--line);z-index:4}
+.pin-bar i{position:absolute;left:0;top:-1px;height:3px;width:100%;background:var(--tungsten);transform-origin:0 50%;transform:scaleX(0)}
+.pin-bar b{position:absolute;top:-4px;width:1px;height:9px;background:var(--muted)}
+/* avís de canvi de projecte */
+.pj-flash{position:absolute;left:50%;top:22px;transform:translate(-50%,-8px);z-index:5;padding:7px 12px;background:var(--paper);color:var(--ink);opacity:0;transition:opacity .35s,transform .35s;pointer-events:none;white-space:nowrap}
+.pj-flash.on{opacity:1;transform:translate(-50%,0)}
+
 /* fotografies */
 .photos{columns:3 280px;column-gap:20px}
 .photo{break-inside:avoid;margin:0 0 20px}
@@ -442,6 +496,7 @@ footer button:hover{color:var(--paper)}
         </div>
       </div>
       <p class="mono muted hint" id="hint"></p>
+      <div id="pinView" hidden></div>
       <div id="stripView" hidden>
         <div class="strip-bleed"><div class="strip" id="strip"><div class="strip-track" id="stripTrack"></div></div></div>
         <div class="strip-ctl"><span class="mono muted" id="stripCount"></span>
@@ -522,7 +577,7 @@ footer button:hover{color:var(--paper)}
    TEXTOS (CA / ES / EN)
    ============================================================ */
 const I18N = {
- ca:{ "hint.strip":"Arrossega la tira o fes servir les fletxes · clica un fotograma per obrir el projecte",
+ ca:{ "hint.mv":"Fes scroll per passar els loops de cada projecte · clica'n un per obrir-lo","hint.strip":"Arrossega la tira o fes servir les fletxes · clica un fotograma per obrir el projecte",
   "nav.work":"Treballs","nav.photos":"Fotografies","nav.bts":"BTS","nav.about":"Sobre mi","nav.contact":"Contacte",
   "menu":"Menú","menu.close":"Tancar","intro.skip":"Saltar intro","replay":"▶ Tornar a veure la intro",
   "hero.roles":"Director de fotografia · Operador de càmera · Ajudant de càmera","hero.loc":"Barcelona — disponible arreu",
@@ -547,7 +602,7 @@ const I18N = {
   "spec.role":"Rol","spec.dir":"Direcció","spec.prod":"Producció","spec.cam":"Càmera","spec.lens":"Òptiques","spec.format":"Format","spec.ratio":"Ràtio",
   "cur.view":"Veure","cur.play":"Obrir","cur.color":"Color","cur.zoom":"Ampliar","lb.close":"Tancar ✕","lb.prev":"← Anterior","lb.next":"Següent →",
   "tag.portrait":"FOTO PERFIL · BOI A CÀMERA","tag.set":"FOTO · BOI AL SET","open":"Obrir" },
- es:{ "hint.strip":"Arrastra la tira o usa las flechas · clica un fotograma para abrir el proyecto",
+ es:{ "hint.mv":"Haz scroll para pasar los loops de cada proyecto · clica uno para abrirlo","hint.strip":"Arrastra la tira o usa las flechas · clica un fotograma para abrir el proyecto",
   "nav.work":"Trabajos","nav.photos":"Fotografías","nav.bts":"BTS","nav.about":"Sobre mí","nav.contact":"Contacto",
   "menu":"Menú","menu.close":"Cerrar","intro.skip":"Saltar intro","replay":"▶ Volver a ver la intro",
   "hero.roles":"Director de fotografía · Operador de cámara · Ayudante de cámara","hero.loc":"Barcelona — disponible en todo el mundo",
@@ -572,7 +627,7 @@ const I18N = {
   "spec.role":"Rol","spec.dir":"Dirección","spec.prod":"Producción","spec.cam":"Cámara","spec.lens":"Ópticas","spec.format":"Formato","spec.ratio":"Ratio",
   "cur.view":"Ver","cur.play":"Abrir","cur.color":"Color","cur.zoom":"Ampliar","lb.close":"Cerrar ✕","lb.prev":"← Anterior","lb.next":"Siguiente →",
   "tag.portrait":"FOTO PERFIL · BOI EN CÁMARA","tag.set":"FOTO · BOI EN EL SET","open":"Abrir" },
- en:{ "hint.strip":"Drag the strip or use the arrows · click a frame to open the project",
+ en:{ "hint.mv":"Scroll to run through each project's loops · click one to open it","hint.strip":"Drag the strip or use the arrows · click a frame to open the project",
   "nav.work":"Work","nav.photos":"Photography","nav.bts":"BTS","nav.about":"About","nav.contact":"Contact",
   "menu":"Menu","menu.close":"Close","intro.skip":"Skip intro","replay":"▶ Replay intro",
   "hero.roles":"Cinematographer · Camera operator · Camera assistant","hero.loc":"Barcelona — available worldwide",
@@ -749,9 +804,13 @@ let viewItems=[];
 function renderWork(){
   viewItems=PROJECTS.filter(p=>(state.type==="all"||p.type===state.type)&&(state.role==="all"||p.roles.includes(state.role)));
   document.getElementById("count").textContent=pad(viewItems.length);
-  empty.hidden=viewItems.length>0; stripView.hidden=!viewItems.length;
-  const hintEl=document.getElementById("hint"); hintEl.hidden=!viewItems.length; hintEl.textContent=t("hint.strip");
-  if(viewItems.length) renderStrip();
+  empty.hidden=viewItems.length>0;
+  const prop=useMv();
+  stripView.hidden=!viewItems.length||prop; pinView.hidden=!viewItems.length||!prop;
+  const hintEl=document.getElementById("hint"); hintEl.hidden=!viewItems.length;
+  hintEl.textContent=prop?t("hint.mv"):t("hint.strip");
+  if(!viewItems.length) return;
+  if(prop){ pinView.innerHTML=""; requestAnimationFrame(renderPin); } else { pinView.innerHTML=""; renderStrip(); }
 }
 
 const STILLS_N=4;
@@ -849,6 +908,121 @@ setInterval(()=>{
 },1100);
 let rsz=null;
 addEventListener("resize",()=>{ clearTimeout(rsz); rsz=setTimeout(()=>{ if(viewItems.length) renderStrip(); },200)});
+
+
+/* ============ TREBALLS · MOVIOLA (escriptori) ============
+   La secció es queda fixa i el scroll normal fa avançar la cinta.
+   Ordre: títol del projecte + els seus loops seguits, i després el següent projecte. */
+const pinView=document.getElementById("pinView");
+const DESK=matchMedia("(min-width:701px)");
+const useMv=()=>DESK.matches;
+const PIN={cards:[],n:0,f:0,tf:0,v:0,raf:0,vis:false,act:-1,actP:-1,el:null,stepPx:0,pinH:0};
+function pinCards(){
+  const out=[];
+  viewItems.forEach((p,pi)=>{
+    const loops=p.stripVideos?p.stripVideos.map((sv,k)=>({kind:"loop",p,pi,k,sv})):[{kind:"loop",p,pi,k:-1,sv:null}];
+    out.push({kind:"title",p,pi,k:-1,nl:loops.length});
+    loops.forEach((c,j)=>{ c.li=j; c.nl=loops.length; out.push(c); });
+  });
+  return out;
+}
+const loopsTxt=n=>({ca:`${n} loops`,es:`${n} loops`,en:`${n} loops`})[lang];
+const projTxt=()=>({ca:"Projecte",es:"Proyecto",en:"Project"})[lang];
+function pcHTML(c,i){
+  const p=c.p;
+  if(c.kind==="title") return `<div class="pc tc-card" data-open="${p.id}" data-i="${i}" data-cursor="view" role="button" tabindex="-1" aria-label="${t("open")} ${esc(p.title)}"><div class="tc-cross"></div>
+    <div class="tc-in"><span class="mono">${projTxt()} ${pad(c.pi+1)} / ${pad(viewItems.length)}</span><b>${esc(p.title)}</b>
+    <span class="mono meta">${typeName(p.type)} · ${rolesTxt(p)} · ${p.year} · ${p.ratio}</span>
+    <span class="mono down">${loopsTxt(c.nl)} ↓</span></div><div class="shade"></div></div>`;
+  const poster=c.sv?c.sv[1]:(stillImg(p,0)||p.sheetPoster), vid=c.sv?c.sv[0]:p.video;
+  const media=vid?`<video data-src="${vsrc(vid)}"${poster?` poster="${poster}"`:""} muted loop playsinline preload="none" aria-hidden="true"></video>`
+    : poster?`<img class="ph-img" src="${poster}" alt="">`:`<div class="ph-img" style="${grade(p.pal,stillSeed(p,0))}"></div>`;
+  return `<div class="pc" data-open="${p.id}" data-i="${i}" data-cursor="view" role="button" tabindex="-1" aria-label="${t("open")} ${esc(p.title)}">${media}<div class="shade"></div><span class="edge">▸ ${pad(c.pi+1)}·${c.li+1} · BVA · ${p.year} · ${p.ratio}</span></div>`;
+}
+function renderPin(){
+  PIN.cards=pinCards(); PIN.n=PIN.cards.length; PIN.act=-1; PIN.actP=-1;
+  const n=PIN.n, stepVh=80;
+  const marks=PIN.cards.map((c,i)=>c.kind==="title"&&i>0?`<b style="left:${(i/(n-1)*100).toFixed(2)}%"></b>`:"").join("");
+  pinView.innerHTML=`<div class="pin-wrap" id="pinWrap" style="height:calc(${(n-1)*stepVh}vh + 100svh)">
+    ${Array.from({length:n},(_,i)=>`<span class="pin-snap" style="top:${i*stepVh}vh"></span>`).join("")}
+    <div class="pin" id="pinBox"><div class="pin-stage" id="pinStage"><div class="strip-bg"></div>${PIN.cards.map(pcHTML).join("")}</div>
+      <div class="pj-col"><div class="pj-num mono" id="pjNum"></div>
+        <div class="pj-roll"><div class="roll-in" id="pjRoll">${viewItems.map(p=>`<div>${esc(p.title)}</div>`).join("")}</div></div>
+        <div class="pj-meta mono" id="pjMeta"></div></div>
+      <div class="lp-col"><div class="lp-list">${viewItems.map((p,i)=>`<button data-pj="${i}"><span class="mono">${pad(i+1)}</span>${esc(p.title)}</button>`).join("")}</div>
+        <div class="loops"><span class="mono" id="loopTxt"></span><div class="loops-bars" id="loopBars"></div></div></div>
+      <div class="pj-flash mono" id="pjFlash"></div>
+      <div class="pin-bar"><i id="pinBar"></i>${marks}</div>
+      <div class="pin-hud mono"><span><span class="rec" aria-hidden="true"></span><span id="pinCount"></span></span><span id="pinTc"></span></div></div></div>`;
+  PIN.el=document.getElementById("pinWrap"); pinIO.disconnect(); pinIO.observe(PIN.el);
+  layoutPin(); PIN.f=PIN.tf=pinTarget(); paintPin(true); kickPin();
+}
+function layoutPin(){
+  const box=document.getElementById("pinBox"); if(!box) return;
+  const W=box.clientWidth, H=box.clientHeight; PIN.pinH=H; PIN.stepPx=.8*innerHeight;
+  let fh=H*.58, fw=Math.min(W*.46, fh*1.78); fh=fw/1.78; PIN.gap=fh*1.12; PIN.fw=fw; PIN.fh=fh;
+  box.style.setProperty("--fw",fw+"px"); box.style.setProperty("--fh",fh+"px");
+  box.querySelectorAll(".pc").forEach(c=>{ c.style.width=fw+"px"; c.style.height=fh+"px"; c.style.margin=`${-fh/2}px 0 0 ${-fw/2}px`; });
+  const r=document.querySelector("#pjRoll>div"); PIN.rollH=r?r.offsetHeight:40;
+}
+const headPx=()=>parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--head"))||60;
+function pinTarget(){
+  if(!PIN.el) return 0; const r=PIN.el.getBoundingClientRect(), total=r.height-PIN.pinH;
+  return Math.max(0,Math.min(1,(headPx()-r.top)/(total||1)))*(PIN.n-1);
+}
+function paintPin(force){
+  const f=PIN.f, v=PIN.v, box=document.getElementById("pinBox"); if(!box) return;
+  const cards=box.querySelectorAll(".pc"), sp=Math.min(1,Math.abs(v)*6), dir=Math.sign(v)||1;
+  cards.forEach((c,i)=>{
+    const d=i-f, ad=Math.abs(d), sc=1-Math.min(ad,1.6)*.16;
+    /* la cinta s'estira i s'inclina amb la velocitat */
+    c.style.transform=`translate3d(0,${(d*PIN.gap).toFixed(1)}px,0) scale(${sc.toFixed(3)},${(sc*(1+sp*.22)).toFixed(3)}) skewY(${(dir*sp*2.2).toFixed(2)}deg)`;
+    c.querySelector(".shade").style.setProperty("--o",Math.min(.7,ad*.45).toFixed(3));
+    c.style.visibility=ad>3.2?"hidden":"";
+  });
+  box.querySelector(".pin-stage").style.setProperty("--perf",((-f*PIN.gap)%30).toFixed(1)+"px");
+  /* el títol de l'esquerra només rodola quan es canvia de projecte */
+  const a0=Math.floor(f), a1=Math.min(PIN.n-1,a0+1), fr=f-a0;
+  const pf=PIN.cards[a0].pi+(PIN.cards[a1].pi-PIN.cards[a0].pi)*fr;
+  document.getElementById("pjRoll").style.transform=`translate3d(0,${(-pf*PIN.rollH).toFixed(1)}px,0)`;
+  document.getElementById("pinBar").style.transform=`scaleX(${(PIN.n>1?f/(PIN.n-1):1).toFixed(4)})`;
+  const a=Math.round(f);
+  if(a!==PIN.act||force){
+    PIN.act=a; const c=PIN.cards[a], p=c.p;
+    document.getElementById("pjNum").textContent=`${projTxt()} ${pad(c.pi+1)} / ${pad(viewItems.length)}`;
+    document.getElementById("pjMeta").innerHTML=`${typeName(p.type)} · ${rolesTxt(p)}<br>${p.year} · ${p.ratio}`;
+    box.querySelectorAll(".lp-list button").forEach((b,i)=>b.classList.toggle("on",i===c.pi));
+    const li=c.kind==="title"?-1:c.li;
+    document.getElementById("loopTxt").textContent=c.kind==="title"?loopsTxt(c.nl):`Loop ${c.li+1} / ${c.nl}`;
+    document.getElementById("loopBars").innerHTML=Array.from({length:c.nl},(_,k)=>`<i style="--s:${k<=li?1:0}"></i>`).join("");
+    document.getElementById("pinCount").textContent=c.kind==="title"?`${p.title}`:`${p.title} · Loop ${c.li+1} / ${c.nl}`;
+    document.getElementById("pinTc").textContent=`TC ${tcFrom(hash(p.id+"tc"+Math.max(0,c.k)))}`;
+    if(PIN.actP!==-1&&PIN.actP!==c.pi&&!force){ const fl=document.getElementById("pjFlash");
+      fl.textContent=`→ ${projTxt()} ${pad(c.pi+1)} · ${p.title}`; fl.classList.add("on"); clearTimeout(PIN.ft); PIN.ft=setTimeout(()=>fl.classList.remove("on"),1600); }
+    PIN.actP=c.pi;
+    /* només es reprodueix el vídeo actiu; els veïns es carreguen */
+    cards.forEach((el,i)=>{ const vd=el.querySelector("video"); if(!vd) return;
+      if(Math.abs(i-a)<=1){ if(!vd.getAttribute("src")) vd.src=vd.dataset.src; if(i===a) vd.play().catch(()=>{}); else vd.pause(); }
+      else if(!vd.paused) vd.pause(); });
+  }
+}
+function pinTick(){
+  PIN.raf=0; if(!PIN.vis||!PIN.n) return;
+  PIN.tf=pinTarget(); const prev=PIN.f; PIN.f+=(PIN.tf-PIN.f)*(reduce?1:.12);
+  if(Math.abs(PIN.tf-PIN.f)<.0005) PIN.f=PIN.tf;
+  PIN.v=PIN.f-prev; paintPin(false);
+  if(PIN.f!==PIN.tf) PIN.raf=requestAnimationFrame(pinTick);
+}
+function kickPin(){ if(!PIN.raf) PIN.raf=requestAnimationFrame(pinTick) }
+const pinIO=new IntersectionObserver(es=>{ PIN.vis=es[0].isIntersecting; if(PIN.vis) kickPin(); else document.querySelectorAll("#pinView video").forEach(v=>v.pause()); });
+addEventListener("scroll",()=>{ if(PIN.vis) kickPin(); },{passive:true});
+function goPin(i){ if(!PIN.el) return; const r=PIN.el.getBoundingClientRect(); scrollTo({top:scrollY+r.top-headPx()+i*PIN.stepPx,behavior:reduce?"auto":"smooth"}); }
+pinView.addEventListener("click",e=>{
+  const b=e.target.closest("[data-pj]"); if(b){ e.stopPropagation(); goPin(PIN.cards.findIndex(c=>c.kind==="title"&&c.pi===+b.dataset.pj)); return; }
+  const c=e.target.closest(".pc"); if(c&&+c.dataset.i!==PIN.act){ e.stopPropagation(); goPin(+c.dataset.i); } },true);
+let mvMode=useMv();
+DESK.addEventListener("change",()=>{ if(useMv()!==mvMode){ mvMode=useMv(); renderWork(); } });
+addEventListener("resize",()=>{ if(mvMode&&PIN.n){ clearTimeout(PIN.rt); PIN.rt=setTimeout(()=>{ layoutPin(); paintPin(true); },150); } });
 
 /* ============ FOTOGRAFIES ============ */
 const fPhoto=document.getElementById("fPhoto"); let photoKind="all", shownPhotos=[];
