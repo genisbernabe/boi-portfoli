@@ -338,8 +338,6 @@ footer button:hover{color:var(--paper)}
 .lb figure{margin:0;max-width:100%}
 .lb-stage{display:grid;place-items:center;width:100%}
 .lb-img{position:relative;background:#000}
-.lb-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
-.lb-flash.on{animation:sflash .3s ease-out}
 .lb figcaption{display:flex;justify-content:space-between;gap:16px;margin-top:10px}
 .lb-btn{position:absolute;padding:10px 14px;border:1px solid var(--line);font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
 .lb-btn:hover{background:var(--paper);color:var(--ink)}
@@ -958,7 +956,7 @@ function lbFig(){
     <figcaption><span>${esc(it.title)}</span><span class="mono muted">${pad(lbI+1)} / ${pad(lbItems.length)} · ${esc(it.meta)}</span></figcaption></figure>`;
 }
 function drawLb(){
-  lb.innerHTML=`<button class="lb-btn lb-close" data-lb="close">${t("lb.close")}</button><div class="lb-stage" id="lbStage">${lbFig()}</div><div class="lb-flash"></div>
+  lb.innerHTML=`<button class="lb-btn lb-close" data-lb="close">${t("lb.close")}</button><div class="lb-stage" id="lbStage">${lbFig()}</div>
     ${lbItems.length>1?`<button class="lb-btn lb-prev" data-lb="prev">${t("lb.prev")}</button><button class="lb-btn lb-next" data-lb="next">${t("lb.next")}</button>`:""}`;
 }
 function openLb(items,i){
@@ -975,7 +973,6 @@ function stepLb(d){
   lbBusy=true;
   iris(img,false,170).onfinish=()=>{
     stage.innerHTML=lbFig();
-    const f=lb.querySelector(".lb-flash"); f.classList.remove("on"); void f.offsetWidth; f.classList.add("on");
     const n=stage.querySelector(".lb-img"), o=iris(n,true,300,50);
     o.onfinish=()=>{ lbBusy=false; o.cancel(); };
   };
