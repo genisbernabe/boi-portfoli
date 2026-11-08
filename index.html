@@ -714,7 +714,7 @@ const PROJECTS = [
         en:"Two friends, one night and the city at their feet. Dusk light and dark interiors."},
    video:"media/primera-noche-loop.mp4",
    sheetVideo:"media/primera-noche-loop-2.mp4", sheetPoster:"media/primera-noche-poster-2.jpg",
-   stripVideo:"media/primera-noche-loop-3.mp4", stripPoster:"media/primera-noche-poster-3.jpg",
+   stripVideos:[["media/primera-noche-loop.mp4","media/primera-noche-poster.jpg"],["media/primera-noche-loop-2.mp4","media/primera-noche-poster-2.jpg"],["media/primera-noche-loop-3.mp4","media/primera-noche-poster-3.jpg"]],
    reelVideo:"media/primera-noche-loop-3.mp4", reelPoster:"media/primera-noche-poster-3.jpg",
    stills:["img/primera-noche-03.jpg","img/primera-noche-01.jpg","img/primera-noche-02.jpg","img/primera-noche-03.jpg","img/primera-noche-04.jpg","img/primera-noche-05.jpg","img/primera-noche-06.jpg","img/primera-noche-07.jpg","img/primera-noche-08.jpg","img/primera-noche-09.jpg","img/primera-noche-10.jpg"],
    pal:["#0e1014","#3a4552","#e9d9a8","#c7843e"]},
@@ -724,7 +724,7 @@ const PROJECTS = [
    log:{ca:"Un noi, una flor vermella i el record de qui ja no hi és. Llum suau d'estiu i colors apagats.",
         es:"Un chico, una flor roja y el recuerdo de quien ya no está. Luz suave de verano y colores apagados.",
         en:"A boy, a red flower and the memory of someone who is gone. Soft summer light and muted colours."},
-   stripVideo:"media/nino-flores-loop-3.mp4", stripPoster:"media/nino-flores-poster-3.jpg",
+   stripVideos:[["media/nino-flores-loop-3.mp4","media/nino-flores-poster-3.jpg"],["media/nino-flores-loop-2.mp4","media/nino-flores-poster-2.jpg"],["media/nino-flores-loop-1.mp4","media/nino-flores-poster-1.jpg"]],
    sheetVideo:"media/nino-flores-loop-2.mp4", sheetPoster:"media/nino-flores-poster-2.jpg",
    reelVideo:"media/nino-flores-loop-1.mp4", reelPoster:"media/nino-flores-poster-1.jpg",
    stills:["img/nino-flores-01.jpg","img/nino-flores-02.jpg","img/nino-flores-03.jpg","img/nino-flores-04.jpg","img/nino-flores-05.jpg","img/nino-flores-06.jpg","img/nino-flores-07.jpg","img/nino-flores-08.jpg","img/nino-flores-09.jpg","img/nino-flores-10.jpg","img/nino-flores-11.jpg"],
@@ -738,16 +738,7 @@ const PHOTOS = [
   {kind:"digital", title:"La primera noche", meta:"Fotograma · 2.39:1", ar:2.39, img:"img/primera-noche-03.jpg", pal:["#0e1014","#3a4552","#e9d9a8","#c7843e"]},
   {kind:"digital", title:"El niño de las flores", meta:"Fotograma · 16:9", ar:16/9, img:"img/nino-flores-01.jpg", pal:["#0f2a28","#2f6a62","#e6dcc0","#c8203a"]},
   {kind:"digital", title:"El niño de las flores", meta:"Fotograma · 16:9", ar:16/9, img:"img/nino-flores-02.jpg", pal:["#1a2a26","#2aa08a","#ece4d0","#c8203a"]},
-  {kind:"digital", title:"El niño de las flores", meta:"Fotograma · 16:9", ar:16/9, img:"img/nino-flores-03.jpg", pal:["#141812","#4a6a3a","#d8e0c0","#c88a7a"]},
-  {kind:"analog", title:"Port de Llançà", meta:"35 mm · Portra 400", ar:3/2, pal:["#1b130c","#7a5a3a","#f2d4a0","#c47a4a"]},
-  {kind:"digital", title:"Montserrat", meta:"Digital", ar:4/5, pal:["#0b0d10","#3a4350","#b9c3cc","#6b7f8f"]},
-  {kind:"analog", title:"Cadí, 6:12 h", meta:"120 · HP5 push 800", ar:1, pal:["#101010","#4a4a4a","#d8d8d8","#888888"]},
-  {kind:"digital", title:"Mercat de Sant Antoni", meta:"Digital", ar:3/2, pal:["#160e0a","#6a3a22","#eab37a","#9a4a2a"]},
-  {kind:"analog", title:{ca:"Taller",es:"Taller",en:"Workshop"}, meta:"35 mm · Cinestill 800T", ar:2/3, pal:["#0a0d14","#2a3a5a","#f0a070","#d0503a"]},
-  {kind:"digital", title:"Platja de la Fosca", meta:"Digital", ar:3/2, pal:["#0e2228","#2c6a72","#f0e2c0","#d8905a"]},
-  {kind:"analog", title:"Rodalies R1", meta:"35 mm · Gold 200", ar:3/2, pal:["#14100a","#6a5530","#f0d690","#a07030"]},
-  {kind:"digital", title:"Fageda d'en Jordà", meta:"Digital", ar:4/5, pal:["#0d120a","#3c5226","#d8d690","#a06a2a"]},
-  {kind:"analog", title:{ca:"Nit de Sant Joan",es:"Noche de San Juan",en:"Midsummer night"}, meta:"35 mm · Portra 800", ar:3/2, pal:["#100808","#5a2018","#f4b060","#e05030"]}
+  {kind:"digital", title:"El niño de las flores", meta:"Fotograma · 16:9", ar:16/9, img:"img/nino-flores-03.jpg", pal:["#141812","#4a6a3a","#d8e0c0","#c88a7a"]}
 ];
 
 const BTS = [
@@ -864,15 +855,17 @@ const STILLS_N=4;
 const ST={x:0,vel:0,target:null,drag:false,lastX:0,moved:0,loopW:0,step:0,n:0,raf:0,visible:false,hover:false,captured:false,center:null,centerI:-1};
 const sfHTML=(p,i)=>{
   const tall=p.ar<16/9?" tall":"";
-  const frames=(p.stripVideo||p.video) ? frame(p.pal,stillSeed(p,0),{img:p.stripPoster||stillImg(p,0),video:p.stripVideo||p.video,cls:"on"})
+  const frames=p.stripVideos ? p.stripVideos.map(([v,img],k)=>frame(p.pal,stillSeed(p,k),{img,video:v,cls:k?"":"on"})).join("")
+    : p.video ? frame(p.pal,stillSeed(p,0),{img:stillImg(p,0),video:p.video,cls:"on"})
     : Array.from({length:p.stills?Math.min(p.stills.length,STILLS_N):STILLS_N},(_,k)=>frame(p.pal,stillSeed(p,k),{img:stillImg(p,k),cls:k?"":"on"})).join("");
-  return `<div class="sf" data-open="${p.id}" data-cursor="view">
+  return `<div class="sf" data-open="${p.id}"${p.stripVideos?" data-vids":""} data-cursor="view">
   <div class="sf-edge"><span>▸ ${12+i*2}A</span><span class="live"><span class="rec" aria-hidden="true"></span><span class="ltc">${tcFrom(hash(p.id+"tc0"))}</span></span><span class="yr">BVA · ${p.year}</span><span>${p.ratio}</span></div>
   <div class="screen"><div class="stack${tall}" style="aspect-ratio:${p.ar}">${frames}</div></div>
   <div class="sf-cap"><b>${esc(p.title)}</b><span class="mono">${typeName(p.type)} · ${rolesTxt(p)}</span></div></div>`;
 };
 const centerX=()=>stripEl.clientWidth/2-ST.step/2;
-function renderStrip(){
+function renderStrip(){ _renderStrip(); syncStripVideos(); }
+function _renderStrip(){
   ST.n=viewItems.length; const one=viewItems.map(sfHTML).join("");
   stripTrack.innerHTML=one;
   ST.step=stripTrack.firstElementChild.getBoundingClientRect().width||600;
@@ -898,7 +891,7 @@ function paintStrip(){
     if(d<bd){bd=d;best=kids[j];bi=j}
   }
   if(best!==ST.center){
-    if(ST.center){ ST.center.classList.remove("center"); ST.center.querySelectorAll(".stack .frame").forEach((f,k)=>f.classList.toggle("on",k===0)); }
+    if(ST.center){ ST.center.classList.remove("center"); if(!ST.center.hasAttribute("data-vids")) ST.center.querySelectorAll(".stack .frame").forEach((f,k)=>f.classList.toggle("on",k===0)); }
     ST.center=best; if(best) best.classList.add("center");
     const i=bi%ST.n; ST.centerI=i;
     stripCount.textContent=`FRAME ${pad(i+1)} / ${pad(ST.n)} · ${viewItems[i].title}`;
@@ -935,9 +928,19 @@ stripEl.addEventListener("keydown",e=>{ if(e.key==="ArrowRight"){e.preventDefaul
   if(e.key==="Enter"&&ST.center){e.preventDefault();openProject(ST.center.dataset.open)} });
 document.getElementById("stripPrev").addEventListener("click",()=>snapTo(-1));
 document.getElementById("stripNext").addEventListener("click",()=>snapTo(1));
+/* targetes amb vídeo: van alternant els seus 3 loops; només es reprodueix el que es veu */
+function syncStripVideos(){ document.querySelectorAll('.sf[data-vids] .stack .frame').forEach(f=>{ const v=f.querySelector("video"); if(!v) return;
+  if(f.classList.contains("on")){ if(v.paused) v.play().catch(()=>{}); } else if(!v.paused) v.pause(); }); }
+setInterval(()=>{
+  if(reduce||stripView.hidden) return;
+  document.querySelectorAll('.sf[data-vids]').forEach(card=>{
+    const fr=card.querySelectorAll(".stack .frame"); let k=[...fr].findIndex(f=>f.classList.contains("on")); k=(k+1)%fr.length;
+    fr.forEach((f,j)=>f.classList.toggle("on",j===k)); });
+  syncStripVideos();
+},4500);
 /* el fotograma central "reprodueix": va passant els seus stills amb timecode */
 setInterval(()=>{
-  if(reduce||!ST.visible||!ST.center||ST.drag||stripView.hidden) return;
+  if(reduce||!ST.visible||!ST.center||ST.drag||stripView.hidden||ST.center.hasAttribute("data-vids")) return;
   const fr=ST.center.querySelectorAll(".stack .frame"); let k=[...fr].findIndex(f=>f.classList.contains("on")); k=(k+1)%fr.length;
   fr.forEach((f,j)=>f.classList.toggle("on",j===k));
   const p=byId(ST.center.dataset.open), l=ST.center.querySelector(".ltc"); if(l) l.textContent=tcFrom(hash(p.id+"tc"+k));
@@ -958,7 +961,8 @@ function exif(f){
     iso:nums?nums[nums.length-1]:[100,200,400,800][Math.floor(r()*4)], mm:[28,35,50,85][Math.floor(r()*4)], ev:Math.floor(r()*5)-2};
 }
 function renderPhotos(){
-  fPhoto.innerHTML=[["all",t("photos.all")],["analog",t("photos.analog")],["digital",t("photos.digital")]].map(([k,v])=>`<button class="chip" data-kind="${k}" aria-pressed="${photoKind===k}">${v}</button>`).join("");
+  const kinds=["analog","digital"].filter(k=>PHOTOS.some(f=>f.kind===k));
+  fPhoto.innerHTML=kinds.length<2?"":[["all",t("photos.all")],...kinds.map(k=>[k,t("photos."+k)])].map(([k,v])=>`<button class="chip" data-kind="${k}" aria-pressed="${photoKind===k}">${v}</button>`).join("");
   shownPhotos=PHOTOS.filter(f=>photoKind==="all"||f.kind===photoKind);
   const v=photoView;
   document.getElementById("photos").hidden=v!=="grid"; phDark.hidden=v!=="dark"; phTable.hidden=v!=="table"; phShutter.hidden=v!=="shutter";
