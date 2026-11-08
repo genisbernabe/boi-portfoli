@@ -44,7 +44,7 @@ p{margin:0}
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   animation:grain 1s steps(4) infinite}
 @keyframes grain{0%{transform:translate3d(0,0,0)}25%{transform:translate3d(-40px,28px,0)}50%{transform:translate3d(30px,-40px,0)}75%{transform:translate3d(-28px,-14px,0)}100%{transform:translate3d(0,0,0)}}
-@media (pointer:coarse){.grain{display:none}.sheet-bar{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(14,13,12,.97)}}
+@media (pointer:coarse){.grain{animation:none}}
 .intro-on .grain{animation:none}
 
 /* ================= CAPÇALERA ================= */
@@ -73,7 +73,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   .nav:not(.open){display:none}
   .nav a{padding:14px 0;border-bottom:1px solid var(--line);font-size:.85rem}
 }
-@media (max-width:420px){.brand{font-size:1.02rem;letter-spacing:.03em;gap:8px}}
+@media (max-width:420px){.brand .bn{display:none}}
 main>section:not(.hero){content-visibility:auto;contain-intrinsic-size:auto 1000px}
 main{padding-top:calc(var(--head) + env(safe-area-inset-top,0px))}
 section[id]{scroll-margin-top:calc(var(--head) + 24px)}
@@ -82,7 +82,7 @@ section[id]{scroll-margin-top:calc(var(--head) + 24px)}
 .screen{position:relative;background:#000;aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden;max-width:100%}
 .frame{position:relative;overflow:hidden;background-color:var(--ink-3);width:100%;max-width:100%}
 .frame.tall{width:auto;height:100%}
-.frame img,.frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .frame::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.6) 100%);pointer-events:none}
 .frame .tag{position:absolute;left:10px;bottom:8px;z-index:1;font-family:var(--f-mono);font-size:.62rem;letter-spacing:.1em;color:rgba(255,255,255,.62)}
 
@@ -112,15 +112,6 @@ html,body{overflow-x:clip}
 .blur-layer .frame{position:absolute;inset:0;height:100%}
 .blur-layer .frame::after{display:none}
 .t-out .blur-layer{opacity:0}
-/* vídeo de portada (La primera noche): nítid i en loop; durant la intro el tapa la capa desenfocada */
-.hero-video{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;object-position:55% 50%;pointer-events:none;background:#000}
-.blur-layer video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:55% 50%}
-.has-video .reel-tabs{display:none}
-/* portada amb vídeo: a tot l'ample i fins a baix de la pantalla (sota la capçalera) */
-.has-video .hero{padding-top:0}
-.has-video .hero-slot{width:100vw;max-width:none;margin-inline:calc(50% - 50vw);aspect-ratio:auto;height:calc(100svh - var(--head) - env(safe-area-inset-top,0px));min-height:320px}
-/* al mòbil el vídeo de portada va a tot l'ample però en 16:9, perquè no quedi retallat */
-@media (max-width:700px){.has-video .hero-slot{height:auto;min-height:0;aspect-ratio:16/9}.has-video .hero-video{inset:0;width:100%;height:100%}}
 
 /* títol de la intro: capa fixa a sobre, fora del monitor (no s'escala) */
 .intro-stage{position:fixed;inset:0;z-index:125;display:none;place-items:center;pointer-events:none;text-align:center;padding:0 6vw;contain:layout paint}
@@ -225,9 +216,7 @@ html,body{overflow-x:clip}
 .sf-edge{position:absolute;left:16px;right:16px;top:31px;display:flex;justify-content:space-between;gap:12px;font-family:var(--f-mono);font-size:.62rem;letter-spacing:.22em;color:#d9893a;white-space:nowrap}
 .sf-edge .live{display:none;color:#fff;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
 .sf.center .sf-edge .live{display:inline-flex}
-.sf .screen{transform:scale(var(--k))}
-/* enfosquir els laterals amb una capa (no amb filter: als vídeos és molt car de recalcular) */
-.sf .screen::after{content:"";position:absolute;inset:0;background:#000;opacity:calc((1 - var(--b)) * .55);pointer-events:none;z-index:1}
+.sf .screen{transform:scale(var(--k));filter:brightness(var(--b)) saturate(calc(.55 + var(--b) * .45))}
 .stack{position:relative;width:100%;max-width:100%}
 .stack.tall{width:auto;height:100%}
 .stack .frame{position:absolute;inset:0;height:100%;opacity:0;transition:opacity .5s ease}
@@ -241,79 +230,6 @@ html,body{overflow-x:clip}
 .ctl-btns{display:flex;gap:8px}
 .ctl-btns .btn{padding:10px 16px}
 
-
-/* ===== PROPOSTES FOTOGRAFIES (selector temporal) ===== */
-.ph-views{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:-8px 0 14px}
-.vsep{color:var(--tungsten);padding:0 6px 0 14px}
-.chip.prop{border-color:rgba(210,156,92,.35)}
-.ph-hint{margin:0 0 24px}
-.ph .frame,.cam-ph .frame{position:absolute;inset:0;height:100%}
-.ph{display:block;position:relative;width:100%;overflow:hidden}
-
-/* 1 · Revelat: cordill d'assecat sota llum de seguretat */
-.dark{position:relative;padding:22px clamp(16px,3vw,44px) 30px;overflow:hidden;
-  background:radial-gradient(ellipse 70% 55% at 50% 0%,rgba(196,30,18,.38),rgba(196,30,18,0) 70%),#0d0606;transition:background .8s}
-.dark::after{content:"";position:absolute;inset:0;background:rgba(255,46,24,.2);mix-blend-mode:multiply;pointer-events:none;transition:opacity .8s}
-.dark.white{background:radial-gradient(ellipse 70% 55% at 50% 0%,rgba(255,240,214,.14),rgba(255,240,214,0) 70%),#161310}
-.dark.white::after{opacity:0}
-.dark-top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px;color:rgba(255,220,210,.75);flex-wrap:wrap}
-.safelight{display:flex;align-items:center;gap:10px}
-.safelight i{width:10px;height:10px;border-radius:50%;background:#e2301f;box-shadow:0 0 16px 5px rgba(226,48,31,.55);transition:all .6s}
-.dark.white .safelight i{background:#f3e9d6;box-shadow:0 0 16px 5px rgba(243,233,214,.45)}
-.dark-top .btn{color:rgba(255,230,220,.9);border-color:rgba(255,200,190,.25)}
-.line{position:relative;margin-bottom:34px}
-.wire{position:absolute;left:-6%;width:112%;top:0;height:40px;overflow:visible;pointer-events:none}
-.wire path{fill:none;stroke:#7a675b;stroke-width:1.3;vector-effect:non-scaling-stroke}
-.line-prints{position:relative;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:0 clamp(14px,2.4vw,34px)}
-.print{display:block;width:100%;text-align:left;padding-top:var(--y);transform-origin:50% var(--y);animation:sway var(--sway) ease-in-out var(--d) infinite alternate}
-@keyframes sway{from{transform:rotate(-1.3deg)}to{transform:rotate(1.3deg)}}
-.print:hover{animation-play-state:paused}
-.pin{display:block;width:11px;height:28px;margin:-12px auto -14px;position:relative;z-index:2;border-radius:2px;background:linear-gradient(90deg,#a87b4d,#c99a66 45%,#8a6036);box-shadow:0 3px 5px rgba(0,0,0,.55)}
-.pin::after{content:"";position:absolute;left:50%;top:6px;bottom:6px;width:1px;background:rgba(0,0,0,.35)}
-.paper{display:block;background:#efe9de;padding:8px 8px 10px;box-shadow:0 16px 34px rgba(0,0,0,.6);transition:transform .3s}
-.print:hover .paper{transform:translateY(-3px)}
-.paper .frame{filter:brightness(1.85) contrast(.38) sepia(.55) saturate(.3);transition:filter 3.4s cubic-bezier(.3,0,.2,1) var(--d2,0s)}
-.print.dev .paper .frame{filter:none}
-.print:hover .paper .frame{filter:none;transition-duration:1.1s;transition-delay:0s}
-.pcap{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:8px;color:#3a332c;font-size:.82rem;line-height:1.25}
-.pcap .mono{font-size:.56rem;color:#7a6f63;white-space:nowrap}
-
-/* 2 · Taula de còpies */
-.ptable{position:relative;overflow:hidden;border:1px solid var(--line);background:radial-gradient(ellipse at 50% 35%,#2b2621,#141210 80%);touch-action:pan-y}
-.ptable::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;background:repeating-linear-gradient(115deg,rgba(255,255,255,.012) 0 2px,transparent 2px 9px)}
-.pr{position:absolute;transform:rotate(var(--r));transition:transform .25s ease;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
-.pr-in{display:block;background:#f2ede3;padding:9px 9px 12px;box-shadow:0 10px 26px rgba(0,0,0,.55);transition:box-shadow .25s}
-.pr.analog .pr-in{background:#0b0a09;padding:14px 11px 30px;position:relative}
-.pr.analog .pr-in::after{content:attr(data-edge);position:absolute;left:12px;right:12px;bottom:10px;font-family:var(--f-mono);font-size:.54rem;letter-spacing:.2em;color:#d98a3a;white-space:nowrap;overflow:hidden}
-.pr-cap{display:flex;justify-content:space-between;gap:8px;margin-top:7px;color:#3a332c;font-size:.78rem;line-height:1.2}
-.pr.analog .pr-cap{display:none}
-.pr:hover{transform:rotate(calc(var(--r) * .6)) translateY(-3px)}
-.pr.lift{transform:rotate(calc(var(--r) * .3)) scale(1.05);cursor:grabbing;transition:transform .15s ease}
-.pr.lift .pr-in{box-shadow:0 34px 70px rgba(0,0,0,.65)}
-
-/* 3 · Obturador */
-.cam{position:relative;aspect-ratio:3/2;max-height:max(340px,calc(100vh - 230px));width:100%;background:#000;overflow:hidden;cursor:pointer;max-width:100%}
-@media (max-width:700px){.cam{aspect-ratio:4/5}}
-.cam-img{position:absolute;inset:0;display:grid;place-items:center}
-.cam-ph{position:relative;max-width:100%}
-.cam-ov{position:absolute;inset:0;pointer-events:none;z-index:2}
-.af{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);display:grid;grid-template-columns:repeat(3,18px);gap:clamp(30px,7vw,90px) clamp(40px,9vw,120px)}
-.af i{width:18px;height:14px;border:1px solid rgba(255,255,255,.45)}
-.af i.c{border-color:#fff}
-.cam.focus .af i.c{border-color:#ff3b2b;box-shadow:0 0 8px rgba(255,59,43,.7)}
-.lcd{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:clamp(14px,3vw,38px);align-items:center;padding:10px 12px;background:rgba(0,0,0,.72);color:#a6e2a0;font-family:var(--f-mono);font-size:clamp(.66rem,1.3vw,.86rem);letter-spacing:.12em;font-variant-numeric:tabular-nums;flex-wrap:wrap}
-.meter{display:inline-flex;align-items:center;gap:3px}
-.meter i{width:2px;height:7px;background:#a6e2a0;opacity:.5}
-.meter i.z{height:11px;opacity:1}
-.cam-bar{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:16px 28px;margin-top:18px}
-.cam-title b{display:block;font-family:var(--f-display);font-weight:800;font-size:clamp(1.6rem,3.4vw,2.6rem);text-transform:uppercase;line-height:1}
-.dial{display:flex;gap:2px;padding:6px 8px;background:#0b0a09;border:1px solid var(--line);overflow-x:auto;max-width:min(52vw,520px)}
-.dial button{min-width:30px;padding:4px 0;font-family:var(--f-mono);font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.dial button:hover{color:var(--paper)}
-.dial button.on{color:#ff8a3d}
-.shutter{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#d9d3c9,#8f887d 70%);box-shadow:0 0 0 4px #1f1c19,0 0 0 5px #4a453e,0 6px 18px rgba(0,0,0,.5);transition:transform .1s}
-.shutter:active,.shutter.press{transform:scale(.9)}
-@media (max-width:700px){.cam-bar{grid-template-columns:1fr auto}.dial{grid-column:1/-1;order:3;max-width:100%}}
 
 /* fotografies */
 .photos{columns:3 280px;column-gap:20px}
@@ -370,8 +286,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-
 footer button:hover{color:var(--paper)}
 
 /* fitxa de projecte */
-.sheet{position:fixed;inset:0;z-index:100;background:var(--ink);overflow-y:auto;overscroll-behavior:contain;animation:sheetIn .45s cubic-bezier(.2,.8,.2,1)}
-@keyframes sheetIn{from{clip-path:inset(50% 0 50% 0)}to{clip-path:inset(0 0 0 0)}}
+.sheet{position:fixed;inset:0;z-index:100;background:var(--ink);overflow-y:auto;overscroll-behavior:contain}
 .sheet-bar{position:sticky;top:0;z-index:5;background:rgba(14,13,12,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
 .sheet-bar .wrap{display:flex;justify-content:space-between;align-items:center;height:var(--head);gap:16px}
 .sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 32px;padding-block:28px 20px}
@@ -395,7 +310,7 @@ footer button:hover{color:var(--paper)}
 .sub-head h3{font-family:var(--f-display);font-size:clamp(1.8rem,4vw,3rem);text-transform:uppercase}
 .stills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
 .stills figure{margin:0}
-.stills figure:first-child,.stills figure:last-child:nth-child(even){grid-column:1/-1}
+.stills figure:first-child{grid-column:1/-1}
 .stills button{display:block;width:100%}
 .stills figcaption{margin-top:6px}
 @media (max-width:700px){.stills{grid-template-columns:1fr}.sheet-info{grid-template-columns:1fr}}
@@ -412,6 +327,10 @@ footer button:hover{color:var(--paper)}
 /* lightbox */
 .lb{position:fixed;inset:0;z-index:150;background:rgba(6,6,5,.96);display:grid;place-items:center;padding:max(60px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(60px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .lb figure{margin:0;max-width:100%}
+.lb-stage{display:grid;place-items:center;width:100%}
+.lb-img{position:relative;background:#000}
+.lb-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.lb-flash.on{animation:sflash .3s ease-out}
 .lb figcaption{display:flex;justify-content:space-between;gap:16px;margin-top:10px}
 .lb-btn{position:absolute;padding:10px 14px;border:1px solid var(--line);font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
 .lb-btn:hover{background:var(--paper);color:var(--ink)}
@@ -470,7 +389,6 @@ footer button:hover{color:var(--paper)}
       <div class="hero-slot" id="heroSlot">
       <div class="screen hero-screen corners" id="heroScreen" role="button" tabindex="0" data-cursor="view">
         <div id="slides"></div>
-        <video class="hero-video" id="heroVideo" data-src="media/primera-noche-loop.mp4" poster="media/primera-noche-poster.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
         <div class="hud">
           <div class="hud-row">
             <span class="mono"><span class="rec" aria-hidden="true"></span>Reel 2026</span>
@@ -529,37 +447,7 @@ footer button:hover{color:var(--paper)}
   <section class="sec" id="fotografies">
     <div class="wrap">
       <div class="sec-head"><h2 data-i18n="photos.title"></h2><div class="frow" id="fPhoto"></div></div>
-      <div class="ph-views" id="phViews" role="group" aria-label="Propostes">
-        <button class="chip" data-pv="grid" aria-pressed="true">Actual</button>
-        <span class="vsep mono">Propostes →</span>
-        <button class="chip prop" data-pv="dark" aria-pressed="false">1 · Revelat</button>
-        <button class="chip prop" data-pv="table" aria-pressed="false">2 · Taula de còpies</button>
-        <button class="chip prop" data-pv="shutter" aria-pressed="false">3 · Obturador</button>
-      </div>
-      <p class="mono muted ph-hint" id="phHint" hidden></p>
       <div class="photos" id="photos"></div>
-      <div id="phDark" hidden>
-        <div class="dark" id="dark">
-          <div class="dark-top mono"><span class="safelight"><i></i><span id="lightLbl">Llum de seguretat</span></span><button class="btn" id="lightBtn">Encendre llum blanca</button></div>
-          <div id="darkRows"></div>
-        </div>
-      </div>
-      <div id="phTable" hidden>
-        <div class="ptable" id="ptable"></div>
-        <div class="strip-ctl"><span class="mono muted" id="tableCount"></span><div class="ctl-btns"><button class="btn" id="tableShuffle">Barrejar còpies</button></div></div>
-      </div>
-      <div id="phShutter" hidden>
-        <div class="cam corners" id="cam" role="button" tabindex="0" data-cursor="zoom">
-          <div class="cam-img" id="camImg"></div>
-          <div class="cam-ov"><div class="af" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="c"></i><i></i><i></i><i></i><i></i></div>
-            <div class="lcd" id="lcd"></div></div>
-        </div>
-        <div class="cam-bar">
-          <div class="cam-title"><b id="camTitle"></b><span class="mono muted" id="camMeta"></span></div>
-          <div class="dial" id="dial" role="group" aria-label="Fotograma"></div>
-          <button class="shutter" id="shutterBtn" aria-label="Disparar: foto següent"></button>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -708,42 +596,86 @@ const I18N = {
    Imatges reals: afegir `stills: ["img/faena-01.jpg", ...]` i `bts: [...]`.
    ============================================================ */
 const PROJECTS = [
-  {id:"la-primera-noche", title:"La primera noche", year:2026, type:"ficcio", roles:["DOP"],
-   length:{ca:"Curtmetratge · 17 min",es:"Cortometraje · 17 min",en:"Short film · 17 min"},
-   director:"Nom Cognom", prod:"Productora", camera:"—", lenses:"—", format:"4K", ratio:"2.39:1", ar:2.39,
-   log:{ca:"Dos amics, una nit i la ciutat als peus. Llum de capvespre i interiors foscos.",
-        es:"Dos amigos, una noche y la ciudad a sus pies. Luz de atardecer e interiores oscuros.",
-        en:"Two friends, one night and the city at their feet. Dusk light and dark interiors."},
-   video:"media/primera-noche-loop.mp4",
-   sheetVideo:"media/primera-noche-loop-2.mp4", sheetPoster:"media/primera-noche-poster-2.jpg",
-   stripVideos:[["media/primera-noche-loop.mp4","media/primera-noche-poster.jpg"],["media/primera-noche-loop-2.mp4","media/primera-noche-poster-2.jpg"],["media/primera-noche-loop-3.mp4","media/primera-noche-poster-3.jpg"]],
-   reelVideo:"media/primera-noche-loop-3.mp4", reelPoster:"media/primera-noche-poster-3.jpg",
-   stills:["img/primera-noche-03.jpg","img/primera-noche-01.jpg","img/primera-noche-02.jpg","img/primera-noche-03.jpg","img/primera-noche-04.jpg","img/primera-noche-05.jpg","img/primera-noche-06.jpg","img/primera-noche-07.jpg","img/primera-noche-08.jpg","img/primera-noche-09.jpg","img/primera-noche-10.jpg"],
-   pal:["#0e1014","#3a4552","#e9d9a8","#c7843e"]},
-  {id:"el-nino-de-las-flores", title:"El niño de las flores", year:2026, type:"ficcio", roles:["DOP"],
-   length:{ca:"Curtmetratge",es:"Cortometraje",en:"Short film"},
-   director:"Nom Cognom", prod:"Productora", camera:"—", lenses:"—", format:"4K", ratio:"16:9", ar:1.778,
-   log:{ca:"Un noi, una flor vermella i el record de qui ja no hi és. Llum suau d'estiu i colors apagats.",
-        es:"Un chico, una flor roja y el recuerdo de quien ya no está. Luz suave de verano y colores apagados.",
-        en:"A boy, a red flower and the memory of someone who is gone. Soft summer light and muted colours."},
-   stripVideos:[["media/nino-flores-loop-3.mp4","media/nino-flores-poster-3.jpg"],["media/nino-flores-loop-2.mp4","media/nino-flores-poster-2.jpg"],["media/nino-flores-loop-1.mp4","media/nino-flores-poster-1.jpg"]],
-   sheetVideo:"media/nino-flores-loop-2.mp4", sheetPoster:"media/nino-flores-poster-2.jpg",
-   reelVideo:"media/nino-flores-loop-1.mp4", reelPoster:"media/nino-flores-poster-1.jpg",
-   stills:["img/nino-flores-01.jpg","img/nino-flores-02.jpg","img/nino-flores-03.jpg","img/nino-flores-04.jpg","img/nino-flores-05.jpg","img/nino-flores-06.jpg","img/nino-flores-07.jpg","img/nino-flores-08.jpg","img/nino-flores-09.jpg","img/nino-flores-10.jpg","img/nino-flores-11.jpg"],
-   pal:["#0f2a28","#2f6a62","#e6dcc0","#c8203a"]}
+  {id:"faena", title:"Faena", year:2025, type:"ficcio", roles:["DOP"],
+   length:{ca:"Curtmetratge · 14 min",es:"Cortometraje · 14 min",en:"Short film · 14 min"},
+   director:"Nom Cognom", prod:"ESCAC", camera:"ARRI Alexa Mini", lenses:"Cooke S4/i", format:"ARRIRAW 3.4K", ratio:"2.39:1", ar:2.39,
+   log:{ca:"Una carnisseria de barri la nit abans de tancar per sempre. Llum de tungstè, fum i carn penjada.",
+        es:"Una carnicería de barrio la noche antes de cerrar para siempre. Luz de tungsteno, humo y carne colgada.",
+        en:"A neighbourhood butcher's shop on its last night before closing for good. Tungsten light, haze and hanging meat."},
+   pal:["#1a0c07","#6b2a14","#f0b265","#b8461f"], featured:true},
+  {id:"terra-de-ningu", title:"Terra de ningú", year:2025, type:"documental", roles:["Operador"],
+   length:{ca:"Documental · 52 min",es:"Documental · 52 min",en:"Documentary · 52 min"},
+   director:"Nom Cognom", prod:"Productora", camera:"Sony FX6", lenses:"Sigma Cine FF Zoom", format:"XAVC-I 4K", ratio:"16:9", ar:1.778,
+   log:{ca:"Tres pastors del Pallars durant l'últim hivern abans de jubilar-se.",
+        es:"Tres pastores del Pallars durante su último invierno antes de jubilarse.",
+        en:"Three shepherds in the Pyrenees during their last winter before retiring."},
+   pal:["#14110b","#5c4a2c","#ddc48c","#8a6a38"]},
+  {id:"cims", title:"Cims", year:2024, type:"outdoor", roles:["Operador","DOP"],
+   length:{ca:"Peça outdoor · 6 min",es:"Pieza outdoor · 6 min",en:"Outdoor film · 6 min"},
+   director:"Nom Cognom", prod:"Productora", camera:"RED Komodo 6K", lenses:"Laowa Zero-D Cine", format:"R3D 6K", ratio:"2:1", ar:2,
+   log:{ca:"Una cordada travessa la carena del Cadí a l'alba. Rodat amb equip lleuger a més de 2.400 metres.",
+        es:"Una cordada cruza la cresta del Cadí al amanecer. Rodado con equipo ligero a más de 2.400 metros.",
+        en:"A rope team crosses the Cadí ridge at dawn. Shot with a light kit above 2,400 metres."},
+   pal:["#0a1118","#2e4a60","#d4e3ec","#e8a86e"], featured:true},
+  {id:"la-cala", title:"La Cala", year:2024, type:"publi", roles:["1AC"],
+   length:{ca:"Espot · 30 s",es:"Spot · 30 s",en:"Commercial · 30 s"},
+   director:"Nom Cognom", prod:"Agència / Productora", camera:"ARRI Alexa 35", lenses:"Zeiss Supreme Prime", format:"ARRIRAW 4.6K", ratio:"16:9", ar:1.778,
+   log:{ca:"Campanya d'estiu per a una marca de begudes, rodada en una cala de la Costa Brava.",
+        es:"Campaña de verano para una marca de bebidas, rodada en una cala de la Costa Brava.",
+        en:"Summer campaign for a drinks brand, shot in a cove on the Costa Brava."},
+   pal:["#0f2a2e","#2f7f86","#f4e6c6","#e8915a"]},
+  {id:"sobretaula", title:"Sobretaula", year:2024, type:"ficcio", roles:["1AC"],
+   length:{ca:"Curtmetratge · 18 min",es:"Cortometraje · 18 min",en:"Short film · 18 min"},
+   director:"Nom Cognom", prod:"Productora", camera:"Sony Venice 2", lenses:"Cooke Panchro/i Classic", format:"X-OCN 6K", ratio:"1.85:1", ar:1.85,
+   log:{ca:"Un dinar familiar que s'allarga fins que surt allò que ningú volia dir.",
+        es:"Una comida familiar que se alarga hasta que sale lo que nadie quería decir.",
+        en:"A family lunch that drags on until someone says what nobody wanted to say."},
+   pal:["#0c0f0a","#33402a","#dcc78c","#7a2f22"]},
+  {id:"boira", title:"Boira", year:2023, type:"documental", roles:["DOP"],
+   length:{ca:"Documental · 24 min",es:"Documental · 24 min",en:"Documentary · 24 min"},
+   director:"Nom Cognom", prod:"Productora", camera:"Blackmagic Pocket 6K", lenses:"Helios 44-2 (vintage)", format:"BRAW 6K", ratio:"2.39:1", ar:2.39,
+   log:{ca:"La plana de Vic en els mesos de boira, a través de qui treballa abans que surti el sol.",
+        es:"La llanura de Vic en los meses de niebla, a través de quienes trabajan antes de que salga el sol.",
+        en:"The Vic plain in the foggy months, seen through people who work before sunrise."},
+   pal:["#15181a","#4d5a5c","#c6cec9","#8c9a90"], featured:true},
+  {id:"marea", title:"Marea", year:2023, type:"outdoor", roles:["2AC"],
+   length:{ca:"Sèrie documental · 3 × 20 min",es:"Serie documental · 3 × 20 min",en:"Documentary series · 3 × 20 min"},
+   director:"Nom Cognom", prod:"Productora", camera:"ARRI Amira", lenses:"Fujinon Premista", format:"ProRes 4444", ratio:"16:9", ar:1.778,
+   log:{ca:"Surf d'hivern a la costa cantàbrica, des de l'aigua i des del penya-segat.",
+        es:"Surf de invierno en la costa cantábrica, desde el agua y desde el acantilado.",
+        en:"Winter surfing on the Cantabrian coast, from the water and from the cliffs."},
+   pal:["#0d0f1e","#3b3a6b","#e8a083","#c75a6a"]},
+  {id:"neons", title:"Neons", year:2023, type:"publi", roles:["Operador"],
+   length:{ca:"Videoclip · 4 min",es:"Videoclip · 4 min",en:"Music video · 4 min"},
+   director:"Nom Cognom", prod:"Productora", camera:"Sony FX9", lenses:"Atlas Orion anamòrfiques", format:"XAVC 4K", ratio:"2.39:1", ar:2.39,
+   log:{ca:"Videoclip nocturn rodat en una sola nit pels carrers del Raval.",
+        es:"Videoclip nocturno rodado en una sola noche por las calles del Raval.",
+        en:"A night-time music video shot in a single night in the streets of the Raval."},
+   pal:["#07090f","#14324a","#63d3e2","#e0442f"], featured:true}
 ];
 const TYPE_KEYS=["ficcio","documental","outdoor","publi"], ROLES=["Operador","DOP","1AC","2AC"];
 
 const PHOTOS = [
-  {kind:"digital", title:"La primera noche", meta:"Fotograma · 2.39:1", ar:2.39, img:"img/primera-noche-01.jpg", pal:["#1a1a1c","#5a5f66","#e9d9a8","#c7843e"]},
-  {kind:"digital", title:"La primera noche", meta:"Fotograma · 2.39:1", ar:2.39, img:"img/primera-noche-02.jpg", pal:["#0a0a0c","#3a2a24","#cfc6b0","#8a2a22"]},
-  {kind:"digital", title:"La primera noche", meta:"Fotograma · 2.39:1", ar:2.39, img:"img/primera-noche-03.jpg", pal:["#0e1014","#3a4552","#e9d9a8","#c7843e"]},
-  {kind:"digital", title:"El niño de las flores", meta:"Fotograma · 16:9", ar:16/9, img:"img/nino-flores-01.jpg", pal:["#0f2a28","#2f6a62","#e6dcc0","#c8203a"]},
-  {kind:"digital", title:"El niño de las flores", meta:"Fotograma · 16:9", ar:16/9, img:"img/nino-flores-02.jpg", pal:["#1a2a26","#2aa08a","#ece4d0","#c8203a"]},
-  {kind:"digital", title:"El niño de las flores", meta:"Fotograma · 16:9", ar:16/9, img:"img/nino-flores-03.jpg", pal:["#141812","#4a6a3a","#d8e0c0","#c88a7a"]}
+  {kind:"analog", title:"Port de Llançà", meta:"35 mm · Portra 400", ar:3/2, pal:["#1b130c","#7a5a3a","#f2d4a0","#c47a4a"]},
+  {kind:"digital", title:"Montserrat", meta:"Digital", ar:4/5, pal:["#0b0d10","#3a4350","#b9c3cc","#6b7f8f"]},
+  {kind:"analog", title:"Cadí, 6:12 h", meta:"120 · HP5 push 800", ar:1, pal:["#101010","#4a4a4a","#d8d8d8","#888888"]},
+  {kind:"digital", title:"Mercat de Sant Antoni", meta:"Digital", ar:3/2, pal:["#160e0a","#6a3a22","#eab37a","#9a4a2a"]},
+  {kind:"analog", title:{ca:"Taller",es:"Taller",en:"Workshop"}, meta:"35 mm · Cinestill 800T", ar:2/3, pal:["#0a0d14","#2a3a5a","#f0a070","#d0503a"]},
+  {kind:"digital", title:"Platja de la Fosca", meta:"Digital", ar:3/2, pal:["#0e2228","#2c6a72","#f0e2c0","#d8905a"]},
+  {kind:"analog", title:"Rodalies R1", meta:"35 mm · Gold 200", ar:3/2, pal:["#14100a","#6a5530","#f0d690","#a07030"]},
+  {kind:"digital", title:"Fageda d'en Jordà", meta:"Digital", ar:4/5, pal:["#0d120a","#3c5226","#d8d690","#a06a2a"]},
+  {kind:"analog", title:{ca:"Nit de Sant Joan",es:"Noche de San Juan",en:"Midsummer night"}, meta:"35 mm · Portra 800", ar:3/2, pal:["#100808","#5a2018","#f4b060","#e05030"]}
 ];
 
 const BTS = [
+  {p:"cims", c:{ca:"Carena del Cadí, 2.400 m",es:"Cresta del Cadí, 2.400 m",en:"Cadí ridge, 2,400 m"}},
+  {p:"faena", c:{ca:"Ajustant el tungstè amb el gaffer",es:"Ajustando el tungsteno con el gaffer",en:"Setting the tungsten with the gaffer"}},
+  {p:"terra-de-ningu", c:{ca:"Seguint el ramat a peu",es:"Siguiendo al rebaño a pie",en:"Following the flock on foot"}},
+  {p:"marea", c:{ca:"Càmera dins la carcassa aquàtica",es:"Cámara dentro de la carcasa acuática",en:"Camera in the water housing"}},
+  {p:"la-cala", c:{ca:"Gimbal a la sorra, hora daurada",es:"Gimbal en la arena, hora dorada",en:"Gimbal on the sand, golden hour"}},
+  {p:"boira", c:{ca:"5:40 h, primera presa del dia",es:"5:40 h, primera toma del día",en:"5:40 am, first take of the day"}},
+  {p:"neons", c:{ca:"Pla seqüència pel Raval",es:"Plano secuencia por el Raval",en:"Long take through the Raval"}},
+  {p:"sobretaula", c:{ca:"Marcant focus a la taula",es:"Marcando foco en la mesa",en:"Marking focus at the table"}}
 ];
 
 /* ============ idioma ============ */
@@ -772,21 +704,14 @@ function grade(pal, seed){
 }
 const pad=v=>String(v).padStart(2,"0");
 function tcFrom(seed){const r=rng(seed);return `01:${pad(Math.floor(r()*40))}:${pad(Math.floor(r()*60))}:${pad(Math.floor(r()*25))}`}
-/* al mòbil es fan servir versions lleugeres dels vídeos (960 px) */
-const MOB=matchMedia("(max-width:700px)").matches;
-const vsrc=v=>MOB&&v?v.replace(/\.mp4$/,"-m.mp4"):v;
 function frame(pal, seed, opts={}){
-  const {ar, img, tag, cls="", video}=opts;
+  const {ar, img, tag, cls=""}=opts;
   const fit = ar ? `aspect-ratio:${ar};` : "";
   const tall = ar && ar < 16/9 ? " tall" : "";
-  return `<div class="frame${tall} ${cls}" style="${fit}${img?"":grade(pal,seed)}">${video?`<video src="${vsrc(video)}"${img?` poster="${img}"`:""} autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>`:img?`<img src="${img}" alt="" loading="lazy">`:""}${tag?`<span class="tag">${tag}</span>`:""}</div>`;
+  return `<div class="frame${tall} ${cls}" style="${fit}${img?"":grade(pal,seed)}">${img?`<img src="${img}" alt="" loading="lazy">`:""}${tag?`<span class="tag">${tag}</span>`:""}</div>`;
 }
 const stillSeed=(p,k)=> k===0 ? hash(p.id+"hero") : hash(p.id+"s"+(k-1));
 const stillImg=(p,k)=> p.stills && p.stills[k];
-/* fitxa: amb fotos reals es mostren totes (sense repetir), sense reals 5 de mostra */
-const realStills=p=>p.stills?[...new Set(p.stills)]:null;
-const nStills=p=>realStills(p)?realStills(p).length:5;
-const sheetStill=(p,k)=>realStills(p)?realStills(p)[k]:stillImg(p,k+1);
 const byId=id=>PROJECTS.find(p=>p.id===id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -800,24 +725,19 @@ let heroI=0, heroTimer=null; const HERO_MS=4600;
 function renderTabs(){
   tabsEl.innerHTML=featured.map((p,i)=>`<button class="mono${i===heroI?" on":""}${i<heroI?" done":""}" data-slide="${i}"><span class="bar"><i></i></span><span class="tt"><span class="tn">${pad(i+1)} · </span>${esc(p.title)}</span></button>`).join("");
 }
-function setCap(){if(heroVideo)return setVideoCap();const p=featured[heroI];document.getElementById("heroCap").textContent=`${p.title} — ${typeName(p.type)} · ${rolesTxt(p)}`;document.getElementById("heroRatio").textContent=p.ratio;
+function setCap(){const p=featured[heroI];document.getElementById("heroCap").textContent=`${p.title} — ${typeName(p.type)} · ${rolesTxt(p)}`;document.getElementById("heroRatio").textContent=p.ratio;
   document.getElementById("heroScreen").setAttribute("aria-label",`${t("open")} ${p.title}`)}
-function goSlide(i){if(heroVideo)return;
+function goSlide(i){
   const s=slidesEl.children; s[heroI].classList.remove("on"); heroI=(i+featured.length)%featured.length; s[heroI].classList.add("on");
   setCap(); renderTabs(); clearTimeout(heroTimer); if(!reduce) heroTimer=setTimeout(()=>goSlide(heroI+1),HERO_MS);
 }
-const heroVideo=document.getElementById("heroVideo");
-if(heroVideo){ document.body.classList.add("has-video"); heroVideo.setAttribute("src",vsrc(heroVideo.dataset.src)); heroVideo.play().catch(()=>{});
-  /* la portada s'atura quan no es veu, per alliberar el mòbil */
-  if("IntersectionObserver" in window) new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ if(heroVideo.paused) heroVideo.play().catch(()=>{}); } else heroVideo.pause(); })).observe(heroVideo); }
-function setVideoCap(){ document.getElementById("heroCap").textContent="La primera noche — "+({ca:"Curtmetratge",es:"Cortometraje",en:"Short film"}[lang]||"Cortometraje"); document.getElementById("heroRatio").textContent="2.39:1"; }
-function startHero(){ if(heroVideo){ setVideoCap(); return; } renderTabs(); setCap(); clearTimeout(heroTimer); if(!reduce) heroTimer=setTimeout(()=>goSlide(heroI+1),HERO_MS); }
+function startHero(){ renderTabs(); setCap(); clearTimeout(heroTimer); if(!reduce) heroTimer=setTimeout(()=>goSlide(heroI+1),HERO_MS); }
 function stopHero(){ clearTimeout(heroTimer); }
 tabsEl.addEventListener("click",e=>{const b=e.target.closest("[data-slide]");if(b)goSlide(+b.dataset.slide)});
 const heroScreen=document.getElementById("heroScreen");
-heroScreen.addEventListener("click",()=>{ if(introRunning) return endIntro(); openProject(heroVideo?"la-primera-noche":featured[heroI].id) });
+heroScreen.addEventListener("click",()=>{ if(introRunning) return endIntro(); openProject(featured[heroI].id) });
 heroScreen.addEventListener("keydown",e=>{
-  if(e.key==="Enter"||e.key===" "){e.preventDefault();openProject(heroVideo?"la-primera-noche":featured[heroI].id)}
+  if(e.key==="Enter"||e.key===" "){e.preventDefault();openProject(featured[heroI].id)}
   if(e.key==="ArrowRight")goSlide(heroI+1); if(e.key==="ArrowLeft")goSlide(heroI-1);
 });
 /* paral·laxi suau dins el reel */
@@ -840,8 +760,8 @@ document.getElementById("aboutPortrait").setAttribute("style", grade(["#0b1015",
 const state={type:"all", role:"all"};
 const fType=document.getElementById("fType"), fRole=document.getElementById("fRole");
 function renderFilters(){
-  fType.innerHTML=`<span class="label mono">${t("f.type")}</span>`+[["all",t("f.all")],...TYPE_KEYS.filter(k=>PROJECTS.some(p=>p.type===k)).map(k=>[k,typeName(k)])].map(([k,v])=>`<button class="chip" data-type="${k}" aria-pressed="${state.type===k}">${v}</button>`).join("");
-  fRole.innerHTML=`<span class="label mono">${t("f.role")}</span>`+[["all",t("f.all")],...ROLES.filter(r=>PROJECTS.some(p=>p.roles.includes(r))).map(r=>[r,roleName(r)])].map(([k,v])=>`<button class="chip" data-role="${k}" aria-pressed="${state.role===k}">${v}</button>`).join("");
+  fType.innerHTML=`<span class="label mono">${t("f.type")}</span>`+[["all",t("f.all")],...TYPE_KEYS.map(k=>[k,typeName(k)])].map(([k,v])=>`<button class="chip" data-type="${k}" aria-pressed="${state.type===k}">${v}</button>`).join("");
+  fRole.innerHTML=`<span class="label mono">${t("f.role")}</span>`+[["all",t("f.all")],...ROLES.map(r=>[r,roleName(r)])].map(([k,v])=>`<button class="chip" data-role="${k}" aria-pressed="${state.role===k}">${v}</button>`).join("");
 }
 fType.addEventListener("click",e=>{const b=e.target.closest("[data-type]");if(!b)return;state.type=b.dataset.type;renderFilters();renderWork()});
 fRole.addEventListener("click",e=>{const b=e.target.closest("[data-role]");if(!b)return;state.role=b.dataset.role;renderFilters();renderWork()});
@@ -860,25 +780,17 @@ function renderWork(){
 
 const STILLS_N=4;
 const ST={x:0,vel:0,target:null,drag:false,lastX:0,moved:0,loopW:0,step:0,n:0,raf:0,visible:false,hover:false,captured:false,center:null,centerI:-1};
-/* cada loop és un fotograma propi de la cinta (k = índex del loop; -1 si el projecte no en té) */
-const sfHTML=(c,i)=>{
-  const p=c.p, sv=c.k>=0&&p.stripVideos[c.k];
+const sfHTML=(p,i)=>{
   const tall=p.ar<16/9?" tall":"";
-  const frames=sv ? frame(p.pal,stillSeed(p,c.k),{img:sv[1],video:sv[0],cls:"on"})
-    : p.video ? frame(p.pal,stillSeed(p,0),{img:stillImg(p,0),video:p.video,cls:"on"})
-    : Array.from({length:p.stills?Math.min(p.stills.length,STILLS_N):STILLS_N},(_,k)=>frame(p.pal,stillSeed(p,k),{img:stillImg(p,k),cls:k?"":"on"})).join("");
-  return `<div class="sf" data-open="${p.id}"${sv?" data-vids":""} data-cursor="view">
-  <div class="sf-edge"><span>▸ ${12+i*2}A</span><span class="live"><span class="rec" aria-hidden="true"></span><span class="ltc">${tcFrom(hash(p.id+"tc"+Math.max(0,c.k)))}</span></span><span class="yr">BVA · ${p.year}</span><span>${p.ratio}</span></div>
+  const frames=Array.from({length:STILLS_N},(_,k)=>frame(p.pal,stillSeed(p,k),{img:stillImg(p,k),cls:k?"":"on"})).join("");
+  return `<div class="sf" data-open="${p.id}" data-cursor="view">
+  <div class="sf-edge"><span>▸ ${12+i*2}A</span><span class="live"><span class="rec" aria-hidden="true"></span><span class="ltc">${tcFrom(hash(p.id+"tc0"))}</span></span><span class="yr">BVA · ${p.year}</span><span>${p.ratio}</span></div>
   <div class="screen"><div class="stack${tall}" style="aspect-ratio:${p.ar}">${frames}</div></div>
   <div class="sf-cap"><b>${esc(p.title)}</b><span class="mono">${typeName(p.type)} · ${rolesTxt(p)}</span></div></div>`;
 };
 const centerX=()=>stripEl.clientWidth/2-ST.step/2;
-function renderStrip(){ _renderStrip(); syncStripVideos(); }
-function _renderStrip(){
-  /* intercalats: un loop de cada projecte per torns */
-  const groups=viewItems.map(p=>p.stripVideos?p.stripVideos.map((_,k)=>({p,k})):[{p,k:-1}]);
-  ST.cards=[]; for(let r=0;r<Math.max(0,...groups.map(g=>g.length));r++) groups.forEach(g=>{ if(g[r]) ST.cards.push(g[r]); });
-  ST.n=ST.cards.length; const one=ST.cards.map(sfHTML).join("");
+function renderStrip(){
+  ST.n=viewItems.length; const one=viewItems.map(sfHTML).join("");
   stripTrack.innerHTML=one;
   ST.step=stripTrack.firstElementChild.getBoundingClientRect().width||600;
   ST.loopW=ST.step*ST.n;
@@ -903,10 +815,10 @@ function paintStrip(){
     if(d<bd){bd=d;best=kids[j];bi=j}
   }
   if(best!==ST.center){
-    if(ST.center){ ST.center.classList.remove("center"); if(!ST.center.hasAttribute("data-vids")) ST.center.querySelectorAll(".stack .frame").forEach((f,k)=>f.classList.toggle("on",k===0)); }
+    if(ST.center){ ST.center.classList.remove("center"); ST.center.querySelectorAll(".stack .frame").forEach((f,k)=>f.classList.toggle("on",k===0)); }
     ST.center=best; if(best) best.classList.add("center");
     const i=bi%ST.n; ST.centerI=i;
-    stripCount.textContent=`FRAME ${pad(i+1)} / ${pad(ST.n)} · ${ST.cards[i].p.title}`;
+    stripCount.textContent=`FRAME ${pad(i+1)} / ${pad(ST.n)} · ${viewItems[i].title}`;
   }
 }
 function stripTick(){
@@ -914,7 +826,7 @@ function stripTick(){
   if(!ST.visible||!ST.n||stripView.hidden) return;
   if(!ST.drag){
     if(ST.target!==null){ const d=ST.target-ST.x; ST.x+=d*.12; if(Math.abs(d)<.4){ST.x=ST.target;ST.target=null} }
-    else { ST.x+=ST.vel; ST.vel*=.93; if(Math.abs(ST.vel)<.05) ST.vel=0; if(!reduce&&!ST.hover&&!ST.vel) ST.x-=.9; }
+    else { ST.x+=ST.vel; ST.vel*=.93; if(Math.abs(ST.vel)<.05) ST.vel=0; if(!reduce&&!ST.hover&&!ST.vel) ST.x-=.35; }
   }
   paintStrip();
   if(!reduce || ST.drag || ST.target!==null || ST.vel) ST.raf=requestAnimationFrame(stripTick);
@@ -940,13 +852,9 @@ stripEl.addEventListener("keydown",e=>{ if(e.key==="ArrowRight"){e.preventDefaul
   if(e.key==="Enter"&&ST.center){e.preventDefault();openProject(ST.center.dataset.open)} });
 document.getElementById("stripPrev").addEventListener("click",()=>snapTo(-1));
 document.getElementById("stripNext").addEventListener("click",()=>snapTo(1));
-/* vídeos de la cinta: només es reprodueixen els que es veuen */
-const stripIO=("IntersectionObserver" in window)?new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;
-  if(e.isIntersecting){ if(v.paused) v.play().catch(()=>{}); } else if(!v.paused) v.pause(); }),{root:null,threshold:.05}):null;
-function syncStripVideos(){ document.querySelectorAll('.sf[data-vids] video').forEach(v=>{ if(stripIO) stripIO.observe(v); }); }
 /* el fotograma central "reprodueix": va passant els seus stills amb timecode */
 setInterval(()=>{
-  if(reduce||!ST.visible||!ST.center||ST.drag||stripView.hidden||ST.center.hasAttribute("data-vids")) return;
+  if(reduce||!ST.visible||!ST.center||ST.drag||stripView.hidden) return;
   const fr=ST.center.querySelectorAll(".stack .frame"); let k=[...fr].findIndex(f=>f.classList.contains("on")); k=(k+1)%fr.length;
   fr.forEach((f,j)=>f.classList.toggle("on",j===k));
   const p=byId(ST.center.dataset.open), l=ST.center.querySelector(".ltc"); if(l) l.textContent=tcFrom(hash(p.id+"tc"+k));
@@ -955,148 +863,23 @@ let rsz=null;
 addEventListener("resize",()=>{ clearTimeout(rsz); rsz=setTimeout(()=>{ if(viewItems.length) renderStrip(); },200)});
 
 /* ============ FOTOGRAFIES ============ */
-const fPhoto=document.getElementById("fPhoto"); let photoKind="all", shownPhotos=[], photoView="grid";
+const fPhoto=document.getElementById("fPhoto"); let photoKind="all", shownPhotos=[];
 const phSeed=f=>hash(L(f.title)+f.meta);
-const phItems=()=>shownPhotos.map(f=>({pal:f.pal,seed:phSeed(f),ar:f.ar,img:f.img,title:L(f.title),meta:f.meta}));
-const PH_HINT={dark:"Les còpies es revelen soles · passa el cursor per acabar de revelar-les · clica per ampliar",
-  table:"Arrossega les còpies per la taula · clica una còpia per ampliar-la",
-  shutter:"Prem el disparador o fes servir les fletxes ← → · clica la imatge per ampliar-la"};
-function exif(f){
-  const r=rng(phSeed(f)+77), nums=f.meta.match(/\d{3,4}/g);
-  return {sp:["1/60","1/125","1/250","1/500","1/30","1/1000"][Math.floor(r()*6)], fs:["F1.8","F2.8","F4","F5.6","F8"][Math.floor(r()*5)],
-    iso:nums?nums[nums.length-1]:[100,200,400,800][Math.floor(r()*4)], mm:[28,35,50,85][Math.floor(r()*4)], ev:Math.floor(r()*5)-2};
-}
 function renderPhotos(){
-  const kinds=["analog","digital"].filter(k=>PHOTOS.some(f=>f.kind===k));
-  fPhoto.innerHTML=kinds.length<2?"":[["all",t("photos.all")],...kinds.map(k=>[k,t("photos."+k)])].map(([k,v])=>`<button class="chip" data-kind="${k}" aria-pressed="${photoKind===k}">${v}</button>`).join("");
+  fPhoto.innerHTML=[["all",t("photos.all")],["analog",t("photos.analog")],["digital",t("photos.digital")]].map(([k,v])=>`<button class="chip" data-kind="${k}" aria-pressed="${photoKind===k}">${v}</button>`).join("");
   shownPhotos=PHOTOS.filter(f=>photoKind==="all"||f.kind===photoKind);
-  const v=photoView;
-  document.getElementById("photos").hidden=v!=="grid"; phDark.hidden=v!=="dark"; phTable.hidden=v!=="table"; phShutter.hidden=v!=="shutter";
-  const hint=document.getElementById("phHint"); hint.hidden=!PH_HINT[v]; hint.textContent=PH_HINT[v]||"";
-  if(v==="grid") document.getElementById("photos").innerHTML=shownPhotos.map((f,i)=>`
+  document.getElementById("photos").innerHTML=shownPhotos.map((f,i)=>`
     <figure class="photo ${f.kind}"><button data-photo="${i}" data-cursor="zoom" aria-label="${esc(L(f.title))}">
       <div class="pf" data-edge="${f.kind==="analog"?"▸ "+(12+i)+"A    "+f.meta.toUpperCase():""}">${frame(f.pal,phSeed(f),{ar:f.ar,img:f.img})}</div></button>
       <figcaption><span>${esc(L(f.title))}</span><span class="mono muted">${esc(f.meta)}</span></figcaption>
     </figure>`).join("");
-  if(v==="dark") renderDark();
-  if(v==="table") renderTable();
-  if(v==="shutter") renderCam();
 }
 fPhoto.addEventListener("click",e=>{const b=e.target.closest("[data-kind]");if(!b)return;photoKind=b.dataset.kind;renderPhotos()});
-document.getElementById("phViews").addEventListener("click",e=>{const b=e.target.closest("[data-pv]");if(!b)return;photoView=b.dataset.pv;
-  b.parentElement.querySelectorAll("[data-pv]").forEach(c=>c.setAttribute("aria-pressed",c===b)); renderPhotos();});
-document.getElementById("photos").addEventListener("click",e=>{const b=e.target.closest("[data-photo]");if(!b)return; openLb(phItems(),+b.dataset.photo)});
-const phDark=document.getElementById("phDark"), phTable=document.getElementById("phTable"), phShutter=document.getElementById("phShutter");
-
-/* --- 1 · Revelat --- */
-const darkEl=document.getElementById("dark"), darkRows=document.getElementById("darkRows");
-let darkSeen=false;
-function renderDark(){
-  const cols=innerWidth<700?2:(innerWidth<1100?3:4), SAG=26;
-  let html="";
-  for(let r0=0;r0<shownPhotos.length;r0+=cols){
-    const row=shownPhotos.slice(r0,r0+cols);
-    html+=`<div class="line"><svg class="wire" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 6 Q50 ${6+SAG*2} 100 6"/></svg>
-      <div class="line-prints" style="--cols:${cols}">${row.map((f,j)=>{
-        const i=r0+j, x=(j+.5+ .06*cols)/(cols+.12*cols), y=(6+SAG*4*x*(1-x))*40/40;
-        return `<button class="print" data-ph="${i}" data-cursor="zoom" aria-label="${esc(L(f.title))}" style="--y:${y.toFixed(1)}px;--d:${(-i*1.3).toFixed(1)}s;--sway:${(4+(i%3)*.8).toFixed(1)}s;--d2:${(i*.35).toFixed(2)}s">
-          <span class="pin"></span><span class="paper"><span class="ph" style="aspect-ratio:${f.ar}">${frame(f.pal,phSeed(f),{img:f.img})}</span>
-          <span class="pcap"><span>${esc(L(f.title))}</span><span class="mono">${esc(f.meta)}</span></span></span></button>`}).join("")}</div></div>`;
-  }
-  darkRows.innerHTML=html;
-  if(darkSeen) requestAnimationFrame(()=>requestAnimationFrame(()=>darkRows.querySelectorAll(".print").forEach(p=>p.classList.add("dev"))));
-}
-new IntersectionObserver(es=>{ if(es[0].isIntersecting&&!darkSeen){ darkSeen=true; darkRows.querySelectorAll(".print").forEach(p=>p.classList.add("dev")); } },{threshold:.25}).observe(darkEl);
-darkRows.addEventListener("click",e=>{const b=e.target.closest("[data-ph]");if(b) openLb(phItems(),+b.dataset.ph)});
-document.getElementById("lightBtn").addEventListener("click",e=>{
-  const w=darkEl.classList.toggle("white");
-  e.currentTarget.textContent=w?"Tornar a la llum de seguretat":"Encendre llum blanca";
-  document.getElementById("lightLbl").textContent=w?"Llum blanca":"Llum de seguretat";
-});
-
-/* --- 2 · Taula de còpies --- */
-const ptable=document.getElementById("ptable"); let tableSeed=1, tableZ=50;
-function renderTable(){
-  const W=ptable.clientWidth||1000, n=shownPhotos.length, cols=W<700?2:(W<1000?3:4);
-  const pw=W<700?W*.46:Math.min(W*.24,300), rows=Math.ceil(n/cols), rowH=pw*1.02;
-  const H=Math.max(420,rows*rowH+pw*.35+40); ptable.style.height=H+"px";
-  const r=rng(tableSeed*977+n);
-  ptable.innerHTML=shownPhotos.map((f,i)=>{
-    const col=i%cols, row=Math.floor(i/cols), cw=W/cols;
-    let x=(col+.5)*cw-pw/2+(r()-.5)*cw*.32, y=row*rowH+24+(r()-.5)*rowH*.28;
-    x=Math.max(8,Math.min(W-pw-8,x)); y=Math.max(10,y);
-    const rot=((r()-.5)*16).toFixed(1);
-    return `<div class="pr ${f.kind}" data-ph="${i}" data-cursor="zoom" style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;width:${pw.toFixed(0)}px;--r:${rot}deg;z-index:${i+1}">
-      <span class="pr-in" data-edge="${f.kind==="analog"?"▸ "+(12+i)+"A  "+f.meta.toUpperCase():""}"><span class="ph" style="aspect-ratio:${f.ar}">${frame(f.pal,phSeed(f),{img:f.img})}</span>
-      <span class="pr-cap"><span>${esc(L(f.title))}</span><span class="mono muted">${esc(f.meta)}</span></span></span></div>`}).join("");
-  document.getElementById("tableCount").textContent=`${pad(n)} ${n===1?"còpia":"còpies"}`;
-}
-let drag=null;
-ptable.addEventListener("pointerdown",e=>{
-  const p=e.target.closest(".pr"); if(!p||e.button!==0) return;
-  e.preventDefault();
-  drag={p,sx:e.clientX,sy:e.clientY,l:p.offsetLeft,t:p.offsetTop,moved:0};
-  p.style.zIndex=++tableZ; p.classList.add("lift"); try{p.setPointerCapture(e.pointerId)}catch(_){}
-});
-ptable.addEventListener("pointermove",e=>{
-  if(!drag) return; const dx=e.clientX-drag.sx, dy=e.clientY-drag.sy; drag.moved=Math.max(drag.moved,Math.abs(dx)+Math.abs(dy));
-  const W=ptable.clientWidth, H=ptable.clientHeight, p=drag.p;
-  p.style.left=Math.max(-p.offsetWidth*.3,Math.min(W-p.offsetWidth*.7,drag.l+dx))+"px";
-  p.style.top=Math.max(-p.offsetHeight*.3,Math.min(H-p.offsetHeight*.6,drag.t+dy))+"px";
-});
-const tableUp=()=>{ if(!drag) return; const d=drag; drag=null; d.p.classList.remove("lift"); if(d.moved<6) openLb(phItems(),+d.p.dataset.ph); };
-ptable.addEventListener("pointerup",tableUp); ptable.addEventListener("pointercancel",()=>{ if(drag){drag.p.classList.remove("lift");drag=null} });
-document.getElementById("tableShuffle").addEventListener("click",()=>{ tableSeed++; renderTable(); });
-
-/* --- 3 · Obturador --- */
-const camEl=document.getElementById("cam"), camImg=document.getElementById("camImg"), dialEl=document.getElementById("dial");
-const CAM={i:0,busy:false};
-/* diafragma hexagonal regular, calculat en píxels perquè no es deformi */
-function hexPoly(R,rot,W,H){ const pts=[]; for(let k=0;k<6;k++){ const a=(rot+k*60)*Math.PI/180; pts.push(`${(W/2+R*Math.cos(a)).toFixed(1)}px ${(H/2+R*Math.sin(a)).toFixed(1)}px`); } return `polygon(${pts.join(",")})`; }
-function renderCam(){
-  dialEl.innerHTML=shownPhotos.map((f,i)=>`<button data-cf="${i}" aria-label="${esc(L(f.title))}">${i+1}</button>`).join("");
-  CAM.i=0; CAM.busy=false; showCam(true);
-}
-function fitCam(){
-  const f=shownPhotos[CAM.i]; const ph=camImg.firstElementChild; if(!f||!ph) return;
-  const w=Math.min(camEl.clientWidth, camEl.clientHeight*f.ar); ph.style.width=w.toFixed(0)+"px";
-}
-function showCam(){
-  const f=shownPhotos[CAM.i]; if(!f) return; const x=exif(f);
-  camImg.innerHTML=`<div class="cam-ph" style="aspect-ratio:${f.ar}">${frame(f.pal,phSeed(f),{img:f.img})}</div>`; fitCam();
-  const meter=Array.from({length:9},(_,k)=>`<i class="${k===4+x.ev?"z":""}"></i>`).join("");
-  document.getElementById("lcd").innerHTML=`<span>${x.sp}</span><span>${x.fs}</span><span>ISO ${x.iso}</span><span>${x.mm} mm</span><span class="meter">−${meter}+</span><span>[${String(shownPhotos.length-CAM.i).padStart(2,"0")}]</span>`;
-  document.getElementById("camTitle").textContent=L(f.title);
-  document.getElementById("camMeta").textContent=f.meta;
-  dialEl.querySelectorAll("[data-cf]").forEach((b,k)=>b.classList.toggle("on",k===CAM.i));
-  const on=dialEl.querySelector(".on"); if(on) on.scrollIntoView({block:"nearest",inline:"center"});
-  camEl.setAttribute("aria-label",`Ampliar ${L(f.title)}`);
-  camEl.classList.remove("focus"); setTimeout(()=>camEl.classList.add("focus"),120); setTimeout(()=>camEl.classList.remove("focus"),900);
-}
-function fire(i){
-  const n=shownPhotos.length; if(!n||CAM.busy) return; i=((i%n)+n)%n;
-  const b=document.getElementById("shutterBtn"); b.classList.add("press"); setTimeout(()=>b.classList.remove("press"),140);
-  if(reduce||!camImg.animate){ CAM.i=i; showCam(); return; }
-  CAM.busy=true;
-  const W=camImg.clientWidth, H=camImg.clientHeight, R=Math.hypot(W,H)/2/0.866+8;
-  const IRIS_OPEN=hexPoly(R,0,W,H), IRIS_SHUT=hexPoly(0,55,W,H);
-  const a=camImg.animate([{clipPath:IRIS_OPEN},{clipPath:IRIS_SHUT}],{duration:170,easing:"cubic-bezier(.6,0,1,1)",fill:"forwards"});
-  a.onfinish=()=>{ CAM.i=i; showCam();
-    const o=camImg.animate([{clipPath:IRIS_SHUT},{clipPath:IRIS_OPEN}],{duration:280,delay:60,easing:"cubic-bezier(0,0,.25,1)",fill:"forwards"});
-    o.onfinish=()=>{ CAM.busy=false; o.cancel(); a.cancel(); }; };
-}
-document.getElementById("shutterBtn").addEventListener("click",()=>fire(CAM.i+1));
-dialEl.addEventListener("click",e=>{const b=e.target.closest("[data-cf]"); if(b&&+b.dataset.cf!==CAM.i) fire(+b.dataset.cf)});
-camEl.addEventListener("click",()=>openLb(phItems(),CAM.i));
-camEl.addEventListener("keydown",e=>{ if(e.key==="ArrowRight"){e.preventDefault();fire(CAM.i+1)} if(e.key==="ArrowLeft"){e.preventDefault();fire(CAM.i-1)} if(e.key==="Enter"||e.key===" "){e.preventDefault();camEl.click()} });
-
-let phRsz=null;
-addEventListener("resize",()=>{ clearTimeout(phRsz); phRsz=setTimeout(()=>{ if(photoView==="dark") renderDark(); if(photoView==="table") renderTable(); if(photoView==="shutter") fitCam(); },200); });
+document.getElementById("photos").addEventListener("click",e=>{const b=e.target.closest("[data-photo]");if(!b)return;
+  openLb(shownPhotos.map(f=>({pal:f.pal,seed:phSeed(f),ar:f.ar,img:f.img,title:L(f.title),meta:f.meta})),+b.dataset.photo)});
 
 /* ============ BTS ============ */
 function renderBts(){
-  const none=!BTS.length; document.getElementById("bts").style.display=none?"none":"";
-  const nl=document.querySelector('.nav a[href="#bts"]'); if(nl) nl.style.display=none?"none":"";
   document.getElementById("btsGrid").innerHTML=BTS.map((b,i)=>{const p=byId(b.p);return `
     <figure data-cursor="color">${frame(p.pal,hash(b.p+"bts"+i),{img:b.img})}
     <figcaption><b>${esc(p.title)}</b> · ${esc(L(b.c))}</figcaption></figure>`}).join("");
@@ -1113,12 +896,22 @@ document.getElementById("rolesGrid").addEventListener("click",e=>{const b=e.targ
   state.role=b.dataset.roleJump; state.type="all"; renderFilters(); renderWork();
   document.getElementById("treballs").scrollIntoView({behavior:reduce?"auto":"smooth"})});
 
+/* ============ OBTURADOR (diafragma hexagonal reutilitzable) ============ */
+function hexPoly(R,rot,W,H){ const pts=[]; for(let k=0;k<6;k++){ const a=(rot+k*60)*Math.PI/180; pts.push(`${(W/2+R*Math.cos(a)).toFixed(1)}px ${(H/2+R*Math.sin(a)).toFixed(1)}px`); } return `polygon(${pts.join(",")})`; }
+/* open=true: el diafragma s'obre; open=false: es tanca */
+function iris(el,open,dur,delay=0){
+  const W=el.clientWidth, H=el.clientHeight, R=Math.hypot(W,H)/2/0.866+8, shut=hexPoly(0,55,W,H), full=hexPoly(R,0,W,H);
+  return el.animate([{clipPath:open?shut:full},{clipPath:open?full:shut}],
+    {duration:dur,delay,easing:open?"cubic-bezier(0,0,.25,1)":"cubic-bezier(.6,0,1,1)",fill:"both"});
+}
+const canIris=el=>!reduce&&el&&el.animate;
+
 /* ============ FITXA DE PROJECTE ============ */
 const sheet=document.getElementById("sheet"); let lastFocus=null, currentId=null;
 function openProject(id){
   const p=byId(id); if(!p) return; currentId=id;
   const i=PROJECTS.indexOf(p), next=PROJECTS[(i+1)%PROJECTS.length];
-  const stills=Array.from({length:nStills(p)},(_,k)=>`<figure><button data-still="${k+1}" data-cursor="zoom" aria-label="Still ${k+1}">${frame(p.pal,stillSeed(p,k+1),{ar:p.ar,img:sheetStill(p,k),tag:"STILL "+pad(k+1)})}</button>
+  const stills=Array.from({length:5},(_,k)=>`<figure><button data-still="${k+1}" data-cursor="zoom" aria-label="Still ${k+1}">${frame(p.pal,stillSeed(p,k+1),{ar:p.ar,img:stillImg(p,k+1),tag:"STILL "+pad(k+1)})}</button>
       <figcaption class="mono muted">TC ${tcFrom(hash(p.id+"tc"+(k+1)))}</figcaption></figure>`).join("");
   const mk=Array.from({length:4},(_,k)=>`<figure data-cursor="color">${frame(p.pal,hash(p.id+"mk"+k),{img:p.bts&&p.bts[k]})}</figure>`).join("");
   sheet.innerHTML=`
@@ -1129,11 +922,11 @@ function openProject(id){
     <div class="wrap">
       <div class="sheet-head"><h2 class="sheet-title" id="sheetTitle">${esc(p.title)}</h2>
         <p class="mono muted">${esc(L(p.length))} · ${p.year} · ${p.ratio}</p></div>
-      <div class="sheet-hero"><div class="screen corners"${(p.sheetVideo||p.video)?` style="aspect-ratio:${p.ar}"`:""}>${frame(p.pal,stillSeed(p,0),{img:p.sheetPoster||stillImg(p,0),video:p.sheetVideo||p.video})}</div></div>
+      <div class="sheet-hero"><div class="screen corners">${frame(p.pal,stillSeed(p,0),{img:stillImg(p,0)})}</div></div>
       <div class="sheet-info">
         <div>
           <p class="lede">${esc(L(p.log))}</p>
-          <div class="reel"><div class="screen"${p.reelVideo?` style="aspect-ratio:${p.ar}"`:""}>${frame(p.pal,hash(p.id+"reel"),{img:p.reelPoster,video:p.reelVideo})}
+          <div class="reel"><div class="screen">${frame(p.pal,hash(p.id+"reel"))}
             <a class="play mono" href="${p.vimeo||"https://vimeo.com/"}" target="_blank" rel="noopener"><i aria-hidden="true"></i>${t("sheet.trailer")}</a></div></div>
         </div>
         <dl class="spec">
@@ -1153,7 +946,7 @@ function openProject(id){
       <button class="next" data-next="${next.id}"><span class="mono muted">${t("sheet.next")}</span><b>${esc(next.title)} →</b></button>
     </div>`;
   if(sheet.hidden){lastFocus=document.activeElement; sheet.hidden=false; document.documentElement.style.overflow="hidden";}
-  else { sheet.style.animation="none"; void sheet.offsetWidth; sheet.style.animation=""; }
+  if(canIris(sheet)){ const a=iris(sheet,true,560); a.onfinish=()=>a.cancel(); }
   sheet.scrollTop=0; hideReticle();
   document.getElementById("closeSheet").focus();
 }
@@ -1162,28 +955,46 @@ sheet.addEventListener("click",e=>{
   if(e.target.closest("#closeSheet")) return closeSheet();
   const n=e.target.closest("[data-next]"); if(n){e.stopPropagation(); openProject(n.dataset.next); return;}
   const s=e.target.closest("[data-still]"); if(s){const p=byId(currentId);
-    openLb(Array.from({length:nStills(p)},(_,k)=>({pal:p.pal,seed:stillSeed(p,k+1),ar:p.ar,img:sheetStill(p,k),title:`${p.title} · Still ${pad(k+1)}`,meta:"TC "+tcFrom(hash(p.id+"tc"+(k+1)))})),+s.dataset.still-1)}
+    openLb(Array.from({length:5},(_,k)=>({pal:p.pal,seed:stillSeed(p,k+1),ar:p.ar,img:stillImg(p,k+1),title:`${p.title} · Still ${pad(k+1)}`,meta:"TC "+tcFrom(hash(p.id+"tc"+(k+1)))})),+s.dataset.still-1)}
 });
 
-/* ============ LIGHTBOX ============ */
-const lb=document.getElementById("lb"); let lbItems=[], lbI=0, lbFocus=null;
+/* ============ LIGHTBOX (amb obturador) ============ */
+const lb=document.getElementById("lb"); let lbItems=[], lbI=0, lbFocus=null, lbBusy=false;
+function lbFig(){
+  const it=lbItems[lbI], ar=it.ar||1.5;
+  return `<figure style="width:min(100%, calc((100vh - 170px) * ${ar}))"><div class="lb-img">${frame(it.pal,it.seed,{ar,img:it.img})}</div>
+    <figcaption><span>${esc(it.title)}</span><span class="mono muted">${pad(lbI+1)} / ${pad(lbItems.length)} · ${esc(it.meta)}</span></figcaption></figure>`;
+}
 function drawLb(){
-  const it=lbItems[lbI]; const ar=it.ar||1.5;
-  const w=`min(100%, calc((100vh - 170px) * ${ar}))`;
-  lb.innerHTML=`<button class="lb-btn lb-close" data-lb="close">${t("lb.close")}</button>
-    <figure style="width:${w}">${frame(it.pal,it.seed,{ar,img:it.img})}
-    <figcaption><span>${esc(it.title)}</span><span class="mono muted">${pad(lbI+1)} / ${pad(lbItems.length)} · ${esc(it.meta)}</span></figcaption></figure>
+  lb.innerHTML=`<button class="lb-btn lb-close" data-lb="close">${t("lb.close")}</button><div class="lb-stage" id="lbStage">${lbFig()}</div><div class="lb-flash"></div>
     ${lbItems.length>1?`<button class="lb-btn lb-prev" data-lb="prev">${t("lb.prev")}</button><button class="lb-btn lb-next" data-lb="next">${t("lb.next")}</button>`:""}`;
 }
-function openLb(items,i){lbItems=items;lbI=i;lbFocus=document.activeElement;lb.hidden=false;document.documentElement.style.overflow="hidden";drawLb();hideReticle();lb.querySelector(".lb-close").focus()}
-function closeLb(){lb.hidden=true;if(sheet.hidden)document.documentElement.style.overflow="";if(lbFocus)lbFocus.focus()}
+function openLb(items,i){
+  lbItems=items; lbI=i; lbFocus=document.activeElement; lb.hidden=false; document.documentElement.style.overflow="hidden";
+  drawLb(); hideReticle(); lb.querySelector(".lb-close").focus();
+  const img=lb.querySelector(".lb-img"); if(canIris(img)) iris(img,true,420,60);
+}
+/* canviar de foto = disparar: el diafragma es tanca, canvia la imatge i s'obre */
+function stepLb(d){
+  if(lbBusy||lbItems.length<2) return;
+  lbI=(lbI+d+lbItems.length)%lbItems.length;
+  const stage=document.getElementById("lbStage"), img=stage.querySelector(".lb-img");
+  if(!canIris(img)){ stage.innerHTML=lbFig(); return; }
+  lbBusy=true;
+  iris(img,false,170).onfinish=()=>{
+    stage.innerHTML=lbFig();
+    const f=lb.querySelector(".lb-flash"); f.classList.remove("on"); void f.offsetWidth; f.classList.add("on");
+    const n=stage.querySelector(".lb-img"), o=iris(n,true,300,50);
+    o.onfinish=()=>{ lbBusy=false; o.cancel(); };
+  };
+}
+function closeLb(){lb.hidden=true;lbBusy=false;if(sheet.hidden)document.documentElement.style.overflow="";if(lbFocus)lbFocus.focus()}
 lb.addEventListener("click",e=>{const b=e.target.closest("[data-lb]");
-  if(!b){ if(e.target===lb) closeLb(); return; }
-  if(b.dataset.lb==="close") closeLb();
-  else { lbI=(lbI+(b.dataset.lb==="next"?1:-1)+lbItems.length)%lbItems.length; drawLb(); lb.querySelector(`[data-lb="${b.dataset.lb}"]`).focus(); }
+  if(!b){ if(e.target===lb||e.target.id==="lbStage") closeLb(); return; }
+  if(b.dataset.lb==="close") closeLb(); else stepLb(b.dataset.lb==="next"?1:-1);
 });
 document.addEventListener("keydown",e=>{
-  if(!lb.hidden){ if(e.key==="Escape")closeLb(); if(e.key==="ArrowRight"){lbI=(lbI+1)%lbItems.length;drawLb()} if(e.key==="ArrowLeft"){lbI=(lbI-1+lbItems.length)%lbItems.length;drawLb()} return; }
+  if(!lb.hidden){ if(e.key==="Escape")closeLb(); if(e.key==="ArrowRight")stepLb(1); if(e.key==="ArrowLeft")stepLb(-1); return; }
   if(!sheet.hidden && e.key==="Escape") closeSheet();
   if(introRunning && e.key==="Escape") endIntro();
 });
@@ -1271,11 +1082,7 @@ function playIntro(){
   /* còpia desenfocada de la imatge actual */
   if(blurLayer) blurLayer.remove();
   const p=featured[heroI]; blurLayer=document.createElement("div"); blurLayer.className="blur-layer";
-  if(heroVideo){
-    blurLayer.innerHTML=`<video src="${heroVideo.getAttribute("src")}" poster="${heroVideo.getAttribute("poster")}" autoplay muted loop playsinline aria-hidden="true"></video>`;
-    const bv=blurLayer.firstChild; try{ bv.currentTime=heroVideo.currentTime }catch(_){} bv.play().catch(()=>{});
-  } else blurLayer.innerHTML=frame(p.pal,stillSeed(p,0),{img:stillImg(p,0)});
-  slidesEl.after(blurLayer);
+  blurLayer.innerHTML=frame(p.pal,stillSeed(p,0),{img:stillImg(p,0)}); slidesEl.after(blurLayer);
   /* FLIP: el monitor es queda al seu lloc i s'amplia amb transform fins a cobrir la pantalla */
   heroEl.classList.remove("landing");
   const r=heroSlot.getBoundingClientRect(), W=innerWidth, H=Math.min(innerHeight,(window.screen&&screen.height)||innerHeight);
