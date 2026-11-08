@@ -145,9 +145,6 @@ html,body{overflow-x:clip}
 @keyframes sflash{0%{opacity:.45}100%{opacity:0}}
 .intro-black{position:fixed;inset:0;z-index:124;background:#000;opacity:0;pointer-events:none;transition:opacity .5s ease}
 .intro-wait .intro-black{opacity:1;transition:none}
-.skip{position:fixed;z-index:130;left:50%;transform:translateX(-50%);top:max(18px,calc(env(safe-area-inset-top,0px) + 14px));padding:8px 12px;border:1px solid rgba(255,255,255,.35);color:#fff;background:rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .3s}
-.intro-on:not(.settle) .skip{opacity:1;pointer-events:auto}
-.skip:hover{background:#fff;color:#000}
 #slides{position:absolute;inset:0;transition:transform .6s ease-out}
 .slide{position:absolute;inset:-3%;opacity:0;transition:opacity 1.3s ease}
 .slide.on{opacity:1}
@@ -339,6 +336,60 @@ html{scroll-snap-type:y proximity}
 @media (max-width:900px){.pb{grid-template-columns:1fr}.pb-side{position:static}}
 
 
+
+/* ===================== PROPOSTES FOTOGRAFIES (selector temporal) ===================== */
+.ph-views{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:-6px 0 22px}
+.ph-views .vsep{color:var(--tungsten);padding:0 6px 0 14px}
+.ph-views .prop{border-color:rgba(210,156,92,.35)}
+
+/* 1 · Full de contactes: un rotllo per projecte */
+.cs-sheet{background:#151311;border:1px solid var(--line);padding:clamp(16px,3vw,36px);display:flex;flex-direction:column;gap:clamp(22px,3vw,36px)}
+.cs-head{display:flex;justify-content:space-between;gap:12px;color:var(--muted)}
+.cs-roll .lbl{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;color:var(--muted)}
+.cs-roll .lbl b{color:var(--paper);font-family:var(--f-display);font-weight:800;text-transform:uppercase;font-size:1.3rem;letter-spacing:.02em}
+.cs-strip{position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:6px;background:#0a0807;padding:26px 6px 30px}
+.cs-strip::before,.cs-strip::after{content:"";position:absolute;left:0;right:0;height:10px;background:repeating-linear-gradient(90deg,transparent 0 8px,rgba(242,234,218,.78) 8px 19px,transparent 19px 27px)}
+.cs-strip::before{top:8px}.cs-strip::after{bottom:8px}
+.cs-fr{position:relative;display:block;width:100%;text-align:left}
+.cs-fr .frame{filter:saturate(.7) brightness(.9);transition:filter .3s}
+.cs-fr:hover .frame{filter:none}
+.cs-fr .no{position:absolute;left:2px;bottom:-21px;font-family:var(--f-mono);font-size:.56rem;letter-spacing:.18em;color:#d9893a}
+.cs-fr svg{position:absolute;left:-7%;top:-14%;width:114%;height:128%;overflow:visible;pointer-events:none;z-index:2}
+.cs-fr svg path{fill:none;stroke:#d7352b;stroke-width:1.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset .55s cubic-bezier(.4,0,.2,1),opacity .1s}
+.cs-fr:hover svg path,.cs-fr:focus-visible svg path{stroke-dashoffset:0;opacity:1}
+@media (max-width:700px){.cs-strip{grid-template-columns:1fr;padding:24px 6px 24px}.cs-fr .no{bottom:auto;top:4px;left:auto;right:6px}}
+
+/* 2 · Projector de diapositives */
+.sp{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.sp-screen{position:relative;background:radial-gradient(ellipse at 50% 45%,#2a2622,#0c0b0a 75%);padding:clamp(18px,4vw,48px);display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;align-items:center;overflow:hidden;cursor:zoom-in;border:1px solid var(--line)}
+.sp-mount{position:relative;background:#e9e3d8;padding:clamp(10px,1.6vw,18px) clamp(10px,1.6vw,18px) clamp(26px,3vw,38px);box-shadow:0 20px 60px rgba(0,0,0,.6);width:min(100%,calc((100svh - 330px) * var(--ar)));max-width:100%}
+.sp-mount .frame{border-radius:2px}
+.sp-mount .note{position:absolute;left:clamp(10px,1.6vw,18px);right:clamp(10px,1.6vw,18px);bottom:clamp(6px,.9vw,11px);display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.62rem;letter-spacing:.14em;color:#4a443c;text-transform:uppercase}
+.sp-lamp{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.sp-hud{position:absolute;left:14px;right:14px;top:10px;display:flex;justify-content:space-between;color:var(--muted);font-variant-numeric:tabular-nums;pointer-events:none}
+.sp-tray{display:flex;gap:10px;overflow-x:auto;padding:6px 2px 10px;scrollbar-width:thin}
+.sp-tray button{flex:none;width:clamp(96px,11vw,150px);background:#d9d2c5;padding:6px 6px 14px;opacity:.55;transition:opacity .2s,transform .25s;position:relative}
+.sp-tray button span{position:absolute;left:6px;bottom:2px;font-family:var(--f-mono);font-size:.5rem;letter-spacing:.12em;color:#4a443c}
+.sp-tray button:hover{opacity:.85}
+.sp-tray button.on{opacity:1;transform:translateY(-6px)}
+.sp-ctl{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.sp-ctl .mono{color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* 3 · Enfocament: files justificades per projecte; el focus va a la foto que mires */
+.rf{display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)}
+.rf-g h3{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 12px;font-weight:400}
+.rf-g h3 b{font-family:var(--f-display);font-weight:800;text-transform:uppercase;font-size:clamp(1.4rem,2.4vw,2rem)}
+.rf-g h3 .mono{color:var(--muted)}
+.rf-row{display:flex;gap:clamp(8px,1vw,14px)}
+.rf-it{position:relative;flex:var(--ar) 1 0;min-width:0;display:block;text-align:left;overflow:hidden}
+.rf-it .frame{transition:filter .45s ease,transform .6s ease}
+.rf-it .cap{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:10px;padding:26px 12px 10px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s;font-variant-numeric:tabular-nums}
+.rf-row:hover .rf-it .frame{filter:blur(5px) brightness(.55) saturate(.7)}
+.rf-row:hover .rf-it:hover .frame{filter:none;transform:scale(1.02)}
+.rf-it:hover .cap{opacity:1;transform:none}
+@media (max-width:700px){.rf-row{flex-direction:column}.rf-it{flex:none;width:100%}.rf-row:hover .rf-it .frame{filter:none}}
+@media (hover:none){.rf-it .cap{opacity:1;transform:none}}
+
 /* fotografies */
 .photos{columns:3 280px;column-gap:20px}
 .photo{break-inside:avoid;margin:0 0 20px}
@@ -440,7 +491,6 @@ footer button:hover{color:var(--paper)}
 
 <div class="intro-black" aria-hidden="true"></div>
 <div class="intro-stage" id="introStage" aria-hidden="true"><div id="introTitle"></div><div class="shutter-flash"></div></div>
-<button class="skip mono" id="skipIntro" data-i18n="intro.skip">Saltar intro</button>
 
 <header class="site-head">
   <div class="wrap head-in">
@@ -452,7 +502,7 @@ footer button:hover{color:var(--paper)}
       <a href="#sobre" data-i18n="nav.about">Sobre mi</a>
       <a href="#contacte" data-i18n="nav.contact">Contacte</a>
     </nav>
-    <div class="lang-sw" role="group" aria-label="Idioma"><span>LANG</span><div class="track"><span class="knob" id="swKnob"></span><button data-lang="ca" aria-pressed="true">CA</button><button data-lang="es" aria-pressed="false">ES</button><button data-lang="en" aria-pressed="false">EN</button></div></div><button class="knob" id="dialKnob" aria-label="Canviar idioma"><i id="dialNeedle"></i></button></div>
+    <div class="lang-sw" role="group" aria-label="Idioma"><span>LANG</span><div class="track"><span class="knob" id="swKnob"></span><button data-lang="ca" aria-pressed="true">CA</button><button data-lang="es" aria-pressed="false">ES</button><button data-lang="en" aria-pressed="false">EN</button></div></div>
     <button class="menu-btn mono" id="menuBtn" aria-expanded="false" aria-controls="nav" data-i18n="menu">Menú</button>
   </div>
   <div class="head-progress" id="progress"></div>
@@ -524,7 +574,15 @@ footer button:hover{color:var(--paper)}
   <section class="sec" id="fotografies">
     <div class="wrap">
       <div class="sec-head"><h2 data-i18n="photos.title"></h2><div class="frow" id="fPhoto"></div></div>
+      <div class="ph-views" id="phViews" role="group" aria-label="Propostes">
+        <button class="chip" data-pv="grid" aria-pressed="true">Actual</button>
+        <span class="vsep mono">Propostes →</span>
+        <button class="chip prop" data-pv="cs" aria-pressed="false">1 · Contactes</button>
+        <button class="chip prop" data-pv="sp" aria-pressed="false">2 · Diapositives</button>
+        <button class="chip prop" data-pv="rf" aria-pressed="false">3 · Enfocament</button>
+      </div>
       <div class="photos" id="photos"></div>
+      <div id="phAlt" hidden></div>
     </div>
   </section>
 
@@ -593,7 +651,7 @@ footer button:hover{color:var(--paper)}
 const I18N = {
  ca:{ "hint.mv":"Fes scroll per passar els loops de cada projecte · clica'n un per obrir-lo","hint.strip":"Arrossega la tira o fes servir les fletxes · clica un fotograma per obrir el projecte",
   "nav.work":"Treballs","nav.photos":"Fotografies","nav.bts":"BTS","nav.about":"Sobre mi","nav.contact":"Contacte",
-  "menu":"Menú","menu.close":"Tancar","intro.skip":"Saltar intro","replay":"▶ Tornar a veure la intro",
+  "menu":"Menú","menu.close":"Tancar","replay":"▶ Tornar a veure la intro",
   "hero.roles":"Director de fotografia · Operador de càmera · Ajudant de càmera","hero.loc":"Barcelona — disponible arreu",
   "intro.kicker":"Ficció · Documental · Outdoor · Publicitat",
   "intro.lede":"Treballo darrere la càmera, de l'estudi fins a la <em>muntanya</em>, el <em>bosc</em> o la <em>platja</em>. La llum es busca on hi ha la història.",
@@ -618,7 +676,7 @@ const I18N = {
   "tag.portrait":"FOTO PERFIL · BOI A CÀMERA","tag.set":"FOTO · BOI AL SET","open":"Obrir" },
  es:{ "hint.mv":"Haz scroll para pasar los loops de cada proyecto · clica uno para abrirlo","hint.strip":"Arrastra la tira o usa las flechas · clica un fotograma para abrir el proyecto",
   "nav.work":"Trabajos","nav.photos":"Fotografías","nav.bts":"BTS","nav.about":"Sobre mí","nav.contact":"Contacto",
-  "menu":"Menú","menu.close":"Cerrar","intro.skip":"Saltar intro","replay":"▶ Volver a ver la intro",
+  "menu":"Menú","menu.close":"Cerrar","replay":"▶ Volver a ver la intro",
   "hero.roles":"Director de fotografía · Operador de cámara · Ayudante de cámara","hero.loc":"Barcelona — disponible en todo el mundo",
   "intro.kicker":"Ficción · Documental · Outdoor · Publicidad",
   "intro.lede":"Trabajo detrás de la cámara, del estudio a la <em>montaña</em>, el <em>bosque</em> o la <em>playa</em>. La luz se busca donde está la historia.",
@@ -643,7 +701,7 @@ const I18N = {
   "tag.portrait":"FOTO PERFIL · BOI EN CÁMARA","tag.set":"FOTO · BOI EN EL SET","open":"Abrir" },
  en:{ "hint.mv":"Scroll to run through each project's loops · click one to open it","hint.strip":"Drag the strip or use the arrows · click a frame to open the project",
   "nav.work":"Work","nav.photos":"Photography","nav.bts":"BTS","nav.about":"About","nav.contact":"Contact",
-  "menu":"Menu","menu.close":"Close","intro.skip":"Skip intro","replay":"▶ Replay intro",
+  "menu":"Menu","menu.close":"Close","replay":"▶ Replay intro",
   "hero.roles":"Cinematographer · Camera operator · Camera assistant","hero.loc":"Barcelona — available worldwide",
   "intro.kicker":"Fiction · Documentary · Outdoor · Commercial",
   "intro.lede":"I work behind the camera, from the studio to the <em>mountains</em>, the <em>forest</em> or the <em>beach</em>. You look for the light where the story is.",
@@ -780,7 +838,7 @@ function startHero(){ if(heroVideo){ setVideoCap(); return; } renderTabs(); setC
 function stopHero(){ clearTimeout(heroTimer); }
 tabsEl.addEventListener("click",e=>{const b=e.target.closest("[data-slide]");if(b)goSlide(+b.dataset.slide)});
 const heroScreen=document.getElementById("heroScreen");
-heroScreen.addEventListener("click",()=>{ if(introRunning) return endIntro(); openProject(heroVideo?"la-primera-noche":featured[heroI].id) });
+heroScreen.addEventListener("click",()=>{ if(introRunning) return; openProject(heroVideo?"la-primera-noche":featured[heroI].id) });
 heroScreen.addEventListener("keydown",e=>{
   if(e.key==="Enter"||e.key===" "){e.preventDefault();openProject(heroVideo?"la-primera-noche":featured[heroI].id)}
   if(e.key==="ArrowRight")goSlide(heroI+1); if(e.key==="ArrowLeft")goSlide(heroI-1);
@@ -1050,10 +1108,66 @@ function renderPhotos(){
       <div class="pf" data-edge="${f.kind==="analog"?"▸ "+(12+i)+"A    "+f.meta.toUpperCase():""}">${frame(f.pal,phSeed(f),{ar:f.ar,img:f.img})}</div></button>
       <figcaption><span>${esc(L(f.title))}</span><span class="mono muted">${esc(f.meta)}</span></figcaption>
     </figure>`).join("");
+  if(typeof phView!=="undefined"&&phView!=="grid") renderPhAlt();
 }
 fPhoto.addEventListener("click",e=>{const b=e.target.closest("[data-kind]");if(!b)return;photoKind=b.dataset.kind;renderPhotos()});
 document.getElementById("photos").addEventListener("click",e=>{const b=e.target.closest("[data-photo]");if(!b)return;
   openLb(shownPhotos.map(f=>({pal:f.pal,seed:phSeed(f),ar:f.ar,img:f.img,title:L(f.title),meta:f.meta})),+b.dataset.photo)});
+
+
+/* ============ PROPOSTES FOTOGRAFIES ============ */
+let phView="grid";
+const phAlt=document.getElementById("phAlt");
+const phGroups=()=>{ const g=[]; shownPhotos.forEach((f,i)=>{ const t0=L(f.title); let x=g.find(z=>z.t===t0); if(!x){x={t:t0,items:[]};g.push(x)} x.items.push({f,i}); }); return g; };
+const phItemsLb=()=>shownPhotos.map(f=>({pal:f.pal,seed:phSeed(f),ar:f.ar,img:f.img,title:L(f.title),meta:f.meta}));
+const GPATH='<svg viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M52 5 C80 3 97 15 96 30 C95 48 70 57 46 56 C20 55 3 45 4 29 C5 13 28 4 60 7"/></svg>';
+function renderPhAlt(){
+  const v=phView; document.getElementById("photos").hidden=v!=="grid"; phAlt.hidden=v==="grid";
+  clearInterval(SP.timer); if(v==="grid"){ phAlt.innerHTML=""; return; }
+  const G=phGroups();
+  if(v==="cs"){
+    let no=0;
+    phAlt.innerHTML=`<div class="cs-sheet"><div class="cs-head mono"><span>${({ca:"Full de contactes",es:"Hoja de contactos",en:"Contact sheet"})[lang]}</span><span>BVA · ${pad(shownPhotos.length)} ${({ca:"fotogrames",es:"fotogramas",en:"frames"})[lang]}</span></div>
+      ${G.map((g,r)=>`<div class="cs-roll"><div class="lbl mono"><b>${esc(g.t)}</b><span>ROLL ${pad(r+1)} · ${g.items[0].f.meta}</span></div>
+        <div class="cs-strip" style="--n:${g.items.length}">${g.items.map(({f,i})=>`<button class="cs-fr" data-ph="${i}" data-cursor="zoom" aria-label="${esc(L(f.title))}">${frame(f.pal,phSeed(f),{ar:f.ar,img:f.img})}${GPATH}<span class="no">▸ ${++no}${r?"B":"A"}</span></button>`).join("")}</div></div>`).join("")}</div>`;
+  }
+  if(v==="sp"){ SP.i=0; phAlt.innerHTML=`<div class="sp"><div class="sp-screen" id="spScreen" data-cursor="zoom"><div class="sp-hud mono"><span id="spNo"></span><span>${({ca:"Projector",es:"Proyector",en:"Projector"})[lang]} · Carousel</span></div><div id="spSlot" style="width:100%;display:grid;justify-items:center"></div><div class="sp-lamp" id="spLamp"></div></div>
+      <div class="sp-tray" id="spTray">${shownPhotos.map((f,i)=>`<button data-sp="${i}" aria-label="${esc(L(f.title))}">${frame(f.pal,phSeed(f),{ar:f.ar,img:f.img})}<span>${pad(i+1)}</span></button>`).join("")}</div>
+      <div class="sp-ctl"><span class="mono" id="spCap"></span><div class="ctl-btns"><button class="btn" id="spPrev" aria-label="Anterior">←</button><button class="btn" id="spNext" aria-label="Següent">→</button></div></div></div>`;
+    spShow(0,true); spAuto(); }
+  if(v==="rf"){
+    phAlt.innerHTML=`<div class="rf">${G.map(g=>`<div class="rf-g"><h3><b>${esc(g.t)}</b><span class="mono">${pad(g.items.length)} · ${g.items[0].f.meta}</span></h3>
+      <div class="rf-row">${g.items.map(({f,i},k)=>`<button class="rf-it" data-ph="${i}" data-cursor="zoom" style="--ar:${f.ar}" aria-label="${esc(L(f.title))}">${frame(f.pal,phSeed(f),{ar:f.ar,img:f.img})}<span class="cap mono"><span>${pad(k+1)} / ${pad(g.items.length)}</span><span>${f.meta}</span></span></button>`).join("")}</div></div>`).join("")}</div>`;
+  }
+}
+/* projector de diapositives: la diapositiva baixa, la làmpada s'apaga un instant i puja la següent */
+const SP={i:0,timer:0,busy:false};
+function spShow(i,instant){
+  const n=shownPhotos.length; if(!n) return; i=((i%n)+n)%n;
+  const f=shownPhotos[i], slot=document.getElementById("spSlot"), lamp=document.getElementById("spLamp"); if(!slot) return;
+  const html=`<div class="sp-mount" style="--ar:${f.ar}">${frame(f.pal,phSeed(f),{ar:f.ar,img:f.img})}<div class="note"><span>${esc(L(f.title))}</span><span>${pad(i+1)} · BVA</span></div></div>`;
+  const set=()=>{ slot.innerHTML=html; SP.i=i;
+    document.getElementById("spNo").textContent=`${pad(i+1)} / ${pad(n)}`;
+    document.getElementById("spCap").textContent=`${L(f.title)} · ${f.meta}`;
+    document.querySelectorAll("#spTray [data-sp]").forEach(b=>b.classList.toggle("on",+b.dataset.sp===i));
+    const on=document.querySelector("#spTray .on"); if(on&&on.scrollIntoView) on.parentElement.scrollTo({left:on.offsetLeft-on.parentElement.clientWidth/2+on.offsetWidth/2,behavior:"smooth"}); };
+  if(instant||reduce||!slot.animate||!slot.firstChild){ set(); return; }
+  if(SP.busy) return; SP.busy=true;
+  slot.animate([{transform:"none"},{transform:"translateY(110%)"}],{duration:260,easing:"cubic-bezier(.6,0,1,1)",fill:"forwards"});
+  lamp.animate([{opacity:0},{opacity:.85},{opacity:.85},{opacity:0}],{duration:620,easing:"linear"});
+  setTimeout(()=>{ set(); const a=slot.animate([{transform:"translateY(-110%)"},{transform:"none"}],{duration:300,easing:"cubic-bezier(0,0,.2,1)",fill:"forwards"}); a.onfinish=()=>{SP.busy=false}; },300);
+}
+function spAuto(){ clearInterval(SP.timer); if(reduce) return; SP.timer=setInterval(()=>{ const sc=document.getElementById("spScreen"); if(!sc) return clearInterval(SP.timer);
+  const r=sc.getBoundingClientRect(); if(r.bottom>0&&r.top<innerHeight&&!sc.matches(":hover")&&sheet.hidden&&lb.hidden) spShow(SP.i+1); },4200); }
+phAlt.addEventListener("click",e=>{
+  const ph=e.target.closest("[data-ph]"); if(ph){ openLb(phItemsLb(),+ph.dataset.ph); return; }
+  const sp=e.target.closest("[data-sp]"); if(sp){ spShow(+sp.dataset.sp); spAuto(); return; }
+  if(e.target.closest("#spPrev")){ spShow(SP.i-1); spAuto(); return; }
+  if(e.target.closest("#spNext")){ spShow(SP.i+1); spAuto(); return; }
+  if(e.target.closest("#spScreen")) openLb(phItemsLb(),SP.i);
+});
+document.getElementById("phViews").addEventListener("click",e=>{ const b=e.target.closest("[data-pv]"); if(!b) return; phView=b.dataset.pv;
+  b.parentElement.querySelectorAll("[data-pv]").forEach(x=>x.setAttribute("aria-pressed",x===b)); renderPhAlt(); });
 
 /* ============ BTS ============ */
 function renderBts(){
@@ -1286,7 +1400,6 @@ function playIntro(){
     });
   });
 }
-document.getElementById("skipIntro").addEventListener("click",e=>{e.stopPropagation();endIntro()});
 addEventListener("resize",()=>{if(introRunning)endIntro()});
 
 document.getElementById("replay").addEventListener("click",()=>playIntro());
