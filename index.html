@@ -868,7 +868,9 @@ const sfHTML=(c,i)=>{
 const centerX=()=>stripEl.clientWidth/2-ST.step/2;
 function renderStrip(){ _renderStrip(); syncStripVideos(); }
 function _renderStrip(){
-  ST.cards=viewItems.flatMap(p=>p.stripVideos?p.stripVideos.map((_,k)=>({p,k})):[{p,k:-1}]);
+  /* intercalats: un loop de cada projecte per torns */
+  const groups=viewItems.map(p=>p.stripVideos?p.stripVideos.map((_,k)=>({p,k})):[{p,k:-1}]);
+  ST.cards=[]; for(let r=0;r<Math.max(0,...groups.map(g=>g.length));r++) groups.forEach(g=>{ if(g[r]) ST.cards.push(g[r]); });
   ST.n=ST.cards.length; const one=ST.cards.map(sfHTML).join("");
   stripTrack.innerHTML=one;
   ST.step=stripTrack.firstElementChild.getBoundingClientRect().width||600;
