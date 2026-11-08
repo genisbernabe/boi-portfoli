@@ -73,7 +73,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   .nav:not(.open){display:none}
   .nav a{padding:14px 0;border-bottom:1px solid var(--line);font-size:.85rem}
 }
-@media (max-width:420px){.brand .bn{display:none}}
+@media (max-width:420px){.brand{font-size:1.02rem;letter-spacing:.03em;gap:8px}}
 main>section:not(.hero){content-visibility:auto;contain-intrinsic-size:auto 1000px}
 main{padding-top:calc(var(--head) + env(safe-area-inset-top,0px))}
 section[id]{scroll-margin-top:calc(var(--head) + 24px)}
@@ -119,6 +119,8 @@ html,body{overflow-x:clip}
 /* portada amb vídeo: a tot l'ample i fins a baix de la pantalla (sota la capçalera) */
 .has-video .hero{padding-top:0}
 .has-video .hero-slot{width:100vw;max-width:none;margin-inline:calc(50% - 50vw);aspect-ratio:auto;height:calc(100svh - var(--head) - env(safe-area-inset-top,0px));min-height:320px}
+/* al mòbil el vídeo de portada va a tot l'ample però en 16:9, perquè no quedi retallat */
+@media (max-width:700px){.has-video .hero-slot{height:auto;min-height:0;aspect-ratio:16/9}.has-video .hero-video{inset:0;width:100%;height:100%}}
 
 /* títol de la intro: capa fixa a sobre, fora del monitor (no s'escala) */
 .intro-stage{position:fixed;inset:0;z-index:125;display:none;place-items:center;pointer-events:none;text-align:center;padding:0 6vw;contain:layout paint}
@@ -971,7 +973,7 @@ function stripTick(){
   if(!ST.visible||!ST.n||stripView.hidden) return;
   if(!ST.drag){
     if(ST.target!==null){ const d=ST.target-ST.x; ST.x+=d*.12; if(Math.abs(d)<.4){ST.x=ST.target;ST.target=null} }
-    else { ST.x+=ST.vel; ST.vel*=.93; if(Math.abs(ST.vel)<.05) ST.vel=0; if(!reduce&&!ST.hover&&!ST.vel) ST.x-=.35; }
+    else { ST.x+=ST.vel; ST.vel*=.93; if(Math.abs(ST.vel)<.05) ST.vel=0; if(!reduce&&!ST.hover&&!ST.vel) ST.x-=.9; }
   }
   paintStrip();
   if(!reduce || ST.drag || ST.target!==null || ST.vel) ST.raf=requestAnimationFrame(stripTick);
@@ -1179,11 +1181,11 @@ function openProject(id){
     <div class="wrap">
       <div class="sheet-head"><h2 class="sheet-title" id="sheetTitle">${esc(p.title)}</h2>
         <p class="mono muted">${esc(L(p.length))} · ${p.year} · ${p.ratio}</p></div>
-      <div class="sheet-hero"><div class="screen corners">${frame(p.pal,stillSeed(p,0),{img:p.sheetPoster||stillImg(p,0),video:p.sheetVideo||p.video})}</div></div>
+      <div class="sheet-hero"><div class="screen corners"${(p.sheetVideo||p.video)?` style="aspect-ratio:${p.ar}"`:""}>${frame(p.pal,stillSeed(p,0),{img:p.sheetPoster||stillImg(p,0),video:p.sheetVideo||p.video})}</div></div>
       <div class="sheet-info">
         <div>
           <p class="lede">${esc(L(p.log))}</p>
-          <div class="reel"><div class="screen">${frame(p.pal,hash(p.id+"reel"),{img:p.reelPoster,video:p.reelVideo})}
+          <div class="reel"><div class="screen"${p.reelVideo?` style="aspect-ratio:${p.ar}"`:""}>${frame(p.pal,hash(p.id+"reel"),{img:p.reelPoster,video:p.reelVideo})}
             <a class="play mono" href="${p.vimeo||"https://vimeo.com/"}" target="_blank" rel="noopener"><i aria-hidden="true"></i>${t("sheet.trailer")}</a></div></div>
         </div>
         <dl class="spec">
