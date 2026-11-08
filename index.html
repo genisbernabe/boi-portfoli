@@ -54,8 +54,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   background:rgba(14,13,12,.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .head-in{display:flex;align-items:center;gap:20px;height:var(--head)}
 .brand{font-family:var(--f-display);font-weight:800;font-size:1.3rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px;white-space:nowrap;margin-right:auto}
-.rec{width:8px;height:8px;border-radius:50%;background:var(--rec);box-shadow:0 0 10px var(--rec);animation:blink 1.6s steps(2) infinite;flex:none}
-@keyframes blink{50%{opacity:.25}}
+/* REC: punt fix + halo en capa pròpia; només s'anima opacity, que va per GPU i no repinta la capçalera */
+.rec{position:relative;width:8px;height:8px;border-radius:50%;background:var(--rec);flex:none;animation:rec 1.2s cubic-bezier(.4,0,.2,1) infinite;will-change:opacity;transform:translateZ(0)}
+.rec::after{content:"";position:absolute;inset:-5px;border-radius:50%;background:radial-gradient(circle,rgba(224,68,47,.55) 0%,rgba(224,68,47,0) 70%);pointer-events:none}
+@keyframes rec{0%,55%{opacity:1}68%,90%{opacity:.18}100%{opacity:1}}
 .nav{display:flex;gap:26px}
 .nav a{text-decoration:none;color:var(--muted);transition:color .2s}
 .nav a:hover,.nav a.cur{color:var(--paper)}
@@ -312,11 +314,7 @@ footer button:hover{color:var(--paper)}
 .spec dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-right:24px;padding-top:14px}
 .spec dd{text-align:right}
 .reel{margin-top:32px}
-.reel .frame{position:absolute;inset:0;height:100%;filter:brightness(.55)}
-.play{position:absolute;z-index:3;display:flex;align-items:center;gap:14px;text-decoration:none}
-.play i{width:64px;height:64px;border-radius:50%;border:1px solid rgba(255,255,255,.7);display:grid;place-items:center;transition:background .2s,transform .2s}
-.play i::before{content:"";border-left:14px solid #fff;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:4px}
-.play:hover i{background:var(--rec);border-color:var(--rec);transform:scale(1.08)}
+.reel .frame{position:absolute;inset:0;height:100%}
 .sub-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-block:20px;border-top:1px solid var(--line);margin-top:24px}
 .sub-head h3{font-family:var(--f-display);font-size:clamp(1.8rem,4vw,3rem);text-transform:uppercase}
 .stills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
@@ -547,7 +545,7 @@ const I18N = {
   "fact.travel":"Viatges","fact.travel.v":"Disponible arreu, amb experiència en rodatges d'alta muntanya i a l'aigua","fact.lang":"Idiomes","fact.lang.v":"Català, castellà i anglès",
   "about.edu":"Formació","edu.v":"Grau en Cinematografia, especialitat de Direcció de Fotografia","about.exp":"Experiència",
   "contact.kicker":"Contacte · Disponible per a projectes 2026–27","contact.copy":"Copiar correu","contact.copied":"Copiat","contact.selected":"Seleccionat, prem Ctrl+C",
-  "sheet.close":"Tancar ✕","sheet.trailer":"Veure tràiler a Vimeo ↗","sheet.frames":"Frames","sheet.mk":"Making of","sheet.onset":"Al set","sheet.next":"Següent projecte",
+  "sheet.close":"Tancar ✕","sheet.frames":"Frames","sheet.mk":"Making of","sheet.onset":"Al set","sheet.next":"Següent projecte",
   "spec.role":"Rol","spec.dir":"Direcció","spec.prod":"Producció","spec.cam":"Càmera","spec.lens":"Òptiques","spec.format":"Format","spec.ratio":"Ràtio",
   "cur.view":"Veure","cur.play":"Obrir","cur.color":"Color","cur.zoom":"Ampliar","lb.close":"Tancar ✕","lb.prev":"← Anterior","lb.next":"Següent →",
   "tag.portrait":"FOTO PERFIL · BOI A CÀMERA","tag.set":"FOTO · BOI AL SET","open":"Obrir" },
@@ -572,7 +570,7 @@ const I18N = {
   "fact.travel":"Viajes","fact.travel.v":"Disponible en todo el mundo, con experiencia en rodajes de alta montaña y en el agua","fact.lang":"Idiomas","fact.lang.v":"Catalán, castellano e inglés",
   "about.edu":"Formación","edu.v":"Grado en Cinematografía, especialidad de Dirección de Fotografía","about.exp":"Experiencia",
   "contact.kicker":"Contacto · Disponible para proyectos 2026–27","contact.copy":"Copiar correo","contact.copied":"Copiado","contact.selected":"Seleccionado, pulsa Ctrl+C",
-  "sheet.close":"Cerrar ✕","sheet.trailer":"Ver tráiler en Vimeo ↗","sheet.frames":"Frames","sheet.mk":"Making of","sheet.onset":"En el set","sheet.next":"Siguiente proyecto",
+  "sheet.close":"Cerrar ✕","sheet.frames":"Frames","sheet.mk":"Making of","sheet.onset":"En el set","sheet.next":"Siguiente proyecto",
   "spec.role":"Rol","spec.dir":"Dirección","spec.prod":"Producción","spec.cam":"Cámara","spec.lens":"Ópticas","spec.format":"Formato","spec.ratio":"Ratio",
   "cur.view":"Ver","cur.play":"Abrir","cur.color":"Color","cur.zoom":"Ampliar","lb.close":"Cerrar ✕","lb.prev":"← Anterior","lb.next":"Siguiente →",
   "tag.portrait":"FOTO PERFIL · BOI EN CÁMARA","tag.set":"FOTO · BOI EN EL SET","open":"Abrir" },
@@ -597,7 +595,7 @@ const I18N = {
   "fact.travel":"Travel","fact.travel.v":"Available worldwide, with experience on high-mountain and water shoots","fact.lang":"Languages","fact.lang.v":"Catalan, Spanish and English",
   "about.edu":"Education","edu.v":"BA in Filmmaking, Cinematography major","about.exp":"Experience",
   "contact.kicker":"Contact · Available for 2026–27 projects","contact.copy":"Copy email","contact.copied":"Copied","contact.selected":"Selected, press Ctrl+C",
-  "sheet.close":"Close ✕","sheet.trailer":"Watch trailer on Vimeo ↗","sheet.frames":"Frames","sheet.mk":"Making of","sheet.onset":"On set","sheet.next":"Next project",
+  "sheet.close":"Close ✕","sheet.frames":"Frames","sheet.mk":"Making of","sheet.onset":"On set","sheet.next":"Next project",
   "spec.role":"Role","spec.dir":"Director","spec.prod":"Production","spec.cam":"Camera","spec.lens":"Lenses","spec.format":"Format","spec.ratio":"Aspect ratio",
   "cur.view":"View","cur.play":"Open","cur.color":"Colour","cur.zoom":"Enlarge","lb.close":"Close ✕","lb.prev":"← Previous","lb.next":"Next →",
   "tag.portrait":"PROFILE PHOTO · BOI ON CAMERA","tag.set":"PHOTO · BOI ON SET","open":"Open" }
@@ -921,8 +919,7 @@ function openProject(id){
       <div class="sheet-info">
         <div>
           <p class="lede">${esc(L(p.log))}</p>
-          <div class="reel"><div class="screen"${p.reelVideo?` style="aspect-ratio:${p.ar}"`:""}>${frame(p.pal,hash(p.id+"reel"),{img:p.reelPoster,video:p.reelVideo})}
-            <a class="play mono" href="${p.vimeo||"https://vimeo.com/"}" target="_blank" rel="noopener"><i aria-hidden="true"></i>${t("sheet.trailer")}</a></div></div>
+          <div class="reel"><div class="screen"${p.reelVideo?` style="aspect-ratio:${p.ar}"`:""}>${frame(p.pal,hash(p.id+"reel"),{img:p.reelPoster,video:p.reelVideo})}</div></div>
         </div>
         <dl class="spec">
           <dt>${t("spec.role")}</dt><dd>${rolesTxt(p)}</dd>
