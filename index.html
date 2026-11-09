@@ -4,102 +4,141 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Boi Vidal Albert</title>
-<meta name="description" content="Boi Vidal Albert — cinematographer, camera operator & camera assistant. Barcelona / available worldwide.">
+<meta name="description" content="Cinematographer, camera operator and camera assistant, based in Barcelona and available worldwide.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="video" href="media/primera-noche-loop.mp4">
 <style>
-/* ============ TOKENS ============ */
+/* =========================================================
+   V2 — minimal editorial, a tot l'ample.
+   El fons (textures, moviment) es tractarà més endavant:
+   tot queda preparat a .bg (ara desactivat).
+   ========================================================= */
 :root{
-  --paper:#f1efea;
-  --ink:#121212;
-  --muted:#8b877f;
-  --line:rgba(18,18,18,.12);
-  --bg-blur:18px;          /* desenfoc del fons: posa 0px per fons nítid */
-  --bg-dim:.78;            /* brillantor del fons */
-  --inset:26px;
-  --inset-b:74px;          /* marge inferior: deixa veure el fons i els textos de fora */
+  --paper:#f1efea; --ink:#121212; --muted:#8b877f; --line:rgba(18,18,18,.12);
   --display:"Inter Tight",system-ui,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,monospace;
   --ease:cubic-bezier(.7,0,.2,1);
+  --gut:20px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{background:#1a1916;color:var(--ink);font-family:var(--display);-webkit-font-smoothing:antialiased;overflow:hidden}
+html,body{height:100%;overflow-x:clip}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);-webkit-font-smoothing:antialiased;overflow:hidden}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-img{display:block;width:100%;height:100%;object-fit:cover}
+img,video{display:block;width:100%;height:100%;object-fit:cover}
 .mono{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;line-height:1.45}
 .muted{color:var(--muted)}
+em{font-style:italic}
 
-/* ============ FONS ============ */
-.bg{position:fixed;inset:0;z-index:0;overflow:hidden}
-.bg-layer{position:absolute;inset:-6%;background-size:cover;background-position:center;
-  filter:blur(var(--bg-blur)) brightness(var(--bg-dim)) saturate(1.05);
-  opacity:0;transition:opacity 1.1s ease, transform 8s ease;transform:scale(1.04)}
-.bg-layer.on{opacity:1;transform:scale(1.1)}
-.bg::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(120% 90% at 50% 40%,transparent 40%,rgba(0,0,0,.45));}
-.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.14;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* fons (pendent de definir) */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* textos sobre el fons, fora del full */
-.outer{position:fixed;left:var(--inset);right:var(--inset);bottom:20px;z-index:2;
-  display:flex;justify-content:space-between;align-items:flex-end;color:#f4f2ee;
-  font-family:var(--mono);font-size:13px;text-transform:uppercase;line-height:1.3;pointer-events:none}
-.outer .r{text-align:right}
-
-/* ============ FULL ============ */
-.sheet{position:fixed;z-index:3;top:var(--inset);left:var(--inset);right:var(--inset);bottom:var(--inset-b);
-  background:var(--paper);display:flex;flex-direction:column;
-  box-shadow:0 30px 80px -20px rgba(0,0,0,.45)}
-.top,.foot{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:16px;padding:16px 20px;flex:none}
-.top .r,.foot .r{text-align:right}
+/* ============ ESTRUCTURA A TOT L'AMPLE ============ */
+.page{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column}
+.top,.foot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:16px var(--gut);flex:none;transition:transform .8s cubic-bezier(.2,.8,.2,1),opacity .8s ease}
+.top .r,.foot .r{display:flex;justify-content:flex-end;gap:18px;align-items:center}
 .nav{display:flex;gap:18px}
 .nav a{position:relative}
 .nav a.cur::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor}
-.nav a:hover{color:var(--muted)}
+.nav a:hover,.foot a:hover,.foot button:hover{color:var(--muted)}
+.lang{display:flex;gap:8px}
+.lang button{opacity:.4}.lang button.on{opacity:1}
 .main{flex:1;position:relative;min-height:0}
-
-.view{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;visibility:hidden;
-  transform:translateY(12px);transition:opacity .5s ease,transform .6s var(--ease),visibility 0s .5s;
-  scrollbar-width:thin}
+.view{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;visibility:hidden;transform:translateY(12px);
+  transition:opacity .5s ease,transform .6s var(--ease),visibility 0s .5s;scrollbar-width:thin}
 .view.on{opacity:1;visibility:visible;transform:none;transition:opacity .6s ease .1s,transform .7s var(--ease) .1s}
-.pad{padding:24px 20px 80px}
+.pad{padding:24px var(--gut) 90px}
 
-/* ============ INICI: tira vertical ============ */
+/* ============ INICI: tira vertical de loops ============ */
 #v-inici{overflow:hidden}
-.stage{position:absolute;inset:0;--aw:560px;--ah:315px;cursor:ns-resize}
-.strip{position:absolute;left:50%;top:0;display:flex;flex-direction:column;align-items:center;gap:14px;
-  transform:translateX(-50%);transition:transform .8s var(--ease);will-change:transform}
+.stage{position:absolute;inset:0;--aw:560px;--ah:315px}
 .mask{position:absolute;inset:0;pointer-events:none;
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 18%,#000 82%,transparent 100%);
-          mask-image:linear-gradient(to bottom,transparent 0,#000 18%,#000 82%,transparent 100%)}
-.mask .strip{pointer-events:auto}
-.s-item{position:relative;width:76px;height:46px;flex:none;
-  transition:width .8s var(--ease),height .8s var(--ease),filter .6s ease,opacity .6s ease}
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 84%,transparent 100%);
+          mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 84%,transparent 100%)}
+.strip{position:absolute;left:50%;top:0;display:flex;flex-direction:column;align-items:center;gap:14px;pointer-events:auto;
+  transform:translateX(-50%);transition:transform .8s var(--ease);will-change:transform}
+.s-item{position:relative;width:76px;height:46px;flex:none;background:#1a1916;
+  transition:width .8s var(--ease),height .8s var(--ease),opacity .6s ease}
+.s-item img,.s-item video{position:absolute;inset:0}
 .s-item img{filter:blur(2px) grayscale(.35);transition:filter .6s ease}
-.s-item:hover img{filter:blur(0) grayscale(0)}
+.s-item:hover img{filter:none}
 .s-item.active{width:var(--aw);height:var(--ah);cursor:pointer}
 .s-item.active img{filter:none}
-.corner{position:absolute;width:12px;height:12px;border:1px solid var(--ink);opacity:0;transition:opacity .4s ease .35s}
-.c1{top:-9px;left:-9px;border-right:0;border-bottom:0}
-.c2{top:-9px;right:-9px;border-left:0;border-bottom:0}
-.c3{bottom:-9px;left:-9px;border-right:0;border-top:0}
-.c4{bottom:-9px;right:-9px;border-left:0;border-top:0}
+.corner{position:absolute;width:12px;height:12px;border:1px solid var(--ink);opacity:0;transition:opacity .4s ease .35s;z-index:2}
+.c1{top:-9px;left:-9px;border-right:0;border-bottom:0}.c2{top:-9px;right:-9px;border-left:0;border-bottom:0}
+.c3{bottom:-9px;left:-9px;border-right:0;border-top:0}.c4{bottom:-9px;right:-9px;border-left:0;border-top:0}
 .s-item.active .corner{opacity:1}
-.rec{position:absolute;top:10px;left:12px;display:flex;align-items:center;gap:6px;color:#fff;opacity:0;transition:opacity .4s ease .4s;font-family:var(--mono);font-size:10px}
+.rec{position:absolute;top:10px;left:12px;z-index:2;display:flex;align-items:center;gap:6px;color:#fff;opacity:0;transition:opacity .4s ease .4s;font-family:var(--mono);font-size:10px}
 .rec i{width:6px;height:6px;border-radius:50%;background:#e23b2e;animation:blink 1.4s steps(2) infinite}
 .s-item.active .rec{opacity:.9}
 @keyframes blink{50%{opacity:0}}
-
-.meta{position:absolute;top:50%;transform:translateY(-50%);z-index:2;pointer-events:none}
+.meta{position:absolute;top:50%;transform:translateY(-50%);z-index:2;pointer-events:none;transition:opacity .8s ease}
 .meta-l{right:calc(50% + var(--aw)/2 + 26px);text-align:right}
 .meta-r{left:calc(50% + var(--aw)/2 + 26px)}
-.meta span{display:block;transition:opacity .35s ease, transform .35s ease}
+.meta span{display:block;transition:opacity .35s ease,transform .35s ease}
 .meta.swap span{opacity:0;transform:translateY(4px)}
-.hint{position:absolute;bottom:14px;left:20px}
-.hint-r{position:absolute;bottom:14px;right:20px;text-align:right}
+.hint{position:absolute;bottom:4px;left:var(--gut)}
+.hint-r{position:absolute;bottom:4px;right:var(--gut);text-align:right}
+
+/* ============ INTRO (com la v1: vídeo a pantalla completa → nom → obturador → s'encaixa) ============ */
+.intro-on .top{transform:translateY(-110%)}
+.intro-on .foot,.intro-on .meta,.intro-on .hint,.intro-on .hint-r{opacity:0}
+.intro{position:fixed;z-index:200;left:0;top:0;width:100vw;height:100vh;background:#000;overflow:hidden;display:none}
+.intro-on .intro{display:block}
+.intro.landing{transition:left 1s cubic-bezier(.75,0,.2,1),top 1s cubic-bezier(.75,0,.2,1),width 1s cubic-bezier(.75,0,.2,1),height 1s cubic-bezier(.75,0,.2,1)}
+.intro video.sharp{position:absolute;inset:0}
+/* desenfocament barat: còpia petita, desenfocada i ampliada */
+.intro .blur{position:absolute;left:-3%;top:-3%;width:26.5%;height:26.5%;transform-origin:0 0;transform:scale(4);
+  filter:blur(4px) brightness(.5) saturate(.85);transition:opacity .55s ease}
+.t-out .intro .blur{opacity:0}
+.it{position:fixed;inset:0;z-index:210;display:none;place-items:center;pointer-events:none;text-align:center;padding:0 6vw}
+.intro-on .it{display:grid}
+.intro-on.settle .it{display:none}
+.it-wrap{display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2vw,24px);opacity:0;transition:opacity .9s ease}
+.t-in .it-wrap,.t-out .it-wrap{opacity:1}
+.it-name{position:relative;font-weight:600;text-transform:uppercase;line-height:.86;letter-spacing:-.045em;font-size:clamp(3.4rem,13vw,12.5rem);color:#f3eee6}
+.it-name .ln{display:block;white-space:nowrap}
+.it-name .ch{display:inline-block;white-space:pre;transform:translate3d(calc(var(--o) * .24em),0,0);transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+.t-in .it-name .ch,.t-out .it-name .ch{transform:none}
+.half{display:block;transition:transform .7s cubic-bezier(.75,0,.25,1)}
+.half.top{clip-path:inset(0 0 50% 0)}
+.half.bot{position:absolute;inset:0;clip-path:inset(50% 0 0 0)}
+.t-out .half.top{transform:translate3d(0,-85vh,0)}
+.t-out .half.bot{transform:translate3d(0,85vh,0)}
+.it-tag{color:rgba(255,255,255,.82);letter-spacing:.18em}
+.t-out .it-tag{opacity:0;transition:opacity .15s}
+.flash{position:absolute;inset:0;background:#fff;opacity:0}
+.t-out .flash{animation:flash .35s ease-out}
+@keyframes flash{0%{opacity:.45}100%{opacity:0}}
+.intro-wait .intro::after{content:"";position:absolute;inset:0;background:#000}
+
+/* ============ MENÚ: selector de projectes en anell ============ */
+.menu{position:fixed;inset:0;z-index:150;background:#050505;color:#f1efea;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s .6s;overflow:hidden}
+.menu.on{opacity:1;visibility:visible;transition:opacity .6s ease}
+.menu .close{position:absolute;top:16px;right:var(--gut);z-index:3}
+.menu .brand{position:absolute;top:16px;left:var(--gut);z-index:3}
+.scene{position:absolute;inset:0;perspective:1500px;display:grid;place-items:center}
+.tilt{transform-style:preserve-3d;transform:rotateX(-22deg) rotateZ(-11deg) scale(.6);transition:transform 1.4s var(--ease)}
+.menu.on .tilt{transform:rotateX(-22deg) rotateZ(-11deg) scale(1)}
+.ring{transform-style:preserve-3d;animation:spin 80s linear infinite}
+.menu:not(.on) .ring{animation-play-state:paused}
+.ring:hover{animation-play-state:paused}
+@keyframes spin{to{transform:rotateY(-360deg)}}
+.tile{position:absolute;left:calc(var(--tw) / -2);top:calc(var(--th) / -2);width:var(--tw);height:var(--th);
+  transform:rotateY(calc(var(--i) * var(--step))) translateZ(var(--r));overflow:hidden;background:#222}
+.tile img{transition:filter .4s ease,transform .8s var(--ease);filter:brightness(.85)}
+.tile:hover img{filter:brightness(1.1);transform:scale(1.05)}
+.tile span{position:absolute;left:8px;bottom:6px;font-family:var(--mono);font-size:10px;text-transform:uppercase;color:#fff;opacity:0;transition:opacity .3s}
+.tile:hover span{opacity:1}
+.center{position:absolute;inset:0;z-index:2;display:grid;place-items:center;pointer-events:none;text-align:center}
+.center>div{pointer-events:auto}
+.center .bigl a{display:block;font-weight:600;text-transform:uppercase;letter-spacing:-.03em;font-size:clamp(26px,3.4vw,48px);line-height:1.08;transition:opacity .3s}
+.center .bigl a:hover{opacity:.55}
+.center .small{margin-top:18px;display:flex;gap:10px;justify-content:center;align-items:center}
+.center .small i{display:inline-block;width:22px;height:1px;background:currentColor}
+.center .small a:hover{opacity:.55}
 
 /* ============ TREBALLS ============ */
 .head{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:end;margin-bottom:28px}
@@ -110,14 +149,15 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 .fgroup b{font-weight:400;color:var(--muted);width:72px}
 .chip{padding:2px 0;opacity:.45;transition:opacity .2s}
 .chip:hover{opacity:.8}
-.chip.on{opacity:1}
-.chip.on::before{content:"[ "} .chip.on::after{content:" ]"}
+.chip.on{opacity:1}.chip.on::before{content:"[ "}.chip.on::after{content:" ]"}
 .rule{height:1px;background:var(--line);margin:0 0 20px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px 14px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:34px 14px}
 .card{display:block}
-.card .ph{aspect-ratio:16/10;overflow:hidden;background:#d9d6cf}
-.card img{transition:transform 1.2s var(--ease),filter .6s ease}
-.card:hover img{transform:scale(1.04)}
+.card .ph{position:relative;aspect-ratio:16/9;overflow:hidden;background:#1a1916}
+.card .ph video{position:absolute;inset:0;opacity:0;transition:opacity .5s}
+.card:hover .ph video{opacity:1}
+.card img{transition:transform 1.2s var(--ease)}
+.card:hover img{transform:scale(1.03)}
 .card .cap{display:flex;justify-content:space-between;margin-top:8px;gap:10px}
 .card.hide{display:none}
 .empty{display:none;padding:40px 0}
@@ -125,97 +165,115 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 /* ============ PROJECTE ============ */
 .p-top{display:flex;justify-content:space-between;margin-bottom:40px}
 .p-title{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:end;margin-bottom:34px}
+.p-title .log{font-size:clamp(18px,1.6vw,24px);line-height:1.2;letter-spacing:-.01em;margin-top:16px;max-width:34ch}
 .kv{display:grid;grid-template-columns:110px 1fr;gap:4px 12px}
 .kv dt{color:var(--muted)}
 .label{display:flex;justify-content:space-between;margin:56px 0 14px}
-.film{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:14px;margin:0 -20px;padding-left:20px;padding-right:20px;scrollbar-width:thin}
-.film figure{flex:none;height:min(52vh,460px);aspect-ratio:2.39/1;scroll-snap-align:center;position:relative;
-  padding:clamp(14px,2.4vw,34px);background:var(--mat,#2a2723)}  /* still sobre fons de color, com Rita */
-.film figure img{box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
-.film figcaption{position:absolute;left:10px;bottom:-1px;transform:translateY(100%);padding-top:6px}
-.mk{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px}
-.mk .ph{overflow:hidden;aspect-ratio:4/5}
-.mk .ph:first-child{aspect-ratio:auto}
-.bw img{filter:grayscale(1);transition:filter .7s ease}
-.bw .ph:hover img,.bw a:hover img{filter:grayscale(0)}
-.teaser{position:relative;aspect-ratio:16/9;background:#111;overflow:hidden;color:#fff}
-.teaser img{opacity:.55}
-.teaser iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.play{position:absolute;inset:0;display:grid;place-items:center}
-.play span{border:1px solid rgba(255,255,255,.7);padding:10px 18px}
-.credits{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 14px;border-top:1px solid var(--line);padding-top:16px}
+.hero-v{position:relative;overflow:hidden;background:#000}
+.film{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--gut) 26px;margin:0 calc(var(--gut) * -1);scrollbar-width:thin}
+.film figure{flex:none;height:min(50vh,440px);scroll-snap-align:center;position:relative;padding:clamp(14px,2.4vw,34px);background:var(--mat,#2a2723);cursor:zoom-in}
+.film figure img{height:100%;width:auto;max-width:none;box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
+.film figcaption{position:absolute;left:0;bottom:-20px}
+.credits{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 14px;border-top:1px solid var(--line);padding-top:16px}
 .next{display:block;margin-top:80px;border-top:1px solid var(--line);padding-top:16px}
-.next .big{transition:color .3s}
-.next:hover .big{color:var(--muted)}
+.next .big{transition:color .3s}.next:hover .big{color:var(--muted)}
 
 /* ============ FOTO / BTS ============ */
-.masonry{columns:4 220px;column-gap:14px}
-.masonry figure{break-inside:avoid;margin-bottom:22px}
+.masonry{columns:3 260px;column-gap:14px}
+.masonry figure{break-inside:avoid;margin-bottom:24px;cursor:zoom-in}
 .masonry .ph{overflow:hidden;background:#d9d6cf}
 .masonry figcaption{margin-top:6px;display:flex;justify-content:space-between}
+.bw img{filter:grayscale(1);transition:filter .7s ease}
+.bw figure:hover img{filter:none}
+.slot{aspect-ratio:4/5;display:grid;place-items:center;background:repeating-linear-gradient(135deg,#e5e2db 0 10px,#ebe8e2 10px 20px);color:var(--muted)}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:180;background:rgba(8,8,8,.94);display:none;place-items:center;padding:60px var(--gut);cursor:zoom-out}
+.lb.on{display:grid}
+.lb img{width:auto;height:auto;max-width:100%;max-height:84vh;object-fit:contain}
+.lb .mono{position:absolute;color:#f1efea}
+.lb .x{top:16px;right:var(--gut)}.lb .cnt{top:16px;left:var(--gut)}
 
 /* ============ SOBRE MI ============ */
 .about{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .lead{font-size:clamp(22px,2.6vw,38px);line-height:1.08;letter-spacing:-.02em;font-weight:500;max-width:24ch}
 .rows{margin-top:40px}
-.row{display:grid;grid-template-columns:140px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
-.about .portrait{aspect-ratio:4/5;overflow:hidden;max-width:420px}
+.row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.row .sub{display:block;color:var(--muted);text-transform:none;letter-spacing:0;font-family:var(--display);font-size:13px;margin-top:2px}
+.portrait{aspect-ratio:4/5;max-width:420px}
+.cv{width:100%;border-collapse:collapse}
+.cv td{padding:10px 0;border-top:1px solid var(--line);vertical-align:top}
+.cv td:last-child{text-align:right}
+.cv button{text-transform:uppercase;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
 
 /* ============ CONTACTE ============ */
 .contact{display:grid;grid-template-columns:1fr 1fr;gap:20px;min-height:100%;align-content:center}
-.links a{display:flex;align-items:baseline;gap:14px}
-.links a .big{transition:transform .5s var(--ease),color .3s}
-.links a:hover .big{transform:translateX(14px);color:var(--muted)}
-.links a .mono{opacity:0;transition:opacity .3s}
-.links a:hover .mono{opacity:1}
+.links a,.links button{display:flex;align-items:baseline;gap:14px;text-align:left}
+.links .big{transition:transform .5s var(--ease),color .3s}
+.links a:hover .big,.links button:hover .big{transform:translateX(14px);color:var(--muted)}
+.links .mono{opacity:0;transition:opacity .3s}
+.links a:hover .mono,.links button:hover .mono{opacity:1}
 
 /* ============ RESPONSIVE ============ */
-@media (max-width:900px){
-  .grid{grid-template-columns:repeat(2,1fr)}
-  .credits{grid-template-columns:repeat(2,1fr)}
-}
+@media (max-width:900px){.credits{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:720px){
-  :root{--inset:10px;--inset-b:56px}
-  .outer{font-size:11px;bottom:12px}
-  .top{grid-template-columns:1fr auto;padding:12px 14px}
-  .top .nav{grid-column:1/-1;grid-row:2;overflow-x:auto;gap:14px;white-space:nowrap}
+  :root{--gut:14px}
+  .top{grid-template-columns:1fr auto;padding:12px var(--gut)}
+  .top .nav{display:none}
   .foot{display:none}
-  .pad{padding:20px 14px 70px}
-  .head,.p-title,.about,.contact{grid-template-columns:1fr}
-  .grid{grid-template-columns:1fr}
-  .mk{grid-template-columns:1fr 1fr}.mk .ph:first-child{grid-column:1/-1;aspect-ratio:16/10}
-  .film{margin:0 -14px;padding-left:14px;padding-right:14px}
-  .film figure{height:auto;width:86vw}
-  .meta-l{right:auto;left:14px;top:14px;transform:none;text-align:left}
-  .meta-r{left:auto;right:14px;top:auto;bottom:40px;transform:none;text-align:right}
+  .head,.p-title,.about,.contact,.grid{grid-template-columns:1fr}
+  .film figure{height:auto;width:86vw}.film figure img{width:100%;height:auto}
+  .meta-l{right:auto;left:var(--gut);top:14px;transform:none;text-align:left}
+  .meta-r{left:auto;right:var(--gut);top:auto;bottom:44px;transform:none;text-align:right}
   .s-item.far{opacity:0!important;pointer-events:none}
-  .hint{bottom:14px;left:14px}.hint-r{display:none}
-  .row{grid-template-columns:100px 1fr}
+  .hint-r{display:none}
+  .row{grid-template-columns:110px 1fr}
 }
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01s!important;animation:none!important}}
 </style>
 </head>
-<body>
+<body class="intro-on intro-wait">
 
-<div class="bg" aria-hidden="true"><div class="bg-layer"></div><div class="bg-layer"></div></div>
-<div class="grain" aria-hidden="true"></div>
+<div class="bg" aria-hidden="true"></div>
 
-<div class="outer" aria-hidden="true">
-  <div>Cinematographer<br>Camera operator</div>
-  <div class="r">Boi Vidal<br>Albert</div>
+<!-- INTRO -->
+<div class="intro" id="intro" aria-hidden="true"></div>
+<div class="it" id="it" aria-hidden="true"><div id="itTitle"></div><div class="flash"></div></div>
+
+<!-- MENÚ (anell de projectes) -->
+<div class="menu" id="menu" aria-hidden="true">
+  <a class="brand mono" href="#inici">Boi Vidal Albert</a>
+  <button class="close mono" id="menuClose" data-i18n="menu.close">Tancar ✕</button>
+  <div class="scene"><div class="tilt"><div class="ring" id="ring"></div></div></div>
+  <div class="center">
+    <div>
+      <div class="bigl">
+        <a href="#treballs" data-i18n="nav.work">Treballs</a>
+        <a href="#fotografies" data-i18n="nav.photos">Fotografies</a>
+        <a href="#bts">BTS</a>
+      </div>
+      <div class="small mono"><a href="#sobre" data-i18n="nav.about">Sobre mi</a><i></i><a href="#contacte" data-i18n="nav.contact">Contacte</a></div>
+    </div>
+  </div>
 </div>
 
-<div class="sheet">
+<div class="lb" id="lb"><span class="mono cnt" id="lbCnt"></span><span class="mono x" data-i18n="lb.close">Tancar ✕</span><img id="lbImg" alt=""></div>
+
+<div class="page">
   <header class="top mono">
     <a href="#inici">Boi Vidal Albert</a>
     <nav class="nav">
-      <a href="#treballs">Treballs</a>
-      <a href="#fotografia">Fotografia</a>
+      <a href="#treballs" data-i18n="nav.work">Treballs</a>
+      <a href="#fotografies" data-i18n="nav.photos">Fotografies</a>
       <a href="#bts">BTS</a>
-      <a href="#sobre">Sobre mi</a>
-      <a href="#contacte">Contacte</a>
+      <a href="#sobre" data-i18n="nav.about">Sobre mi</a>
+      <a href="#contacte" data-i18n="nav.contact">Contacte</a>
     </nav>
-    <div class="r">BCN <span id="clock">--:--</span></div>
+    <div class="r">
+      <div class="lang"><button data-lang="ca">CA</button><button data-lang="es">ES</button><button data-lang="en">EN</button></div>
+      <span>BCN <span id="clock">--:--</span></span>
+      <button id="menuBtn" data-i18n="menu">(Índex)</button>
+    </div>
   </header>
 
   <main class="main">
@@ -223,10 +281,10 @@ img{display:block;width:100%;height:100%;object-fit:cover}
     <section class="view" id="v-inici" data-view="inici">
       <div class="stage" id="stage">
         <div class="mask"><div class="strip" id="strip"></div></div>
-        <div class="meta meta-l mono"><span class="muted" id="m-idx">01/08</span><span id="m-title">—</span></div>
-        <div class="meta meta-r mono"><span class="muted" id="m-year">—</span><span id="m-role">—</span></div>
-        <div class="hint mono muted">(Scroll / ↑↓) &nbsp; Clica per obrir</div>
-        <div class="hint-r mono muted">DOP · Operador · 1AC · 2AC</div>
+        <div class="meta meta-l mono"><span class="muted" id="m-idx"></span><span id="m-title"></span></div>
+        <div class="meta meta-r mono"><span class="muted" id="m-year"></span><span id="m-role"></span></div>
+        <div class="hint mono muted" data-i18n="hint.home"></div>
+        <div class="hint-r mono muted" data-i18n="hero.roles"></div>
       </div>
     </section>
 
@@ -234,27 +292,27 @@ img{display:block;width:100%;height:100%;object-fit:cover}
     <section class="view" data-view="treballs">
       <div class="pad">
         <div class="head">
-          <h1 class="big">Treballs<sup id="count">(08)</sup></h1>
+          <h1 class="big"><span data-i18n="work.title"></span><sup id="count"></sup></h1>
           <div class="filters mono">
-            <div class="fgroup" data-key="cat"><b>Tipus</b></div>
-            <div class="fgroup" data-key="role"><b>Rol</b></div>
+            <div class="fgroup" data-key="type"><b data-i18n="f.type"></b></div>
+            <div class="fgroup" data-key="role"><b data-i18n="f.role"></b></div>
           </div>
         </div>
         <div class="rule"></div>
         <div class="grid mono" id="grid"></div>
-        <p class="empty mono muted" id="empty">Cap projecte amb aquests filtres.</p>
+        <p class="empty mono muted" id="empty" data-i18n="work.empty"></p>
       </div>
     </section>
 
-    <!-- PROJECTE (es pinta amb JS) -->
+    <!-- PROJECTE -->
     <section class="view" data-view="projecte"><div class="pad" id="project"></div></section>
 
-    <!-- FOTOGRAFIA -->
-    <section class="view" data-view="fotografia">
+    <!-- FOTOGRAFIES -->
+    <section class="view" data-view="fotografies">
       <div class="pad">
         <div class="head">
-          <h1 class="big">Fotografia</h1>
-          <div class="filters mono"><div class="fgroup" id="photo-filter"><b>Format</b></div></div>
+          <h1 class="big" data-i18n="photos.title"></h1>
+          <div class="filters mono"><div class="fgroup" id="photoFilter"></div></div>
         </div>
         <div class="rule"></div>
         <div class="masonry mono" id="photos"></div>
@@ -266,7 +324,7 @@ img{display:block;width:100%;height:100%;object-fit:cover}
       <div class="pad">
         <div class="head">
           <h1 class="big">Behind<br>the scenes</h1>
-          <p class="mono muted">Al set, darrere la càmera.<br>Passa el cursor per veure-les en color.</p>
+          <p class="mono muted" data-i18n="bts.hint"></p>
         </div>
         <div class="rule"></div>
         <div class="masonry mono bw" id="bts"></div>
@@ -277,18 +335,21 @@ img{display:block;width:100%;height:100%;object-fit:cover}
     <section class="view" data-view="sobre">
       <div class="pad about">
         <div>
-          <p class="mono muted" style="margin-bottom:14px">[ Sobre mi ]</p>
-          <div class="portrait ph"><img id="portrait" alt="Boi treballant al set"></div>
+          <p class="mono muted" style="margin-bottom:14px">[ <span data-i18n="about.title"></span> ]</p>
+          <div class="portrait slot mono" data-i18n="tag.set"></div>
         </div>
         <div>
-          <p class="lead">Sóc el Boi, director de fotografia i operador de càmera a Barcelona. M’agrada rodar on passen les coses: muntanya, bosc, mar i sets de ficció.</p>
+          <p class="lead" data-i18n="about.lede"></p>
           <div class="rows mono">
-            <div class="row"><span class="muted">Rols</span><span>Director de fotografia · Operador de càmera · 1r ajudant de càmera · 2n ajudant de càmera</span></div>
-            <div class="row"><span class="muted">Produccions</span><span>Documental · Ficció · Outdoor · Publicitat</span></div>
-            <div class="row"><span class="muted">Base</span><span>Barcelona — disponible arreu del món</span></div>
-            <div class="row"><span class="muted">Formació</span><span>ESCAC — Escola Superior de Cinema i Audiovisuals de Catalunya</span></div>
-            <div class="row"><span class="muted">Experiència</span><span>[ Afegir llista de rodatges / productores ]</span></div>
+            <div class="row"><span class="muted" data-i18n="about.roles"></span><span id="roles"></span></div>
+            <div class="row"><span class="muted" data-i18n="fact.types"></span><span data-i18n="fact.types.v"></span></div>
+            <div class="row"><span class="muted" data-i18n="fact.base"></span><span data-i18n="hero.loc"></span></div>
+            <div class="row"><span class="muted" data-i18n="fact.travel"></span><span data-i18n="fact.travel.v"></span></div>
+            <div class="row"><span class="muted" data-i18n="fact.lang"></span><span data-i18n="fact.lang.v"></span></div>
+            <div class="row"><span class="muted" data-i18n="about.edu"></span><span>ESCAC<span class="sub" data-i18n="edu.v"></span></span></div>
           </div>
+          <p class="mono muted" style="margin:40px 0 8px" data-i18n="about.exp"></p>
+          <table class="cv mono" id="cv"></table>
         </div>
       </div>
     </section>
@@ -296,284 +357,416 @@ img{display:block;width:100%;height:100%;object-fit:cover}
     <!-- CONTACTE -->
     <section class="view" data-view="contacte">
       <div class="pad contact">
-        <p class="mono muted">[ Contacte ]<br><br>Barcelona / available worldwide.<br>Escriu-me per a rodatges, pressupostos<br>o disponibilitat.</p>
+        <p class="mono muted"><span data-i18n="contact.kicker"></span><br><br><span data-i18n="hero.loc"></span></p>
         <div class="links">
-          <a href="mailto:hola@boividal.com"><span class="big">Email</span><span class="mono">hola@boividal.com ↗</span></a>
-          <a href="https://instagram.com/" target="_blank" rel="noopener"><span class="big">Instagram</span><span class="mono">↗</span></a>
+          <button id="copyMail"><span class="big">Email</span><span class="mono" id="mailLbl">contacte@boividalalbert.com</span></button>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener"><span class="big">Instagram</span><span class="mono">↗</span></a>
           <a href="https://vimeo.com/" target="_blank" rel="noopener"><span class="big">Vimeo</span><span class="mono">↗</span></a>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener"><span class="big">YouTube</span><span class="mono">↗</span></a>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="foot mono">
-    <span>©2026 Boi Vidal Albert</span>
-    <span class="muted" id="foot-mid">Cinematographer / Camera operator / Camera assistant</span>
-    <span class="r"><a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a> &nbsp; <a href="https://vimeo.com/" target="_blank" rel="noopener">Vimeo</a></span>
+    <span>© 2026 Boi Vidal Albert</span>
+    <button class="muted" id="replay" data-i18n="replay"></button>
+    <span class="r"><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a><a href="https://vimeo.com/" target="_blank" rel="noopener">Vimeo</a><a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a></span>
   </footer>
 </div>
 
 <script>
-/* =========================================================
-   CONTINGUT — canvia aquí títols, rols i imatges.
-   Ara les imatges són de mostra (picsum). Substitueix img()
-   per rutes reals, p. ex. "img/faena/still-01.jpg".
-   ========================================================= */
-const img = (seed, w = 1600, h = 900) => `https://picsum.photos/seed/${seed}/${w}/${h}`;
+/* ============================================================
+   TEXTOS (CA / ES / EN) — portats de la v1
+   ============================================================ */
+const I18N = {
+ ca:{ "nav.work":"Treballs","nav.photos":"Fotografies","nav.about":"Sobre mi","nav.contact":"Contacte",
+  "menu":"(Índex)","menu.close":"Tancar ✕","replay":"▶ Tornar a veure la intro",
+  "hint.home":"(Scroll / ↑↓) · Clica per obrir",
+  "hero.roles":"Director de fotografia · Operador de càmera · Ajudant de càmera","hero.loc":"Barcelona — disponible arreu",
+  "work.title":"Treballs","f.type":"Tipus","f.role":"Rol","f.all":"Tots",
+  "work.empty":"Cap projecte amb aquesta combinació de tipus i rol. Prova un altre filtre.",
+  "type.ficcio":"Ficció","type.documental":"Documental","type.outdoor":"Outdoor","type.publi":"Publi / Comercial",
+  "rn.Operador":"Operador","photos.title":"Fotografies","photos.all":"Totes","photos.analog":"Analògic","photos.digital":"Digital",
+  "bts.hint":"Passa per sobre per veure el color",
+  "about.title":"Sobre mi","about.lede":"Sóc operador de càmera i director de fotografia amb base a Barcelona. M'agraden els rodatges petits i àgils, i els llocs on la càmera s'ha d'adaptar al terreny.",
+  "about.roles":"Rols","role.DOP":"Direcció de fotografia: llum, càmera i look de la peça.","role.Operador":"Càmera en mà, steadicam lleuger, trípode i gimbal.",
+  "role.1AC":"Primer ajudant: focus, òptiques i preparació de càmera.","role.2AC":"Segon ajudant: claqueta, targetes i report de càmera.",
+  "fact.types":"Tipus","fact.types.v":"Ficció, documental, outdoor, publicitat i videoclip","fact.base":"Base",
+  "fact.travel":"Viatges","fact.travel.v":"Disponible arreu, amb experiència en rodatges d'alta muntanya i a l'aigua","fact.lang":"Idiomes","fact.lang.v":"Català, castellà i anglès",
+  "about.edu":"Formació","edu.v":"Grau en Cinematografia, especialitat de Direcció de Fotografia","about.exp":"Experiència",
+  "contact.kicker":"Contacte · Disponible per a projectes 2026–27","contact.copied":"Copiat ✓",
+  "back":"(Tornar)","sheet.frames":"Frames","sheet.loop":"Loop","sheet.next":"Següent projecte","slide":"Llisca →",
+  "spec.role":"Rol","spec.dir":"Direcció","spec.prod":"Producció","spec.cam":"Càmera","spec.lens":"Òptiques","spec.format":"Format","spec.ratio":"Ràtio","spec.year":"Any",
+  "lb.close":"Tancar ✕","tag.set":"Foto · Boi al set","bts.soon":"Foto BTS · pròximament","still":"Fotograma" },
+ es:{ "nav.work":"Trabajos","nav.photos":"Fotografías","nav.about":"Sobre mí","nav.contact":"Contacto",
+  "menu":"(Índice)","menu.close":"Cerrar ✕","replay":"▶ Volver a ver la intro",
+  "hint.home":"(Scroll / ↑↓) · Clica para abrir",
+  "hero.roles":"Director de fotografía · Operador de cámara · Ayudante de cámara","hero.loc":"Barcelona — disponible en todo el mundo",
+  "work.title":"Trabajos","f.type":"Tipo","f.role":"Rol","f.all":"Todos",
+  "work.empty":"Ningún proyecto con esta combinación de tipo y rol. Prueba otro filtro.",
+  "type.ficcio":"Ficción","type.documental":"Documental","type.outdoor":"Outdoor","type.publi":"Publi / Comercial",
+  "rn.Operador":"Operador","photos.title":"Fotografías","photos.all":"Todas","photos.analog":"Analógico","photos.digital":"Digital",
+  "bts.hint":"Pasa por encima para ver el color",
+  "about.title":"Sobre mí","about.lede":"Soy operador de cámara y director de fotografía con base en Barcelona. Me gustan los rodajes pequeños y ágiles, y los lugares donde la cámara tiene que adaptarse al terreno.",
+  "about.roles":"Roles","role.DOP":"Dirección de fotografía: luz, cámara y look de la pieza.","role.Operador":"Cámara en mano, steadicam ligero, trípode y gimbal.",
+  "role.1AC":"Primer ayudante: foco, ópticas y preparación de cámara.","role.2AC":"Segundo ayudante: claqueta, tarjetas y parte de cámara.",
+  "fact.types":"Tipo","fact.types.v":"Ficción, documental, outdoor, publicidad y videoclip","fact.base":"Base",
+  "fact.travel":"Viajes","fact.travel.v":"Disponible en todo el mundo, con experiencia en rodajes de alta montaña y en el agua","fact.lang":"Idiomas","fact.lang.v":"Catalán, castellano e inglés",
+  "about.edu":"Formación","edu.v":"Grado en Cinematografía, especialidad de Dirección de Fotografía","about.exp":"Experiencia",
+  "contact.kicker":"Contacto · Disponible para proyectos 2026–27","contact.copied":"Copiado ✓",
+  "back":"(Volver)","sheet.frames":"Frames","sheet.loop":"Loop","sheet.next":"Siguiente proyecto","slide":"Desliza →",
+  "spec.role":"Rol","spec.dir":"Dirección","spec.prod":"Producción","spec.cam":"Cámara","spec.lens":"Ópticas","spec.format":"Formato","spec.ratio":"Ratio","spec.year":"Año",
+  "lb.close":"Cerrar ✕","tag.set":"Foto · Boi en el set","bts.soon":"Foto BTS · próximamente","still":"Fotograma" },
+ en:{ "nav.work":"Work","nav.photos":"Photography","nav.about":"About","nav.contact":"Contact",
+  "menu":"(Index)","menu.close":"Close ✕","replay":"▶ Replay intro",
+  "hint.home":"(Scroll / ↑↓) · Click to open",
+  "hero.roles":"Cinematographer · Camera operator · Camera assistant","hero.loc":"Barcelona — available worldwide",
+  "work.title":"Work","f.type":"Type","f.role":"Role","f.all":"All",
+  "work.empty":"No projects match this type and role. Try another filter.",
+  "type.ficcio":"Fiction","type.documental":"Documentary","type.outdoor":"Outdoor","type.publi":"Commercial",
+  "rn.Operador":"Operator","photos.title":"Photography","photos.all":"All","photos.analog":"Analog","photos.digital":"Digital",
+  "bts.hint":"Hover to see the colour",
+  "about.title":"About","about.lede":"I'm a camera operator and cinematographer based in Barcelona. I like small, agile crews, and places where the camera has to adapt to the terrain.",
+  "about.roles":"Roles","role.DOP":"Cinematography: light, camera and the look of the piece.","role.Operador":"Handheld, light steadicam, tripod and gimbal.",
+  "role.1AC":"First assistant: focus pulling, lenses and camera prep.","role.2AC":"Second assistant: slate, cards and camera reports.",
+  "fact.types":"Type","fact.types.v":"Fiction, documentary, outdoor, commercials and music videos","fact.base":"Based in",
+  "fact.travel":"Travel","fact.travel.v":"Available worldwide, with experience on high-mountain and water shoots","fact.lang":"Languages","fact.lang.v":"Catalan, Spanish and English",
+  "about.edu":"Education","edu.v":"BA in Filmmaking, Cinematography major","about.exp":"Experience",
+  "contact.kicker":"Contact · Available for 2026–27 projects","contact.copied":"Copied ✓",
+  "back":"(Back)","sheet.frames":"Frames","sheet.loop":"Loop","sheet.next":"Next project","slide":"Swipe →",
+  "spec.role":"Role","spec.dir":"Director","spec.prod":"Production","spec.cam":"Camera","spec.lens":"Lenses","spec.format":"Format","spec.ratio":"Aspect ratio","spec.year":"Year",
+  "lb.close":"Close ✕","tag.set":"Photo · Boi on set","bts.soon":"BTS photo · coming soon","still":"Still" }
+};
 
-const CATS  = { documental: "Documental", ficcio: "Ficció", outdoor: "Outdoor", publi: "Publi / Comercial" };
-const ROLES = { operador: "Operador", dop: "DOP", "1ac": "1AC", "2ac": "2AC" };
-
+/* ============================================================
+   DADES — mateixes que la v1 (media/ i img/ del repo)
+   ============================================================ */
 const PROJECTS = [
-  { slug:"faena",      title:"Faena",        year:2025, cat:"ficcio",     role:"dop",      format:"Curtmetratge",  director:"—", production:"ESCAC", camera:"ARRI Alexa Mini", lenses:"Cooke S4/i", mat:"#3a2318" },
-  { slug:"luces",      title:"Luces",        year:2025, cat:"ficcio",     role:"operador", format:"Curtmetratge",  director:"—", production:"—",     camera:"RED Komodo",      lenses:"Zeiss Super Speed", mat:"#2b2a33" },
-  { slug:"carena",     title:"Carena",       year:2024, cat:"outdoor",    role:"operador", format:"Peça outdoor",  director:"—", production:"—",     camera:"Sony FX6",        lenses:"Sony G Master", mat:"#25302a" },
-  { slug:"mardefons",  title:"Mar de fons",  year:2024, cat:"documental", role:"dop",      format:"Documental",    director:"—", production:"—",     camera:"Sony FX3",        lenses:"Sigma Cine", mat:"#1f2b33" },
-  { slug:"nitdestiu",  title:"Nit d’estiu",  year:2024, cat:"publi",      role:"1ac",      format:"Spot",          director:"—", production:"—",     camera:"ARRI Alexa 35",   lenses:"Leitz Summicron-C", mat:"#33261f" },
-  { slug:"vertical",   title:"Vertical",     year:2023, cat:"outdoor",    role:"dop",      format:"Branded",       director:"—", production:"—",     camera:"Blackmagic 6K",   lenses:"DZOFilm Vespid", mat:"#2a2f35" },
-  { slug:"lesmans",    title:"Les mans",     year:2023, cat:"documental", role:"operador", format:"Documental",    director:"—", production:"—",     camera:"Canon C70",       lenses:"Canon CN-E", mat:"#302b24" },
-  { slug:"ritme",      title:"Ritme",        year:2023, cat:"publi",      role:"2ac",      format:"Videoclip",     director:"—", production:"—",     camera:"ARRI Alexa Mini LF", lenses:"Atlas Orion", mat:"#2e1f26" },
-].map(p => ({
-  ...p,
-  cover:   img(p.slug, 1800, 1012),
-  stills:  [1,2,3,4,5,6].map(n => img(`${p.slug}-s${n}`, 1600, 670)),
-  making:  [1,2,3].map(n => img(`${p.slug}-m${n}`, 900, 1100)),
-  vimeo:   "", // p. ex. "https://player.vimeo.com/video/123456789"
-}));
+  {id:"la-primera-noche", title:"La primera noche", year:2026, type:"ficcio", roles:["DOP"],
+   length:{ca:"Curtmetratge · 17 min",es:"Cortometraje · 17 min",en:"Short film · 17 min"},
+   director:"Nom Cognom", prod:"Productora", camera:"—", lenses:"—", format:"4K", ratio:"2.39:1", mat:"#16181c",
+   log:{ca:"Dos amics, una nit i la ciutat als peus. Llum de capvespre i interiors foscos.",
+        es:"Dos amigos, una noche y la ciudad a sus pies. Luz de atardecer e interiores oscuros.",
+        en:"Two friends, one night and the city at their feet. Dusk light and dark interiors."},
+   cover:"media/primera-noche-poster.jpg",
+   sheetVideo:"media/primera-noche-loop-2.mp4", sheetPoster:"media/primera-noche-poster-2.jpg",
+   stripVideos:[["media/primera-noche-loop.mp4","media/primera-noche-poster.jpg"],["media/primera-noche-loop-2.mp4","media/primera-noche-poster-2.jpg"],["media/primera-noche-loop-3.mp4","media/primera-noche-poster-3.jpg"]],
+   stills:["img/primera-noche-01.jpg","img/primera-noche-02.jpg","img/primera-noche-03.jpg","img/primera-noche-04.jpg","img/primera-noche-05.jpg","img/primera-noche-06.jpg","img/primera-noche-07.jpg","img/primera-noche-08.jpg","img/primera-noche-09.jpg","img/primera-noche-10.jpg"]},
+  {id:"el-nino-de-las-flores", title:"El niño de las flores", year:2026, type:"ficcio", roles:["DOP"],
+   length:{ca:"Curtmetratge",es:"Cortometraje",en:"Short film"},
+   director:"Nom Cognom", prod:"Productora", camera:"—", lenses:"—", format:"4K", ratio:"16:9", mat:"#13221f",
+   log:{ca:"Un noi, una flor vermella i el record de qui ja no hi és. Llum suau d'estiu i colors apagats.",
+        es:"Un chico, una flor roja y el recuerdo de quien ya no está. Luz suave de verano y colores apagados.",
+        en:"A boy, a red flower and the memory of someone who is gone. Soft summer light and muted colours."},
+   cover:"media/nino-flores-poster-3.jpg",
+   sheetVideo:"media/nino-flores-loop-2.mp4", sheetPoster:"media/nino-flores-poster-2.jpg",
+   stripVideos:[["media/nino-flores-loop-3.mp4","media/nino-flores-poster-3.jpg"],["media/nino-flores-loop-2.mp4","media/nino-flores-poster-2.jpg"],["media/nino-flores-loop-1.mp4","media/nino-flores-poster-1.jpg"]],
+   stills:["img/nino-flores-01.jpg","img/nino-flores-02.jpg","img/nino-flores-03.jpg","img/nino-flores-04.jpg","img/nino-flores-05.jpg","img/nino-flores-06.jpg","img/nino-flores-07.jpg","img/nino-flores-08.jpg","img/nino-flores-09.jpg","img/nino-flores-10.jpg","img/nino-flores-11.jpg"]}
+];
+const TYPE_KEYS=["ficcio","documental","outdoor","publi"], ROLES=["Operador","DOP","1AC","2AC"];
 
-const PHOTOS = Array.from({length: 14}, (_, i) => ({
-  src: img(`foto-${i}`, 900, [1100, 700, 1200, 900, 600][i % 5]),
-  type: i % 3 === 0 ? "analogic" : "digital",
-  title: ["Montseny", "Cap de Creus", "Raval", "Pedraforca", "Delta", "Sitges", "Port"][i % 7],
-}));
-const BTS = Array.from({length: 10}, (_, i) => ({ src: img(`bts-${i}`, 900, [1100, 700, 1000, 800][i % 4]), title: PROJECTS[i % 8].title }));
+const PHOTOS = [
+  {kind:"digital", title:"La primera noche", meta:"2.39:1", img:"img/primera-noche-01.jpg"},
+  {kind:"digital", title:"La primera noche", meta:"2.39:1", img:"img/primera-noche-02.jpg"},
+  {kind:"digital", title:"La primera noche", meta:"2.39:1", img:"img/primera-noche-03.jpg"},
+  {kind:"digital", title:"El niño de las flores", meta:"16:9", img:"img/nino-flores-01.jpg"},
+  {kind:"digital", title:"El niño de las flores", meta:"16:9", img:"img/nino-flores-02.jpg"},
+  {kind:"digital", title:"El niño de las flores", meta:"16:9", img:"img/nino-flores-03.jpg"}
+];
+const BTS = [ /* {img:"img/bts-01.jpg", title:"La primera noche"} */ ];
 
-/* ================= UTILITATS ================= */
-const $ = (s, el = document) => el.querySelector(s);
-const pad = n => String(n).padStart(2, "0");
+/* ============ utilitats ============ */
+const $=(s,el=document)=>el.querySelector(s), $$=(s,el=document)=>[...el.querySelectorAll(s)];
+const pad=n=>String(n).padStart(2,"0");
+const MOB=matchMedia("(max-width:720px)").matches;
+const vsrc=v=>MOB&&v?v.replace(/\.mp4$/,"-m.mp4"):v;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let lang="ca"; try{const s=localStorage.getItem("bva-lang"); if(I18N[s]) lang=s;}catch(_){}
+const t=k=>I18N[lang][k]??I18N.ca[k]??k;
+const L=v=>(v&&typeof v==="object")?(v[lang]??v.ca):v;
+const roleName=r=>r==="Operador"?t("rn.Operador"):r;
+const rolesTxt=p=>p.roles.map(roleName).join(" / ");
+const byId=id=>PROJECTS.find(p=>p.id===id);
 
-/* fons amb fos encadenat */
-const layers = [...document.querySelectorAll(".bg-layer")];
-let layerIdx = 0, currentBg = "";
-function setBg(url){
-  if (!url || url === currentBg) return;
-  currentBg = url;
-  const pre = new Image();
-  pre.onload = () => {
-    if (url !== currentBg) return;
-    layerIdx = 1 - layerIdx;
-    layers[layerIdx].style.backgroundImage = `url("${url}")`;
-    layers[layerIdx].classList.add("on");
-    layers[1 - layerIdx].classList.remove("on");
-  };
-  pre.src = url;
-}
+function tick(){ $("#clock").textContent=new Intl.DateTimeFormat("ca-ES",{hour:"2-digit",minute:"2-digit",timeZone:"Europe/Madrid"}).format(new Date()); }
+tick(); setInterval(tick,15000);
 
-/* rellotge de Barcelona */
-function tick(){
-  $("#clock").textContent = new Intl.DateTimeFormat("ca-ES", { hour:"2-digit", minute:"2-digit", timeZone:"Europe/Madrid" }).format(new Date());
-}
-tick(); setInterval(tick, 15000);
-
-/* ================= INICI ================= */
-const stage = $("#stage"), strip = $("#strip");
-let cur = 0;
-strip.innerHTML = PROJECTS.map((p, i) => `
-  <button class="s-item" data-i="${i}" aria-label="${p.title}">
-    <img src="${img(p.slug, 1200, 675)}" alt="">
+/* ============ INICI: tira vertical (un element per loop) ============ */
+const ENTRIES=PROJECTS.flatMap(p=>p.stripVideos.map(([v,poster],k)=>({p,k,v,poster,n:p.stripVideos.length})));
+const stage=$("#stage"), strip=$("#strip");
+let cur=0;
+strip.innerHTML=ENTRIES.map((e,i)=>`
+  <button class="s-item" data-i="${i}" aria-label="${e.p.title}">
+    <img src="${e.poster}" alt="" loading="${i<3?"eager":"lazy"}">
     <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
     <span class="rec"><i></i>REC</span>
   </button>`).join("");
-const items = [...strip.children];
+const items=[...strip.children];
 
+function activeVideo(){ return items[cur].querySelector("video"); }
+function playActive(time){
+  items.forEach((el,i)=>{ const v=el.querySelector("video"); if(i!==cur&&v){v.pause();v.remove();} });
+  const el=items[cur]; let v=el.querySelector("video");
+  if(!v){ v=document.createElement("video"); v.muted=true; v.loop=true; v.playsInline=true; v.setAttribute("playsinline","");
+    v.poster=ENTRIES[cur].poster; v.src=vsrc(ENTRIES[cur].v); el.insertBefore(v,el.querySelector(".corner")); }
+  if(time!=null){ try{v.currentTime=time}catch(_){} }
+  v.play().catch(()=>{});
+}
 function layoutStrip(){
-  const w = stage.clientWidth, h = stage.clientHeight, mobile = w < 720;
-  let aw = Math.min(w * (mobile ? .86 : .44), 680);
-  let ah = aw * 9 / 16;
-  if (ah > h * .62) { ah = h * .62; aw = ah * 16 / 9; }
-  stage.style.setProperty("--aw", aw + "px");
-  stage.style.setProperty("--ah", ah + "px");
-  const small = 46, gap = 14;
-  strip.style.transform = `translate(-50%, ${h / 2 - (cur * (small + gap) + ah / 2)}px)`;
-  items.forEach((el, i) => {
-    const d = Math.abs(i - cur);
-    el.classList.toggle("active", i === cur);
-    el.classList.toggle("far", d > 1);
-    el.style.opacity = i === cur ? 1 : Math.max(.15, 1 - d * .2);
-  });
+  const w=stage.clientWidth, h=stage.clientHeight; if(!w||!h) return;
+  let aw=Math.min(w*(w<720?.88:.5), 820), ah=aw*9/16;
+  if(ah>h*.64){ah=h*.64;aw=ah*16/9;}
+  stage.style.setProperty("--aw",aw+"px"); stage.style.setProperty("--ah",ah+"px");
+  strip.style.transform=`translate(-50%, ${h/2-(cur*(46+14)+ah/2)}px)`;
+  items.forEach((el,i)=>{ const d=Math.abs(i-cur);
+    el.classList.toggle("active",i===cur); el.classList.toggle("far",d>1);
+    el.style.opacity=i===cur?1:Math.max(.15,1-d*.2); });
 }
-function go(i){
-  const n = Math.max(0, Math.min(PROJECTS.length - 1, i));
-  if (n === cur && strip.dataset.ready) return;
-  cur = n; strip.dataset.ready = 1;
-  const p = PROJECTS[cur];
-  const metas = document.querySelectorAll(".meta");
-  metas.forEach(m => m.classList.add("swap"));
-  setTimeout(() => {
-    $("#m-idx").textContent = `${pad(cur + 1)}/${pad(PROJECTS.length)}`;
-    $("#m-title").textContent = p.title;
-    $("#m-year").textContent = `${p.year} — ${p.format}`;
-    $("#m-role").textContent = `${ROLES[p.role]} · ${CATS[p.cat]}`;
-    metas.forEach(m => m.classList.remove("swap"));
-  }, 250);
-  layoutStrip();
-  setBg(p.cover);
+function setMeta(){
+  const e=ENTRIES[cur];
+  $("#m-idx").textContent=`${pad(cur+1)}/${pad(ENTRIES.length)}`;
+  $("#m-title").textContent=e.p.title;
+  $("#m-year").textContent=`${e.p.year} — ${L(e.p.length)}`;
+  $("#m-role").textContent=`${rolesTxt(e.p)} · ${t("sheet.loop")} ${pad(e.k+1)}/${pad(e.n)}`;
 }
-strip.addEventListener("click", e => {
-  const b = e.target.closest(".s-item"); if (!b) return;
-  const i = +b.dataset.i;
-  if (i === cur) location.hash = `projecte/${PROJECTS[i].slug}`; else go(i);
+function go(i,force){
+  const n=Math.max(0,Math.min(ENTRIES.length-1,i));
+  if(n===cur&&!force) return;
+  cur=n;
+  const metas=$$(".meta"); metas.forEach(m=>m.classList.add("swap"));
+  setTimeout(()=>{ setMeta(); metas.forEach(m=>m.classList.remove("swap")); },250);
+  layoutStrip(); if(!introRunning) playActive();
+}
+strip.addEventListener("click",e=>{ const b=e.target.closest(".s-item"); if(!b||introRunning) return;
+  const i=+b.dataset.i; if(i===cur) location.hash=`projecte/${ENTRIES[i].p.id}`; else go(i); });
+let wAcc=0,wLock=false;
+stage.addEventListener("wheel",e=>{ e.preventDefault(); if(wLock||introRunning) return; wAcc+=e.deltaY;
+  if(Math.abs(wAcc)>40){ go(cur+Math.sign(wAcc)); wAcc=0; wLock=true; setTimeout(()=>wLock=false,650); } },{passive:false});
+let ty=null;
+stage.addEventListener("touchstart",e=>ty=e.touches[0].clientY,{passive:true});
+stage.addEventListener("touchend",e=>{ if(ty===null||introRunning) return; const dy=ty-e.changedTouches[0].clientY; if(Math.abs(dy)>40) go(cur+Math.sign(dy)); ty=null; });
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){ closeMenu(); closeLb(); }
+  if($("#lb").classList.contains("on")){ if(e.key==="ArrowRight") lbStep(1); if(e.key==="ArrowLeft") lbStep(-1); return; }
+  if(view!=="inici"||introRunning||$("#menu").classList.contains("on")) return;
+  if(e.key==="ArrowDown"||e.key==="ArrowRight") go(cur+1);
+  if(e.key==="ArrowUp"||e.key==="ArrowLeft") go(cur-1);
+  if(e.key==="Enter") location.hash=`projecte/${ENTRIES[cur].p.id}`;
 });
-let wheelAcc = 0, wheelLock = false;
-stage.addEventListener("wheel", e => {
-  e.preventDefault();
-  if (wheelLock) return;
-  wheelAcc += e.deltaY;
-  if (Math.abs(wheelAcc) > 40) {
-    go(cur + Math.sign(wheelAcc)); wheelAcc = 0; wheelLock = true;
-    setTimeout(() => wheelLock = false, 650);
-  }
-}, { passive: false });
-let ty = null;
-stage.addEventListener("touchstart", e => ty = e.touches[0].clientY, { passive: true });
-stage.addEventListener("touchend", e => {
-  if (ty === null) return;
-  const dy = ty - e.changedTouches[0].clientY;
-  if (Math.abs(dy) > 40) go(cur + Math.sign(dy));
-  ty = null;
-});
-document.addEventListener("keydown", e => {
-  if (view !== "inici") return;
-  if (e.key === "ArrowDown" || e.key === "ArrowRight") go(cur + 1);
-  if (e.key === "ArrowUp" || e.key === "ArrowLeft") go(cur - 1);
-  if (e.key === "Enter") location.hash = `projecte/${PROJECTS[cur].slug}`;
-});
-addEventListener("resize", layoutStrip);
 
-/* ================= TREBALLS ================= */
-const filt = { cat: "all", role: "all" };
-function buildFilters(){
-  [["cat", CATS], ["role", ROLES]].forEach(([key, map]) => {
-    const g = document.querySelector(`.fgroup[data-key="${key}"]`);
-    g.insertAdjacentHTML("beforeend",
-      `<button class="chip on" data-v="all">Tots</button>` +
-      Object.entries(map).map(([k, v]) => `<button class="chip" data-v="${k}">${v}</button>`).join(""));
-    g.addEventListener("click", e => {
-      const c = e.target.closest(".chip"); if (!c) return;
-      filt[key] = c.dataset.v;
-      g.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === c));
-      applyFilters();
+/* ============ INTRO ============ */
+const introEl=$("#intro"), itTitle=$("#itTitle");
+let introRunning=false, introToken=0, introTimers=[];
+function buildTitle(){
+  const line=w=>{const ch=[...w],c=(ch.length-1)/2;return `<span class="ln">${ch.map((x,i)=>`<span class="ch" style="--o:${(i-c).toFixed(1)}">${x}</span>`).join("")}</span>`;};
+  const name=line("Boi Vidal")+line("Albert");
+  itTitle.innerHTML=`<div class="it-wrap"><div class="it-name"><span class="half top">${name}</span><span class="half bot">${name}</span></div><p class="it-tag mono">${t("hero.roles")}</p></div>`;
+}
+function endIntro(){
+  introToken++; introTimers.forEach(clearTimeout); introTimers=[];
+  const iv=introEl.querySelector("video.sharp"); const time=iv?iv.currentTime:null;
+  introRunning=false;
+  document.body.classList.remove("intro-on","intro-wait","settle","t-in","t-out");
+  introEl.classList.remove("landing"); introEl.removeAttribute("style"); introEl.innerHTML=""; itTitle.innerHTML="";
+  if(view==="inici") playActive(time);
+}
+function playIntro(){
+  if(reduce){ endIntro(); return; }
+  if(location.hash && location.hash!=="#inici"){ location.hash="inici"; }
+  const token=++introToken; introTimers.forEach(clearTimeout); introTimers=[]; introRunning=true;
+  go(0,true); items.forEach(el=>{const v=el.querySelector("video"); if(v){v.pause();v.remove();}});
+  const bc=document.body.classList;
+  bc.remove("settle","t-in","t-out"); bc.add("intro-on","intro-wait");
+  introEl.classList.remove("landing"); introEl.removeAttribute("style");
+  const src=vsrc(ENTRIES[0].v), poster=ENTRIES[0].poster;
+  introEl.innerHTML=`<video class="sharp" src="${src}" poster="${poster}" autoplay muted loop playsinline></video>
+    <div class="blur"><video src="${src}" poster="${poster}" autoplay muted loop playsinline></video></div>`;
+  const [sharp,soft]=$$("video",introEl); [sharp,soft].forEach(v=>{v.muted=true;v.play().catch(()=>{})});
+  buildTitle();
+  const fonts=document.fonts&&document.fonts.load?Promise.race([document.fonts.load('600 100px "Inter Tight"'),new Promise(r=>setTimeout(r,1200))]).catch(()=>{}):Promise.resolve();
+  fonts.then(()=>new Promise(r=>setTimeout(r,200))).then(()=>{
+    if(token!==introToken) return;
+    requestAnimationFrame(()=>{ if(token!==introToken) return;
+      bc.remove("intro-wait");
+      const at=(ms,fn)=>introTimers.push(setTimeout(()=>{ if(token===introToken) fn(); },ms));
+      at(80,()=>bc.add("t-in"));
+      at(2150,()=>{ bc.remove("t-in"); bc.add("t-out"); try{soft.currentTime=sharp.currentTime}catch(_){} });
+      at(2850,()=>{                                   /* el vídeo s'encaixa al fotograma actiu de la tira */
+        bc.add("settle"); layoutStrip();
+        const r=items[cur].getBoundingClientRect();
+        introEl.classList.add("landing");
+        Object.assign(introEl.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px"});
+      });
+      at(3950,endIntro);
     });
   });
 }
-function buildGrid(){
-  $("#grid").innerHTML = PROJECTS.map((p, i) => `
-    <a class="card" href="#projecte/${p.slug}" data-i="${i}" data-cat="${p.cat}" data-role="${p.role}">
-      <div class="ph"><img loading="lazy" src="${img(p.slug, 900, 562)}" alt="${p.title}"></div>
-      <div class="cap"><span>[ ${p.title} ]</span><span>${ROLES[p.role]}</span></div>
-      <div class="cap muted" style="margin-top:2px"><span>${CATS[p.cat]}</span><span>${p.year}</span></div>
+addEventListener("resize",()=>{ if(introRunning) endIntro(); layoutStrip(); setRing(); });
+$("#replay").addEventListener("click",playIntro);
+
+/* ============ MENÚ: anell de projectes ============ */
+const menu=$("#menu"), ring=$("#ring");
+const RING=[]; PROJECTS.forEach(p=>p.stills.forEach(s=>RING.push({p,s})));
+// barreja els dos projectes perquè s'alternin a l'anell
+const ringItems=[]; { const a=RING.filter(x=>x.p===PROJECTS[0]), b=RING.filter(x=>x.p===PROJECTS[1]);
+  for(let i=0;i<Math.max(a.length,b.length);i++){ if(a[i]) ringItems.push(a[i]); if(b[i]) ringItems.push(b[i]); } }
+const RN=Math.min(ringItems.length,18);
+ring.innerHTML=ringItems.slice(0,RN).map((x,i)=>`<a class="tile" href="#projecte/${x.p.id}" style="--i:${i}"><img src="${x.s}" alt="" loading="lazy"><span>${x.p.title}</span></a>`).join("");
+function setRing(){
+  const tw=Math.min(innerWidth*(MOB?.3:.15),230), th=tw*.92, r=(tw+4)/(2*Math.tan(Math.PI/RN));
+  ring.style.setProperty("--tw",tw+"px"); ring.style.setProperty("--th",th+"px");
+  ring.style.setProperty("--r",r+"px"); ring.style.setProperty("--step",(360/RN)+"deg");
+}
+setRing();
+function openMenu(){ menu.classList.add("on"); menu.setAttribute("aria-hidden","false"); }
+function closeMenu(){ menu.classList.remove("on"); menu.setAttribute("aria-hidden","true"); }
+$("#menuBtn").addEventListener("click",openMenu);
+$("#menuClose").addEventListener("click",closeMenu);
+menu.addEventListener("click",e=>{ if(e.target.closest("a")) closeMenu(); });
+
+/* ============ TREBALLS ============ */
+const filt={type:"all",role:"all"};
+function renderFilters(){
+  const tg=$('.fgroup[data-key="type"]'), rg=$('.fgroup[data-key="role"]');
+  $$(".chip",tg).forEach(c=>c.remove()); $$(".chip",rg).forEach(c=>c.remove());
+  tg.insertAdjacentHTML("beforeend",[["all",t("f.all")],...TYPE_KEYS.map(k=>[k,t("type."+k)])].map(([k,v])=>`<button class="chip${filt.type===k?" on":""}" data-v="${k}">${v}</button>`).join(""));
+  rg.insertAdjacentHTML("beforeend",[["all",t("f.all")],...ROLES.map(k=>[k,roleName(k)])].map(([k,v])=>`<button class="chip${filt.role===k?" on":""}" data-v="${k}">${v}</button>`).join(""));
+}
+$$(".fgroup[data-key]").forEach(g=>g.addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(!c) return;
+  filt[g.dataset.key]=c.dataset.v; renderFilters(); applyFilters(); }));
+function renderGrid(){
+  $("#grid").innerHTML=PROJECTS.map(p=>`
+    <a class="card" href="#projecte/${p.id}" data-type="${p.type}" data-roles="${p.roles.join(",")}">
+      <div class="ph"><img loading="lazy" src="${p.cover}" alt="${p.title}"><video muted loop playsinline preload="none" data-src="${vsrc(p.sheetVideo)}"></video></div>
+      <div class="cap"><span>[ ${p.title} ]</span><span>${rolesTxt(p)}</span></div>
+      <div class="cap muted" style="margin-top:2px"><span>${t("type."+p.type)} — ${L(p.length)}</span><span>${p.year}</span></div>
     </a>`).join("");
-  $("#grid").addEventListener("mouseover", e => {
-    const c = e.target.closest(".card"); if (c) setBg(PROJECTS[+c.dataset.i].cover);
-  });
+  $$(".card").forEach(c=>{ const v=$("video",c);
+    c.addEventListener("mouseenter",()=>{ if(!v.src) v.src=v.dataset.src; v.play().catch(()=>{}); });
+    c.addEventListener("mouseleave",()=>v.pause()); });
+  applyFilters();
 }
 function applyFilters(){
-  let n = 0;
-  document.querySelectorAll(".card").forEach(c => {
-    const ok = (filt.cat === "all" || c.dataset.cat === filt.cat) && (filt.role === "all" || c.dataset.role === filt.role);
-    c.classList.toggle("hide", !ok); if (ok) n++;
-  });
-  $("#count").textContent = `(${pad(n)})`;
-  $("#empty").style.display = n ? "none" : "block";
+  let n=0;
+  $$(".card").forEach(c=>{ const ok=(filt.type==="all"||c.dataset.type===filt.type)&&(filt.role==="all"||c.dataset.roles.split(",").includes(filt.role));
+    c.classList.toggle("hide",!ok); if(ok) n++; });
+  $("#count").textContent=`(${pad(n)})`; $("#empty").style.display=n?"none":"block";
 }
 
-/* ================= PROJECTE ================= */
-function renderProject(slug){
-  const i = Math.max(0, PROJECTS.findIndex(p => p.slug === slug));
-  const p = PROJECTS[i], nx = PROJECTS[(i + 1) % PROJECTS.length];
-  setBg(p.cover);
-  $("#project").innerHTML = `
-    <div class="p-top mono"><a href="#treballs">(Tornar)</a><span class="muted">${pad(i + 1)}/${pad(PROJECTS.length)}</span></div>
+/* ============ PROJECTE ============ */
+let lbList=[], lbI=0;
+function renderProject(id){
+  const i=Math.max(0,PROJECTS.findIndex(p=>p.id===id)), p=PROJECTS[i], nx=PROJECTS[(i+1)%PROJECTS.length];
+  const stills=[...new Set(p.stills)];
+  $("#project").innerHTML=`
+    <div class="p-top mono"><a href="#treballs">${t("back")}</a><span class="muted">${pad(i+1)}/${pad(PROJECTS.length)}</span></div>
     <div class="p-title">
-      <h1 class="big">${p.title}</h1>
+      <div><h1 class="big">${p.title}</h1><p class="log">${L(p.log)}</p></div>
       <dl class="kv mono">
-        <dt>Rol</dt><dd>${ROLES[p.role]}</dd>
-        <dt>Tipus</dt><dd>${CATS[p.cat]} — ${p.format}</dd>
-        <dt>Any</dt><dd>${p.year}</dd>
-        <dt>Càmera</dt><dd>${p.camera}</dd>
+        <dt>${t("spec.role")}</dt><dd>${rolesTxt(p)}</dd>
+        <dt>${t("f.type")}</dt><dd>${t("type."+p.type)} — ${L(p.length)}</dd>
+        <dt>${t("spec.year")}</dt><dd>${p.year}</dd>
+        <dt>${t("spec.ratio")}</dt><dd>${p.ratio}</dd>
       </dl>
     </div>
-    <div class="ph" style="aspect-ratio:2.39/1;overflow:hidden"><img src="${img(p.slug, 2000, 837)}" alt="${p.title}"></div>
+    <div class="hero-v" style="aspect-ratio:${p.ratio==="2.39:1"?"2.39/1":"16/9"}"><video src="${vsrc(p.sheetVideo)}" poster="${p.sheetPoster}" autoplay muted loop playsinline></video></div>
 
-    <div class="label mono"><span>[ Frames ]</span><span class="muted">Llisca →</span></div>
+    <div class="label mono"><span>[ ${t("sheet.frames")} ]</span><span class="muted">${pad(stills.length)} · ${t("slide")}</span></div>
     <div class="film mono" style="--mat:${p.mat}">
-      ${p.stills.map((s, n) => `<figure><img loading="lazy" src="${s}" alt=""><figcaption class="muted">${pad(n + 1)}</figcaption></figure>`).join("")}
+      ${stills.map((s,n)=>`<figure data-n="${n}"><img loading="lazy" src="${s}" alt="${t("still")} ${n+1}"><figcaption class="muted">${pad(n+1)}</figcaption></figure>`).join("")}
     </div>
 
-    <div class="label mono"><span>[ Making of ]</span><span class="muted">Al set</span></div>
-    <div class="mk bw">${p.making.map(s => `<div class="ph"><img loading="lazy" src="${s}" alt=""></div>`).join("")}</div>
-
-    <div class="label mono"><span>[ Teaser ]</span><span class="muted">${p.vimeo ? "Vimeo" : "Pendent"}</span></div>
-    <div class="teaser mono">
-      ${p.vimeo
-        ? `<iframe src="${p.vimeo}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`
-        : `<img loading="lazy" src="${img(p.slug + '-t', 1600, 900)}" alt=""><div class="play"><span>▶ Teaser — enllaç de Vimeo</span></div>`}
+    <div class="label mono"><span>[ ${t("sheet.loop")}s ]</span><span class="muted">${pad(p.stripVideos.length)}</span></div>
+    <div class="grid" style="grid-template-columns:repeat(${MOB?1:3},1fr)">
+      ${p.stripVideos.map(([v,po])=>`<div class="hero-v" style="aspect-ratio:16/9"><video src="${vsrc(v)}" poster="${po}" autoplay muted loop playsinline preload="metadata"></video></div>`).join("")}
     </div>
 
-    <div class="label mono"><span>[ Fitxa tècnica ]</span><span></span></div>
+    <div class="label mono"><span>[ Credits ]</span><span></span></div>
     <div class="credits mono">
-      <div><span class="muted">Director/a</span><br>${p.director}</div>
-      <div><span class="muted">Producció</span><br>${p.production}</div>
-      <div><span class="muted">Rol</span><br>${ROLES[p.role]}</div>
-      <div><span class="muted">Càmera</span><br>${p.camera}</div>
-      <div><span class="muted">Òptiques</span><br>${p.lenses}</div>
-      <div><span class="muted">Format</span><br>${p.format}, ${p.year}</div>
+      <div><span class="muted">${t("spec.dir")}</span><br>${p.director}</div>
+      <div><span class="muted">${t("spec.prod")}</span><br>${p.prod}</div>
+      <div><span class="muted">${t("spec.role")}</span><br>${rolesTxt(p)}</div>
+      <div><span class="muted">${t("spec.cam")}</span><br>${p.camera}</div>
+      <div><span class="muted">${t("spec.lens")}</span><br>${p.lenses}</div>
+      <div><span class="muted">${t("spec.format")}</span><br>${p.format}</div>
+      <div><span class="muted">${t("spec.ratio")}</span><br>${p.ratio}</div>
+      <div><span class="muted">${t("spec.year")}</span><br>${p.year}</div>
     </div>
 
-    <a class="next" href="#projecte/${nx.slug}">
-      <span class="mono muted">Següent projecte</span>
-      <div class="big" style="margin-top:8px">${nx.title} →</div>
-    </a>`;
-  document.querySelector('[data-view="projecte"]').scrollTop = 0;
+    <a class="next" href="#projecte/${nx.id}"><span class="mono muted">${t("sheet.next")}</span><div class="big" style="margin-top:8px">${nx.title} →</div></a>`;
+  $$(".film figure").forEach(f=>f.addEventListener("click",()=>openLb(stills,+f.dataset.n)));
+  $('[data-view="projecte"]').scrollTop=0;
 }
 
-/* ================= FOTO / BTS ================= */
-let photoFilter = "all";
-function buildPhotos(){
-  const f = $("#photo-filter");
-  f.insertAdjacentHTML("beforeend", `<button class="chip on" data-v="all">Totes</button><button class="chip" data-v="analogic">Analògic</button><button class="chip" data-v="digital">Digital</button>`);
-  f.addEventListener("click", e => {
-    const c = e.target.closest(".chip"); if (!c) return;
-    photoFilter = c.dataset.v;
-    f.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === c));
-    drawPhotos();
-  });
-  drawPhotos();
-  $("#bts").innerHTML = BTS.map(b => `<figure><div class="ph"><img loading="lazy" src="${b.src}" alt=""></div><figcaption><span>[ ${b.title} ]</span><span class="muted">Set</span></figcaption></figure>`).join("");
-  $("#portrait").src = img("boi-portrait", 900, 1125);
-}
-function drawPhotos(){
-  $("#photos").innerHTML = PHOTOS.filter(p => photoFilter === "all" || p.type === photoFilter)
-    .map(p => `<figure><div class="ph"><img loading="lazy" src="${p.src}" alt=""></div><figcaption><span>${p.title}</span><span class="muted">${p.type === "analogic" ? "35mm" : "Digital"}</span></figcaption></figure>`).join("");
-}
+/* ============ LIGHTBOX ============ */
+const lb=$("#lb");
+function openLb(list,i){ lbList=list; lbI=i; lbShow(); lb.classList.add("on"); }
+function lbShow(){ $("#lbImg").src=lbList[lbI]; $("#lbCnt").textContent=`${pad(lbI+1)}/${pad(lbList.length)}`; }
+function lbStep(d){ lbI=(lbI+d+lbList.length)%lbList.length; lbShow(); }
+function closeLb(){ lb.classList.remove("on"); }
+lb.addEventListener("click",closeLb);
 
-/* ================= ROUTER ================= */
-let view = "";
-const bgFor = { fotografia: () => PHOTOS[0].src, bts: () => BTS[1].src, sobre: () => img("boi-portrait", 1600, 900), contacte: () => PROJECTS[2].cover };
+/* ============ FOTO / BTS / SOBRE ============ */
+let photoF="all";
+function renderPhotos(){
+  const f=$("#photoFilter");
+  f.innerHTML=[["all",t("photos.all")],["analog",t("photos.analog")],["digital",t("photos.digital")]].map(([k,v])=>`<button class="chip${photoF===k?" on":""}" data-v="${k}">${v}</button>`).join("");
+  const list=PHOTOS.filter(p=>photoF==="all"||p.kind===photoF);
+  $("#photos").innerHTML=list.map((p,i)=>`<figure data-n="${i}"><div class="ph"><img loading="lazy" src="${p.img}" alt="${p.title}"></div><figcaption><span>${p.title}</span><span class="muted">${p.meta}</span></figcaption></figure>`).join("");
+  $$("#photos figure").forEach(fg=>fg.addEventListener("click",()=>openLb(list.map(p=>p.img),+fg.dataset.n)));
+}
+$("#photoFilter").addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(!c) return; photoF=c.dataset.v; renderPhotos(); });
+function renderBts(){
+  $("#bts").innerHTML=BTS.length
+    ? BTS.map(b=>`<figure><div class="ph"><img loading="lazy" src="${b.img}" alt=""></div><figcaption><span>[ ${b.title} ]</span><span class="muted">Set</span></figcaption></figure>`).join("")
+    : Array.from({length:6},()=>`<figure><div class="slot mono">${t("bts.soon")}</div></figure>`).join("");
+}
+function renderAbout(){
+  $("#roles").innerHTML=ROLES.map(r=>`${roleName(r)}<span class="sub">${t("role."+r)}</span>`).join("<br>");
+  $("#cv").innerHTML=PROJECTS.map(p=>`<tr><td class="muted">${p.year}</td><td><button data-id="${p.id}">${p.title}</button> <span class="muted">— ${L(p.length)}</span></td><td>${rolesTxt(p)}</td></tr>`).join("");
+}
+$("#cv").addEventListener("click",e=>{ const b=e.target.closest("[data-id]"); if(b) location.hash="projecte/"+b.dataset.id; });
+$("#copyMail").addEventListener("click",async()=>{
+  const m="contacte@boividalalbert.com";
+  try{ await navigator.clipboard.writeText(m); $("#mailLbl").textContent=t("contact.copied"); setTimeout(()=>$("#mailLbl").textContent=m,1600); }
+  catch(_){ location.href="mailto:"+m; }
+});
+
+/* ============ IDIOMA ============ */
+function applyLang(){
+  document.documentElement.lang=lang;
+  $$("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
+  $$(".lang button").forEach(b=>b.classList.toggle("on",b.dataset.lang===lang));
+  renderFilters(); renderGrid(); renderPhotos(); renderBts(); renderAbout(); setMeta();
+  if(view==="projecte") renderProject(location.hash.split("/")[1]);
+}
+$(".lang").addEventListener("click",e=>{ const b=e.target.closest("[data-lang]"); if(!b) return;
+  lang=b.dataset.lang; try{localStorage.setItem("bva-lang",lang)}catch(_){} applyLang(); });
+
+/* ============ ROUTER ============ */
+let view="";
 function route(){
-  const [v = "inici", arg] = (location.hash.slice(1) || "inici").split("/");
-  view = document.querySelector(`.view[data-view="${v}"]`) ? v : "inici";
-  if (view === "projecte") renderProject(arg);
-  document.querySelectorAll(".view").forEach(el => el.classList.toggle("on", el.dataset.view === view));
-  document.querySelectorAll(".nav a").forEach(a => a.classList.toggle("cur", a.hash.slice(1) === view || (view === "projecte" && a.hash === "#treballs")));
-  if (view === "inici") { layoutStrip(); setBg(PROJECTS[cur].cover); }
-  if (view === "treballs") setBg(PROJECTS[0].cover);
-  if (bgFor[view]) setBg(bgFor[view]());
+  const [v="inici",arg]=(location.hash.slice(1)||"inici").split("/");
+  const prev=view;
+  view=$(`.view[data-view="${v}"]`)?v:"inici";
+  if(view==="projecte") renderProject(arg);
+  $$(".view").forEach(el=>el.classList.toggle("on",el.dataset.view===view));
+  $$(".nav a").forEach(a=>a.classList.toggle("cur",a.hash.slice(1)===view||(view==="projecte"&&a.hash==="#treballs")));
+  if(view==="inici"){ layoutStrip(); if(!introRunning) playActive(); }
+  else { const av=activeVideo(); if(av) av.pause(); }
+  if(prev==="projecte"&&view!=="projecte") $$("#project video").forEach(v=>v.pause());
+  closeMenu();
 }
-addEventListener("hashchange", route);
+addEventListener("hashchange",route);
 
-buildFilters(); buildGrid(); buildPhotos();
-go(0); route();
+/* ============ ARRENCADA ============ */
+if(!location.hash||location.hash==="#inici") introRunning=true;
+applyLang(); route(); layoutStrip(); setMeta();
+if(view==="inici"){
+  if(document.visibilityState==="visible") playIntro();
+  else { endIntro(); document.addEventListener("visibilitychange",function once(){ if(document.visibilityState==="visible"){ document.removeEventListener("visibilitychange",once); playIntro(); } }); }
+} else endIntro();
 </script>
 </body>
 </html>
