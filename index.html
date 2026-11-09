@@ -214,6 +214,99 @@ em{font-style:italic}
 .links .mono{opacity:0;transition:opacity .3s}
 .links a:hover .mono,.links button:hover .mono{opacity:1}
 
+
+/* ============ TREBALLS · PROPOSTES ============ */
+.wstage{display:none}
+.wstage.on{display:block}
+.grid.wstage.on{display:grid}
+#wView .chip span{pointer-events:none}
+/* fotograma de pel·lícula: perforacions + codi de vora */
+.fr{--sp:18px;position:absolute;background:#0b0b0b;padding:var(--sp) 5px calc(var(--sp) + 9px);display:block;color:#c9a46a}
+.fr::before,.fr::after{content:"";position:absolute;left:0;right:0;height:8px;
+  background:repeating-linear-gradient(90deg,transparent 0 6px,#ece8e0 6px 14px,transparent 14px 22px)}
+.fr::before{top:5px}.fr::after{bottom:5px}
+.fr .pic{position:relative;width:100%;height:100%;overflow:hidden;background:#1a1a1a}
+.fr .pic img,.fr .pic video{position:absolute;inset:0}
+.fr .edge{position:absolute;left:8px;right:8px;bottom:calc(var(--sp) - 2px);display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;letter-spacing:.08em;line-height:1;white-space:nowrap}
+.hud{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;pointer-events:none}
+.hud span:first-child{color:#e23b2e}
+
+/* 1 · CINTA */
+#wCinta{position:relative;height:max(460px,calc(100svh - 290px));overflow:hidden;cursor:grab;user-select:none;touch-action:pan-y}
+#wCinta.drag{cursor:grabbing}
+.pa-scene{position:absolute;inset:0;perspective:1400px;display:grid;place-items:center}
+.pa-tilt{transform-style:preserve-3d;transform:rotateX(-17deg) rotateZ(-9deg)}
+.pa-ring{transform-style:preserve-3d}
+.pa-ring .fr{left:calc(var(--fw) / -2);top:calc(var(--fh) / -2);width:var(--fw);height:var(--fh);
+  transform:rotateY(calc(var(--i) * var(--step))) translateZ(var(--r));transition:filter .4s}
+.pa-ring .fr .pic img{filter:brightness(.8);transition:filter .4s}
+.pa-ring .fr.front .pic img{filter:none}
+.pa-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;pointer-events:none}
+.pa-title{pointer-events:auto;font-size:clamp(30px,4.6vw,68px);font-weight:500;letter-spacing:-.04em;text-transform:uppercase;line-height:.92;
+  color:var(--ink);transition:opacity .3s;text-shadow:0 0 18px var(--paper)}
+.pa-center .mono{text-shadow:0 0 10px var(--paper)}
+.pa-hint{margin-top:10px}
+
+/* 2 · PROJECTOR */
+#wProj{position:relative;height:max(480px,calc(100svh - 290px));flex-direction:column;user-select:none}
+#wProj.on{display:flex}
+.pb-top{display:flex;justify-content:space-between}
+.pb-scene{position:relative;flex:1;perspective:1100px;overflow:hidden;cursor:grab;touch-action:pan-y;margin:0 calc(var(--gut) * -1)}
+.pb-scene.drag{cursor:grabbing}
+.pb-track{position:absolute;left:50%;top:50%;transform-style:preserve-3d}
+.pb-track .fr{left:calc(var(--fw) / -2);top:calc(var(--fh) / -2);width:var(--fw);height:var(--fh);backface-visibility:hidden}
+.pb-track .fr .pic{transition:filter .5s}
+.pb-track .fr:not(.on) .pic{filter:brightness(.55) saturate(.7)}
+.pb-track .fr.on::marker{display:none}
+.pb-beam{position:absolute;left:50%;top:-10%;width:120%;height:130%;transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(ellipse 30% 45% at 50% 50%,rgba(255,240,210,.25),transparent 70%)}
+.pb-bot{display:grid;grid-template-columns:1fr auto auto;gap:24px;align-items:end;padding-top:14px}
+.pb-title{display:block;font-size:clamp(28px,4vw,58px);font-weight:500;letter-spacing:-.04em;text-transform:uppercase;line-height:.9;margin-top:4px}
+.pb-meta{display:flex;flex-direction:column;text-align:right}
+.pb-ctl{display:flex;gap:6px}
+.pb-ctl button{border:1px solid var(--ink);width:42px;height:32px}
+.pb-ctl button:hover{background:var(--ink);color:var(--paper)}
+
+/* 3 · OBJECTIU */
+#wLens{height:max(480px,calc(100svh - 290px));user-select:none}
+#wLens.on{display:grid;grid-template-columns:1fr 1fr;gap:4vw;align-items:center}
+.pc-dial-wrap{position:relative;justify-self:center;--D:min(64vh,40vw)}
+.pc-dial{position:relative;width:var(--D);height:var(--D);border-radius:50%;cursor:grab;touch-action:none;
+  background:radial-gradient(circle,#161616 0 34%,#0d0d0d 34% 36%,#1d1d1d 36% 64%,#0b0b0b 64% 65%,#202020 65% 100%);
+  box-shadow:inset 0 0 0 1px #000,0 30px 60px -20px rgba(0,0,0,.45)}
+.pc-dial.drag{cursor:grabbing}
+.pc-ticks,.pc-labels,.pc-thumbs{position:absolute;inset:0;border-radius:50%}
+.pc-ticks{background:repeating-conic-gradient(#cfc9bd 0 .35deg,transparent .35deg 5deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 92%,#000 92% 97%,transparent 97%);mask:radial-gradient(circle,transparent 0 92%,#000 92% 97%,transparent 97%)}
+.pc-labels span{position:absolute;left:50%;top:50%;font-family:var(--mono);font-size:10px;color:#e8e2d6;white-space:nowrap}
+.pc-thumbs .th{position:absolute;left:50%;top:50%;width:calc(var(--D) * .17);aspect-ratio:16/10;overflow:hidden;border:1px solid #000;cursor:pointer;transition:outline-color .3s;outline:1px solid transparent;outline-offset:3px}
+.pc-thumbs .th img{filter:grayscale(.5) brightness(.75);transition:filter .3s}
+.pc-thumbs .th.on{outline-color:#e8e2d6}
+.pc-thumbs .th.on img,.pc-thumbs .th:hover img{filter:none}
+.pc-iris{position:absolute;left:50%;top:50%;width:30%;height:30%;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;color:#e8e2d6;
+  background:radial-gradient(circle,#050505 0 var(--ap,30%),transparent calc(var(--ap,30%) + 1%)),repeating-conic-gradient(from var(--rot,0deg),#2a2a2a 0 30deg,#1a1a1a 30deg 60deg);
+  transition:--ap .5s}
+.pc-mark{position:absolute;right:calc(var(--D) * -.04);top:50%;width:0;height:0;transform:translateY(-50%);border:8px solid transparent;border-right-color:var(--ink)}
+.pc-right{display:flex;flex-direction:column;gap:16px}
+.pc-view{position:relative;display:block;aspect-ratio:16/9;background:#000;cursor:pointer}
+.pc-pic{position:absolute;inset:0;overflow:hidden;clip-path:circle(75% at 50% 50%);transition:clip-path .55s cubic-bezier(.7,0,.3,1)}
+.pc-pic.shut{clip-path:circle(0% at 50% 50%)}
+.pc-pic img,.pc-pic video{position:absolute;inset:0}
+.pc-view .corner{opacity:1}
+.pc-osd{position:absolute;left:12px;right:12px;display:flex;justify-content:space-between;color:#fff;z-index:2;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.pc-osd-t{top:10px}.pc-osd-t span:first-child{color:#ff5a4c}
+.pc-osd-b{bottom:10px}
+.pc-info{display:grid;gap:4px}
+.pc-title{font-size:clamp(28px,3.6vw,54px);font-weight:500;letter-spacing:-.04em;text-transform:uppercase;line-height:.9}
+@property --ap{syntax:"<percentage>";inherits:false;initial-value:30%}
+
+@media (max-width:720px){
+  #wView{margin-top:4px}
+  #wLens.on{grid-template-columns:1fr;height:auto;gap:28px;padding-bottom:20px}
+  .pc-dial-wrap{--D:78vw}
+  .pb-bot{grid-template-columns:1fr auto}.pb-meta{display:none}
+}
+
 /* ============ RESPONSIVE ============ */
 @media (max-width:900px){.credits{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:720px){
@@ -296,10 +389,62 @@ em{font-style:italic}
           <div class="filters mono">
             <div class="fgroup" data-key="type"><b data-i18n="f.type"></b></div>
             <div class="fgroup" data-key="role"><b data-i18n="f.role"></b></div>
+            <div class="fgroup" id="wView"><b data-i18n="f.view"></b>
+              <button class="chip" data-w="cinta">1 · <span data-i18n="w.cinta"></span></button>
+              <button class="chip" data-w="proj">2 · <span data-i18n="w.proj"></span></button>
+              <button class="chip" data-w="lens">3 · <span data-i18n="w.lens"></span></button>
+              <button class="chip" data-w="grid">4 · <span data-i18n="w.grid"></span></button>
+            </div>
           </div>
         </div>
         <div class="rule"></div>
-        <div class="grid mono" id="grid"></div>
+
+        <!-- PROPOSTA 1 · CINTA: anell de pel·lícula que gira -->
+        <div class="wstage" id="wCinta" data-w="cinta">
+          <div class="pa-scene" id="paScene"><div class="pa-tilt"><div class="pa-ring" id="paRing"></div></div></div>
+          <div class="pa-center">
+            <span class="mono muted" id="paIdx"></span>
+            <a class="pa-title" id="paTitle"></a>
+            <span class="mono" id="paMeta"></span>
+            <span class="mono muted pa-hint" data-i18n="w.hint.drag"></span>
+          </div>
+          <div class="hud mono"><span>● REC</span><span id="paTc">01:00:00:00</span><span>24 FPS · 180°</span></div>
+        </div>
+
+        <!-- PROPOSTA 2 · PROJECTOR: tira corba que corre -->
+        <div class="wstage" id="wProj" data-w="proj">
+          <div class="pb-top mono"><span>▸ <span data-i18n="w.proj.label"></span></span><span class="muted" id="pbFeet">0000 FT + 00</span></div>
+          <div class="pb-scene" id="pbScene"><div class="pb-track" id="pbTrack"></div></div>
+          <div class="pb-bot">
+            <div><span class="mono muted" id="pbIdx"></span><a class="pb-title" id="pbTitle"></a></div>
+            <div class="mono pb-meta"><span id="pbMeta"></span><span class="muted" id="pbTc"></span></div>
+            <div class="pb-ctl mono"><button id="pbPrev">←</button><button id="pbNext">→</button></div>
+          </div>
+        </div>
+
+        <!-- PROPOSTA 3 · OBJECTIU: anell d'enfocament que roda -->
+        <div class="wstage" id="wLens" data-w="lens">
+          <div class="pc-dial-wrap">
+            <div class="pc-dial" id="pcDial">
+              <div class="pc-ticks"></div>
+              <div class="pc-labels" id="pcLabels"></div>
+              <div class="pc-thumbs" id="pcThumbs"></div>
+              <div class="pc-iris" id="pcIris"><span class="mono" id="pcF">f/2.8</span></div>
+            </div>
+            <span class="pc-mark"></span>
+          </div>
+          <div class="pc-right">
+            <a class="pc-view" id="pcView">
+              <div class="pc-pic" id="pcPic"></div>
+              <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+              <span class="pc-osd mono pc-osd-t"><span>● REC</span><span id="pcTc"></span></span>
+              <span class="pc-osd mono pc-osd-b"><span id="pcExp">f/2.8 · 1/50 · ISO 800</span><span id="pcFocus">∞</span></span>
+            </a>
+            <div class="pc-info"><span class="mono muted" id="pcIdx"></span><span class="pc-title" id="pcTitle"></span><span class="mono" id="pcMeta"></span></div>
+          </div>
+        </div>
+
+        <div class="grid mono wstage" id="grid" data-w="grid"></div>
         <p class="empty mono muted" id="empty" data-i18n="work.empty"></p>
       </div>
     </section>
@@ -384,7 +529,7 @@ const I18N = {
   "menu":"(Índex)","menu.close":"Tancar ✕","replay":"▶ Tornar a veure la intro",
   "hint.home":"(Scroll / ↑↓) · Clica per obrir",
   "hero.roles":"Director de fotografia · Operador de càmera · Ajudant de càmera","hero.loc":"Barcelona — disponible arreu",
-  "work.title":"Treballs","f.type":"Tipus","f.role":"Rol","f.all":"Tots",
+  "work.title":"Treballs","f.view":"Vista","w.cinta":"Cinta","w.proj":"Projector","w.lens":"Objectiu","w.grid":"Graella","w.hint.drag":"Arrossega la cinta · clica un fotograma","w.proj.label":"Projector · 24 fps","w.open":"Obrir projecte →","f.type":"Tipus","f.role":"Rol","f.all":"Tots",
   "work.empty":"Cap projecte amb aquesta combinació de tipus i rol. Prova un altre filtre.",
   "type.ficcio":"Ficció","type.documental":"Documental","type.outdoor":"Outdoor","type.publi":"Publi / Comercial",
   "rn.Operador":"Operador","photos.title":"Fotografies","photos.all":"Totes","photos.analog":"Analògic","photos.digital":"Digital",
@@ -403,7 +548,7 @@ const I18N = {
   "menu":"(Índice)","menu.close":"Cerrar ✕","replay":"▶ Volver a ver la intro",
   "hint.home":"(Scroll / ↑↓) · Clica para abrir",
   "hero.roles":"Director de fotografía · Operador de cámara · Ayudante de cámara","hero.loc":"Barcelona — disponible en todo el mundo",
-  "work.title":"Trabajos","f.type":"Tipo","f.role":"Rol","f.all":"Todos",
+  "work.title":"Trabajos","f.view":"Vista","w.cinta":"Cinta","w.proj":"Proyector","w.lens":"Objetivo","w.grid":"Cuadrícula","w.hint.drag":"Arrastra la cinta · clica un fotograma","w.proj.label":"Proyector · 24 fps","w.open":"Abrir proyecto →","f.type":"Tipo","f.role":"Rol","f.all":"Todos",
   "work.empty":"Ningún proyecto con esta combinación de tipo y rol. Prueba otro filtro.",
   "type.ficcio":"Ficción","type.documental":"Documental","type.outdoor":"Outdoor","type.publi":"Publi / Comercial",
   "rn.Operador":"Operador","photos.title":"Fotografías","photos.all":"Todas","photos.analog":"Analógico","photos.digital":"Digital",
@@ -422,7 +567,7 @@ const I18N = {
   "menu":"(Index)","menu.close":"Close ✕","replay":"▶ Replay intro",
   "hint.home":"(Scroll / ↑↓) · Click to open",
   "hero.roles":"Cinematographer · Camera operator · Camera assistant","hero.loc":"Barcelona — available worldwide",
-  "work.title":"Work","f.type":"Type","f.role":"Role","f.all":"All",
+  "work.title":"Work","f.view":"View","w.cinta":"Reel","w.proj":"Projector","w.lens":"Lens","w.grid":"Grid","w.hint.drag":"Drag the reel · click a frame","w.proj.label":"Projector · 24 fps","w.open":"Open project →","f.type":"Type","f.role":"Role","f.all":"All",
   "work.empty":"No projects match this type and role. Try another filter.",
   "type.ficcio":"Fiction","type.documental":"Documentary","type.outdoor":"Outdoor","type.publi":"Commercial",
   "rn.Operador":"Operator","photos.title":"Photography","photos.all":"All","photos.analog":"Analog","photos.digital":"Digital",
@@ -634,7 +779,7 @@ function renderFilters(){
   rg.insertAdjacentHTML("beforeend",[["all",t("f.all")],...ROLES.map(k=>[k,roleName(k)])].map(([k,v])=>`<button class="chip${filt.role===k?" on":""}" data-v="${k}">${v}</button>`).join(""));
 }
 $$(".fgroup[data-key]").forEach(g=>g.addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(!c) return;
-  filt[g.dataset.key]=c.dataset.v; renderFilters(); applyFilters(); }));
+  filt[g.dataset.key]=c.dataset.v; renderFilters(); applyFilters(); renderW(); }));
 function renderGrid(){
   $("#grid").innerHTML=PROJECTS.map(p=>`
     <a class="card" href="#projecte/${p.id}" data-type="${p.type}" data-roles="${p.roles.join(",")}">
@@ -738,11 +883,192 @@ function applyLang(){
   document.documentElement.lang=lang;
   $$("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
   $$(".lang button").forEach(b=>b.classList.toggle("on",b.dataset.lang===lang));
-  renderFilters(); renderGrid(); renderPhotos(); renderBts(); renderAbout(); setMeta();
+  renderFilters(); renderGrid(); renderPhotos(); renderBts(); renderAbout(); setMeta(); if(typeof renderW==='function'&&PA) renderW();
   if(view==="projecte") renderProject(location.hash.split("/")[1]);
 }
 $(".lang").addEventListener("click",e=>{ const b=e.target.closest("[data-lang]"); if(!b) return;
   lang=b.dataset.lang; try{localStorage.setItem("bva-lang",lang)}catch(_){} applyLang(); });
+
+
+/* ============================================================
+   TREBALLS · 3 PROPOSTES AMB MOVIMENT
+   ============================================================ */
+let wMode="cinta"; try{const m=localStorage.getItem("bva-wmode"); if(m) wMode=m;}catch(_){}
+const matchP=p=>(filt.type==="all"||p.type===filt.type)&&(filt.role==="all"||p.roles.includes(filt.role));
+function workItems(){
+  const out=[];
+  PROJECTS.filter(matchP).forEach(p=>{
+    p.stripVideos.forEach(([v,po],k)=>out.push({p,v,po,lab:`${t("sheet.loop")} ${pad(k+1)}`}));
+    [...new Set(p.stills)].slice(0,5).forEach((s,k)=>out.push({p,po:s,lab:`${t("still")} ${pad(k+1)}`}));
+  });
+  // alterna projectes perquè es barregin
+  const by=PROJECTS.map(p=>out.filter(o=>o.p===p)), mix=[];
+  for(let i=0;i<Math.max(0,...by.map(b=>b.length));i++) by.forEach(b=>{ if(b[i]) mix.push(b[i]); });
+  return mix;
+}
+const frHTML=(it,i,extra="")=>`<div class="fr${extra}" data-i="${i}" data-id="${it.p.id}"${it.v?` data-v="${it.v}"`:""}><div class="pic"><img src="${it.po}" alt="" loading="lazy" draggable="false"></div><span class="edge"><span>BVA 500T ▸ ${pad(i+1)}</span><span>${pad((i*7)%36)}A ◂</span></span></div>`;
+function vidOn(el,on){
+  if(!el) return; const pic=$(".pic",el); let v=$("video",pic);
+  if(on&&el.dataset.v&&!v){ v=document.createElement("video"); v.muted=true; v.loop=true; v.playsInline=true; v.setAttribute("playsinline","");
+    v.src=vsrc(el.dataset.v); pic.appendChild(v); v.play().catch(()=>{}); }
+  else if(!on&&v){ v.pause(); v.remove(); }
+}
+const modn=(a,n)=>((a%n)+n)%n;
+const tcAt=f=>`01:${pad(Math.floor(f/1440)%60)}:${pad(Math.floor(f/24)%60)}:${pad(f%24)}`;
+let wRaf=0, wFrame=0;
+function wLoop(){ wFrame++; if(wMode==="cinta") stepA(); else if(wMode==="proj") stepB(); else if(wMode==="lens") stepC(); wRaf=requestAnimationFrame(wLoop); }
+function startW(){ cancelAnimationFrame(wRaf); if(view==="treballs"&&wMode!=="grid") wRaf=requestAnimationFrame(wLoop); }
+function stopW(){ cancelAnimationFrame(wRaf); $$(".wstage video").forEach(v=>v.pause()); }
+function setWMode(m){
+  wMode=m; try{localStorage.setItem("bva-wmode",m)}catch(_){}
+  $$("#wView .chip").forEach(c=>c.classList.toggle("on",c.dataset.w===m));
+  $$(".wstage").forEach(el=>el.classList.toggle("on",el.dataset.w===m));
+  $$(".wstage:not(.on) .fr").forEach(el=>vidOn(el,false));
+  renderW(); startW();
+}
+$("#wView").addEventListener("click",e=>{ const c=e.target.closest("[data-w]"); if(c) setWMode(c.dataset.w); });
+function renderW(){ if(wMode==="cinta") renderA(); else if(wMode==="proj") renderB(); else if(wMode==="lens") renderC(); }
+
+/* arrossegar genèric (separa clic d'arrossegament) */
+function dragger(el,onMove,onEnd){
+  const st={down:false,x:0,y:0,moved:0};
+  el.addEventListener("pointerdown",e=>{ st.down=true; st.x=e.clientX; st.y=e.clientY; st.moved=0; });
+  addEventListener("pointermove",e=>{ if(!st.down) return; const dx=e.clientX-st.x, dy=e.clientY-st.y; st.x=e.clientX; st.y=e.clientY;
+    st.moved+=Math.abs(dx)+Math.abs(dy); if(st.moved>4){ el.classList.add("drag"); onMove(dx,dy); } });
+  addEventListener("pointerup",()=>{ if(!st.down) return; st.down=false; el.classList.remove("drag"); onEnd&&onEnd(); });
+  el.addEventListener("click",e=>{ if(st.moved>6){ e.preventDefault(); e.stopPropagation(); } },true);
+  return st;
+}
+
+/* ---------- 1 · CINTA ---------- */
+const PA={items:[],angle:0,vel:-.08,drag:false,n:0,step:0,front:-1};
+function renderA(){
+  let it=workItems(); if(!it.length){ $("#paRing").innerHTML=""; return; }
+  while(it.length<14) it=it.concat(it);
+  PA.items=it; PA.n=it.length; PA.step=360/PA.n; PA.front=-1;
+  const ring=$("#paRing");
+  ring.innerHTML=it.map((x,i)=>frHTML(x,i).replace('class="fr"',`class="fr" style="--i:${i}"`)).join("");
+  sizeA();
+}
+function sizeA(){
+  const st=$("#wCinta"), h=st.clientHeight||600;
+  const fw=Math.min(innerWidth*(MOB?.36:.15),h*.38,250), fh=fw*.62+45, r=PA.n*fw/(2*Math.PI);
+  const ring=$("#paRing"); ring.style.setProperty("--fw",fw+"px"); ring.style.setProperty("--fh",fh+"px");
+  ring.style.setProperty("--r",r+"px"); ring.style.setProperty("--step",PA.step+"deg");
+}
+function stepA(){
+  if(!PA.n) return;
+  if(!PA.drag){ PA.vel+=(-.08-PA.vel)*.03; PA.angle+=PA.vel; }
+  $("#paRing").style.transform=`rotateY(${PA.angle}deg)`;
+  const f=modn(Math.round(-PA.angle/PA.step),PA.n);
+  if(f!==PA.front){
+    const frs=$$("#paRing .fr");
+    frs.forEach((el,i)=>{ const d=Math.min(modn(i-f,PA.n),modn(f-i,PA.n)); el.classList.toggle("front",d===0); vidOn(el,d<=1); });
+    PA.front=f; const x=PA.items[f];
+    $("#paIdx").textContent=`${pad(f+1)}/${pad(PA.n)} · ${x.lab}`;
+    const a=$("#paTitle"); a.textContent=x.p.title; a.href="#projecte/"+x.p.id;
+    $("#paMeta").textContent=`${x.p.year} — ${rolesTxt(x.p)} · ${t("type."+x.p.type)}`;
+  }
+  if(wFrame%2===0) $("#paTc").textContent=tcAt(Math.floor(wFrame/2.5));
+}
+const dA=dragger($("#wCinta"),dx=>{ PA.drag=true; PA.angle+=dx*.18; PA.vel=dx*.18; },()=>{ PA.drag=false; });
+$("#wCinta").addEventListener("wheel",e=>{ if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey){ e.preventDefault(); PA.vel-=(e.deltaX||e.deltaY)*.01; } },{passive:false});
+$("#paRing").addEventListener("click",e=>{ const f=e.target.closest(".fr"); if(f) location.hash="projecte/"+f.dataset.id; });
+
+/* ---------- 2 · PROJECTOR ---------- */
+const PB={items:[],n:0,pos:0,target:0,act:-1,R:1000,deg:0,fw:0,lock:false};
+function renderB(){
+  let it=workItems(); if(!it.length){ $("#pbTrack").innerHTML=""; return; }
+  while(it.length<12) it=it.concat(it);
+  PB.items=it; PB.n=it.length; PB.act=-1;
+  $("#pbTrack").innerHTML=it.map((x,i)=>frHTML(x,i)).join("");
+  if(!$(".pb-beam")) $("#pbScene").insertAdjacentHTML("afterbegin",'<div class="pb-beam"></div>');
+  sizeB();
+}
+function sizeB(){
+  const sc=$("#pbScene"), h=sc.clientHeight||400;
+  const fw=Math.min(innerWidth*(MOB?.7:.36),(h*.78-45)/.5625*1,640), fh=fw*.5625+45;
+  PB.fw=fw; PB.R=Math.max(900,fw*2.3); PB.deg=(fw+2)/PB.R*180/Math.PI;
+  const tr=$("#pbTrack"); tr.style.setProperty("--fw",fw+"px"); tr.style.setProperty("--fh",fh+"px");
+}
+function stepB(){
+  if(!PB.n) return;
+  PB.pos+=(PB.target-PB.pos)*.1;
+  const frs=$("#pbTrack").children;
+  for(let i=0;i<frs.length;i++){
+    let d=modn(i-PB.pos+PB.n/2,PB.n)-PB.n/2;
+    const el=frs[i], a=d*PB.deg;
+    if(Math.abs(a)>75){ el.style.visibility="hidden"; continue; }
+    el.style.visibility="visible";
+    el.style.transform=`translateZ(${PB.R}px) rotateY(${-a}deg) translateZ(${-PB.R}px)`;
+  }
+  $("#pbTrack").style.transform=`translateZ(${-PB.R*0.02}px)`;
+  const a=modn(Math.round(PB.pos),PB.n);
+  if(a!==PB.act){
+    PB.act=a; [...frs].forEach((el,i)=>{ el.classList.toggle("on",i===a); vidOn(el,i===a); });
+    const x=PB.items[a];
+    $("#pbIdx").textContent=`${pad(a+1)}/${pad(PB.n)} · ${x.lab}`;
+    const tl=$("#pbTitle"); tl.textContent=x.p.title; tl.href="#projecte/"+x.p.id;
+    $("#pbMeta").textContent=`${x.p.year} — ${rolesTxt(x.p)} · ${L(x.p.length)}`;
+  }
+  const feet=Math.abs(PB.pos)*16+wFrame/40;
+  $("#pbFeet").textContent=`${String(Math.floor(feet)).padStart(4,"0")} FT + ${pad(Math.floor((feet%1)*16))}`;
+  if(wFrame%2===0) $("#pbTc").textContent=tcAt(Math.floor(wFrame/2.5));
+}
+function moveB(d){ PB.target=Math.round(PB.target)+d; }
+dragger($("#pbScene"),dx=>{ PB.target-=dx/PB.fw*1.2; PB.pos=PB.target; },()=>{ PB.target=Math.round(PB.target); });
+$("#pbScene").addEventListener("wheel",e=>{ e.preventDefault(); if(PB.lock) return; const d=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
+  if(Math.abs(d)<8) return; moveB(Math.sign(d)); PB.lock=true; setTimeout(()=>PB.lock=false,420); },{passive:false});
+$("#pbTrack").addEventListener("click",e=>{ const f=e.target.closest(".fr"); if(!f) return;
+  const i=+f.dataset.i; let d=modn(i-Math.round(PB.pos)+PB.n/2,PB.n)-PB.n/2; if(d===0) location.hash="projecte/"+f.dataset.id; else moveB(d); });
+$("#pbPrev").addEventListener("click",()=>moveB(-1)); $("#pbNext").addEventListener("click",()=>moveB(1));
+
+/* ---------- 3 · OBJECTIU ---------- */
+const PC={items:[],n:0,angle:0,target:0,act:-1,step:0,lock:false};
+const DIST=["∞","10","5","3","2","1.5","1.2","1","0.8","0.7","0.6","0.5"], FSTOP=["1.4","2","2.8","4","5.6","8","11","16"];
+function renderC(){
+  const it=workItems(); PC.items=it; PC.n=it.length; PC.act=-1; if(!PC.n){ $("#pcThumbs").innerHTML=""; return; }
+  PC.step=360/PC.n;
+  $("#pcThumbs").innerHTML=it.map((x,i)=>`<div class="th" data-i="${i}"><img src="${x.po}" alt="" draggable="false"></div>`).join("");
+  $("#pcLabels").innerHTML=DIST.map((d,i)=>`<span data-a="${i*30}">${d}${i===0?"":" m"}</span>`).join("");
+}
+function stepC(){
+  if(!PC.n) return;
+  PC.angle+=(PC.target-PC.angle)*.1;
+  const D=$("#pcDial").clientWidth, Rt=D*.40, Rl=D*.485;
+  $$("#pcThumbs .th").forEach((el,i)=>{ const a=(i*PC.step+PC.angle)*Math.PI/180;
+    el.style.transform=`translate(-50%,-50%) translate(${Math.cos(a)*Rt*.82}px,${Math.sin(a)*Rt*.82}px)`; });
+  $$("#pcLabels span").forEach(el=>{ const a=(+el.dataset.a+PC.angle*.6)*Math.PI/180;
+    el.style.transform=`translate(-50%,-50%) translate(${Math.cos(a)*Rl*.86}px,${Math.sin(a)*Rl*.86}px)`; });
+  $(".pc-ticks").style.transform=`rotate(${PC.angle*.6}deg)`;
+  $("#pcIris").style.setProperty("--rot",(PC.angle*1.5)+"deg");
+  const a=modn(Math.round(-PC.angle/PC.step),PC.n);
+  if(a!==PC.act){ const first=PC.act<0; PC.act=a; showC(a,first); }
+  if(wFrame%2===0) $("#pcTc").textContent=tcAt(Math.floor(wFrame/2.5));
+}
+let cTimer=0;
+function showC(a,instant){
+  const x=PC.items[a];
+  $$("#pcThumbs .th").forEach((el,i)=>el.classList.toggle("on",i===a));
+  const f=FSTOP[a%FSTOP.length]; $("#pcF").textContent="f/"+f;
+  $("#pcIris").style.setProperty("--ap",(18+(a%FSTOP.length)*3)+"%");
+  $("#pcExp").textContent=`f/${f} · 1/50 · ISO ${[400,800,1280,3200][a%4]}`;
+  $("#pcFocus").textContent=DIST[a%DIST.length]+(a%DIST.length?" m":"");
+  $("#pcIdx").textContent=`${pad(a+1)}/${pad(PC.n)} · ${x.lab}`;
+  $("#pcTitle").textContent=x.p.title; $("#pcMeta").textContent=`${x.p.year} — ${rolesTxt(x.p)} · ${L(x.p.length)}`;
+  $("#pcView").href="#projecte/"+x.p.id;
+  const pic=$("#pcPic"); clearTimeout(cTimer);
+  const swap=()=>{ pic.innerHTML=x.v?`<video src="${vsrc(x.v)}" poster="${x.po}" autoplay muted loop playsinline></video>`:`<img src="${x.po}" alt="">`;
+    const v=$("video",pic); if(v){ v.muted=true; v.play().catch(()=>{}); } pic.classList.remove("shut"); };
+  if(instant) swap(); else { pic.classList.add("shut"); cTimer=setTimeout(swap,480); }
+}
+function moveC(d){ PC.target=Math.round(PC.target/PC.step)*PC.step-d*PC.step; }
+dragger($("#pcDial"),(dx,dy)=>{ PC.target+=(dy-dx)*.35*-1; PC.angle=PC.target; },()=>{ PC.target=Math.round(PC.target/PC.step)*PC.step; });
+$("#wLens").addEventListener("wheel",e=>{ e.preventDefault(); if(PC.lock) return; const d=e.deltaY||e.deltaX; if(Math.abs(d)<8) return;
+  moveC(Math.sign(d)); PC.lock=true; setTimeout(()=>PC.lock=false,380); },{passive:false});
+$("#pcThumbs").addEventListener("click",e=>{ const th=e.target.closest(".th"); if(!th) return;
+  const i=+th.dataset.i; let d=modn(i-PC.act+PC.n/2,PC.n)-PC.n/2; moveC(d); });
+addEventListener("resize",()=>{ if(wMode==="cinta") sizeA(); if(wMode==="proj") sizeB(); });
 
 /* ============ ROUTER ============ */
 let view="";
@@ -756,13 +1082,14 @@ function route(){
   if(view==="inici"){ layoutStrip(); if(!introRunning) playActive(); }
   else { const av=activeVideo(); if(av) av.pause(); }
   if(prev==="projecte"&&view!=="projecte") $$("#project video").forEach(v=>v.pause());
+  if(view==="treballs"){ requestAnimationFrame(()=>{ if(wMode==="cinta") sizeA(); if(wMode==="proj") sizeB(); startW(); }); } else stopW();
   closeMenu();
 }
 addEventListener("hashchange",route);
 
 /* ============ ARRENCADA ============ */
 if(!location.hash||location.hash==="#inici") introRunning=true;
-applyLang(); route(); layoutStrip(); setMeta();
+applyLang(); setWMode(wMode); route(); layoutStrip(); setMeta();
 if(view==="inici"){
   if(document.visibilityState==="visible") playIntro();
   else { endIntro(); document.addEventListener("visibilitychange",function once(){ if(document.visibilityState==="visible"){ document.removeEventListener("visibilitychange",once); playIntro(); } }); }
