@@ -336,6 +336,9 @@ em{font-style:italic}
   transform:rotateY(calc(var(--i) * var(--step))) translateZ(var(--r));transition:filter .4s}
 .pa-ring .fr .pic img{filter:brightness(.8);transition:filter .4s}
 .pa-ring .fr.front .pic img{filter:none}
+.pa-ring .fr{cursor:pointer}
+.pa-ring .fr.hov .pic img{filter:none}
+.pa-ring .fr.hov{outline:1px solid var(--ink);outline-offset:3px}
 .pa-center{position:absolute;left:0;right:0;top:0;bottom:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;pointer-events:none}
 .pa-title{pointer-events:auto;font-size:clamp(30px,4.6vw,68px);font-weight:500;letter-spacing:-.04em;text-transform:uppercase;line-height:.92;
   color:var(--ink);transition:opacity .3s;text-shadow:0 0 18px var(--paper)}
@@ -533,7 +536,7 @@ em{font-style:italic}
 
   <footer class="foot mono">
     <span>© 2026 Boi Vidal Albert</span>
-    <span class="fx-wrap"><span class="fx" id="fxSel"><span class="muted" data-i18n="fx.label"></span><button data-fx="vent">Vent</button><button data-fx="marea">Marea</button><button data-fx="gota">Gota</button><button data-fx="pols">Pols</button></span><button class="muted" id="replay" data-i18n="replay"></button></span>
+    <button class="muted" id="replay" data-i18n="replay"></button>
     <span class="r"><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a><a href="https://vimeo.com/" target="_blank" rel="noopener">Vimeo</a><a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a></span>
   </footer>
 </div>
@@ -752,6 +755,7 @@ function endIntro(){
   introEl.classList.remove("landing"); introEl.removeAttribute("style"); introEl.innerHTML=""; itTitle.innerHTML="";
   if(view==="inici") playActive(time);
   scrambleIn($$(".top > a, .nav a, .lang button, #menuBtn, .foot span, .foot a, .foot button"),40);
+  sandIn();
   cascade($$(".nav a"));
 }
 function playIntro(){
@@ -1070,7 +1074,7 @@ function workItems(){
   const out=[];
   PROJECTS.filter(matchP).forEach(p=>{
     p.stripVideos.forEach(([v,po],k)=>out.push({p,v,po,lab:`${t("sheet.loop")} ${pad(k+1)}`}));
-    [...new Set(p.stills)].slice(0,5).forEach((s,k)=>out.push({p,po:s,lab:`${t("still")} ${pad(k+1)}`}));
+    [...new Set(p.stills)].slice(0,5).forEach((s,k)=>out.push({p,po:s,v:p.stripVideos[k%p.stripVideos.length][0],lab:`${t("still")} ${pad(k+1)}`}));
   });
   // alterna projectes perquè es barregin
   const by=PROJECTS.map(p=>out.filter(o=>o.p===p)), mix=[];
@@ -1099,7 +1103,7 @@ const PA={items:[],angle:0,vel:-.08,drag:false,n:0,step:0,front:-1};
 function renderA(){
   let it=workItems(); if(!it.length){ $("#paRing").innerHTML=""; return; }
   while(it.length<14) it=it.concat(it);
-  PA.items=it; PA.n=it.length; PA.step=360/PA.n; PA.front=-1;
+  PA.items=it; PA.n=it.length; PA.step=360/PA.n; PA.front=-1; PA.hov=-1; PA.shown=-1;
   const ring=$("#paRing");
   ring.innerHTML=it.map((x,i)=>frHTML(x,i).replace('class="fr"',`class="fr" style="--i:${i}"`)).join("");
   sizeA();
@@ -1121,24 +1125,33 @@ function fitA(){
   const cx=(x0+x1)/2-(fr.left+fr.width/2), cy=(y0+y1)/2-(fr.top+fr.height/2);
   fit.style.transform=`translate(${(-s*cx).toFixed(1)}px,${(-s*cy).toFixed(1)}px) scale(${s.toFixed(3)})`;
 }
+PA.hov=-1; PA.shown=-1;
+function showA(i){                      /* títol central = fotograma de davant, o el que tens sota el cursor */
+  if(i===PA.shown||i<0) return; PA.shown=i; const x=PA.items[i];
+  scramble($("#paIdx"),`${pad(i+1)}/${pad(PA.n)} · ${x.lab}`,320);
+  const a=$("#paTitle"); scramble(a,x.p.title,520); a.href="#projecte/"+x.p.id;
+  scramble($("#paMeta"),`${x.p.year} — ${rolesTxt(x.p)} · ${t("type."+x.p.type)}`,420);
+}
 function stepA(){
   if(!PA.n) return;
-  if(!PA.drag){ PA.vel+=(-.08-PA.vel)*.03; PA.angle+=PA.vel; }
+  if(!PA.drag){ PA.vel+=((PA.hov>=0?-.012:-.08)-PA.vel)*.03; PA.angle+=PA.vel; }   /* sota el cursor la cinta gairebé s'atura */
   $("#paRing").style.transform=`rotateY(${PA.angle}deg)`;
   const f=modn(Math.round(-PA.angle/PA.step),PA.n);
   if(f!==PA.front){
     const frs=$$("#paRing .fr");
-    frs.forEach((el,i)=>{ const d=Math.min(modn(i-f,PA.n),modn(f-i,PA.n)); el.classList.toggle("front",d===0); vidOn(el,d<=1); });
-    PA.front=f; const x=PA.items[f];
-    scramble($("#paIdx"),`${pad(f+1)}/${pad(PA.n)} · ${x.lab}`,320);
-    const a=$("#paTitle"); scramble(a,x.p.title,520); a.href="#projecte/"+x.p.id;
-    scramble($("#paMeta"),`${x.p.year} — ${rolesTxt(x.p)} · ${t("type."+x.p.type)}`,420);
+    frs.forEach((el,i)=>{ const d=Math.min(modn(i-f,PA.n),modn(f-i,PA.n)); el.classList.toggle("front",d===0); vidOn(el,d<=1||i===PA.hov); });
+    PA.front=f; if(PA.hov<0) showA(f);
   }
   if(wFrame%2===0) $("#paTc").textContent=tcAt(Math.floor(wFrame/2.5));
 }
 const dA=dragger($("#wCinta"),dx=>{ PA.drag=true; PA.angle+=dx*.18; PA.vel=dx*.18; },()=>{ PA.drag=false; });
 $("#wCinta").addEventListener("wheel",e=>{ if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey){ e.preventDefault(); PA.vel-=(e.deltaX||e.deltaY)*.01; } },{passive:false});
 $("#paRing").addEventListener("click",e=>{ const f=e.target.closest(".fr"); if(f) location.hash="projecte/"+f.dataset.id; });
+$("#paRing").addEventListener("pointerover",e=>{ const f=e.target.closest(".fr"); if(!f||PA.drag) return; const i=+f.dataset.i; if(i===PA.hov) return;
+  const old=$$("#paRing .fr")[PA.hov]; if(old){ old.classList.remove("hov"); const d=Math.min(modn(PA.hov-PA.front,PA.n),modn(PA.front-PA.hov,PA.n)); if(d>1) vidOn(old,false); }
+  PA.hov=i; f.classList.add("hov"); vidOn(f,true); showA(i); });
+$("#paRing").addEventListener("pointerleave",()=>{ const old=$$("#paRing .fr")[PA.hov]; if(old){ old.classList.remove("hov");
+  const d=Math.min(modn(PA.hov-PA.front,PA.n),modn(PA.front-PA.hov,PA.n)); if(d>1) vidOn(old,false); } PA.hov=-1; showA(PA.front); });
 
 addEventListener("resize",()=>{ sizeA(); fitA(); });
 
@@ -1146,8 +1159,7 @@ $$(".nav a, .top > a, #menuBtn, .foot a, .menu .center a").forEach(a=>a.addEvent
 /* ============ SORRA: punts del fons ============
    4 entrades per comparar (Vent · Marea · Gota · Pols) + ones d'aigua sota el cursor.
    Totes acaben en la mateixa textura subtil; només canvia com hi arriben els grans. */
-const SAND={cv:$("#sand"),ctx:null,pts:[],raf:0,t0:0,end:0,on:false,mode:"vent",rip:[],mx:null,my:null,W:0,H:0};
-try{const m=localStorage.getItem("bva-fx"); if(["vent","marea","gota","pols"].includes(m)) SAND.mode=m;}catch(_){}
+const SAND={cv:$("#sand"),ctx:null,pts:[],raf:0,t0:0,end:0,on:false,mode:"gota",rip:[],mx:null,my:null,W:0,H:0};
 const clamp01=v=>v<0?0:v>1?1:v;
 function sandBuild(){
   const cv=SAND.cv, d=Math.min(2,devicePixelRatio||1), W=innerWidth, H=innerHeight; SAND.W=W; SAND.H=H;
@@ -1209,12 +1221,6 @@ addEventListener("pointermove",e=>{ SAND.mx=e.clientX; SAND.my=e.clientY; if(!SA
   const now=performance.now(); if(now-ripLast<110||Math.hypot(e.clientX-ripX,e.clientY-ripY)<26) return;
   ripLast=now; ripX=e.clientX; ripY=e.clientY; SAND.rip.push({x:e.clientX,y:e.clientY,t0:now}); if(SAND.rip.length>8) SAND.rip.shift(); sandKick(); },{passive:true});
 addEventListener("pointerdown",e=>{ if(!SAND.on||reduce) return; SAND.rip.push({x:e.clientX,y:e.clientY,t0:performance.now(),big:1}); sandKick(); },{passive:true});
-/* selector de proves (peu de pàgina) */
-function syncFx(){ $$("#fxSel [data-fx]").forEach(b=>b.classList.toggle("on",b.dataset.fx===SAND.mode)); }
-$("#fxSel").addEventListener("click",e=>{ const b=e.target.closest("[data-fx]"); if(!b) return; SAND.mode=b.dataset.fx;
-  try{localStorage.setItem("bva-fx",SAND.mode)}catch(_){} syncFx();
-  if(view==="treballs"||view==="fotografies") sandIn(); else location.hash="treballs"; });
-syncFx();
 /* ============ ROUTER ============ */
 let view="";
 function route(){
@@ -1228,7 +1234,7 @@ function route(){
   else { const av=activeVideo(); if(av) av.pause(); }
   if(prev==="projecte"&&view!=="projecte") $$("#project video").forEach(v=>v.pause());
   if(view==="treballs"){ requestAnimationFrame(()=>{ sizeA(); fitA(); startW(); }); } else stopW();
-  if(view==="treballs"||view==="fotografies"){ if(prev!==view) sandIn(); } else sandOut();
+  if(prev!==view&&!introRunning) sandIn();   /* entrada Gota a cada secció */
   if(view==="fotografies"){ startPh(); if(prev!=="fotografies") introTira(); } else stopPh();
   if(prev!==view&&!introRunning){ const V=$(".view.on");
     scrambleIn($$("h1 span[data-i18n], h1[data-i18n], .fgroup b, .p-top a, .label span, .row > span.muted, .sh-intro .mono span, .contact .mono span",V),35);
