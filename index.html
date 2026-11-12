@@ -441,7 +441,6 @@ body:not(.v-inici) .h-sel{display:none}
 /* entrades de la cinta */
 #wCinta.cin-run .pa-center,#wCinta.cin-run .hud{opacity:0}
 .pa-center,#wCinta .hud{transition:opacity .8s ease}
-#cinSel .chip span{pointer-events:none}
 .pa-ring{will-change:transform}
 .pa-ring .fr .pic::after{content:"";position:absolute;inset:0;background:#000;opacity:.22;transition:opacity .4s;pointer-events:none}
 .pa-ring .fr.front .pic::after,.pa-ring .fr.hov .pic::after{opacity:0}
@@ -622,11 +621,6 @@ body:not(.v-inici) .h-sel{display:none}
           <div class="filters mono">
             <div class="fgroup" data-key="type"><b data-i18n="f.type"></b></div>
             <div class="fgroup" data-key="role"><b data-i18n="f.role"></b></div>
-            <div class="fgroup" id="cinSel"><b data-i18n="cin.label"></b>
-              <button class="chip" data-cin="bob">1 · <span data-i18n="cin.bob"></span></button>
-              <button class="chip" data-cin="fil">2 · <span data-i18n="cin.fil"></span></button>
-              <button class="chip" data-cin="dis">3 · <span data-i18n="cin.dis"></span></button>
-            </div>
           </div>
         </div>
         <div class="rule"></div>
@@ -1364,12 +1358,11 @@ const PA={items:[],angle:0,vel:-.08,drag:false,n:0,step:0,front:-1};
    1 Bobinat: tots els fotogrames apilats davant i es despleguen al voltant de l'anell, com una bobina que es desenrotlla.
    2 Enfilat: la pel·lícula arriba recta, com una tira, i es corba fotograma a fotograma fins a tancar l'anell.
    3 Dispersió: els fotogrames arriben escampats per l'espai (com la sorra del fons) i s'ajunten a l'anell. */
-let cinMode="bob"; try{const m=localStorage.getItem("bva-cin"); if(["bob","fil","dis"].includes(m)) cinMode=m;}catch(_){}
+const cinMode="dis";   /* entrada escollida: Dispersió */
 let cinT=[];
 function introCinta(){
   cinT.forEach(clearTimeout); cinT=[];
   const st=$("#wCinta"), frs=$$("#paRing .fr"), n=frs.length; if(!n) return;
-  $$("#cinSel .chip").forEach(c=>c.classList.toggle("on",c.dataset.cin===cinMode));
   if(reduce){ return; }
   const fw=parseFloat($("#paRing").style.getPropertyValue("--fw"))||200, rnd=k=>{ let x=Math.sin(k*91.7+cinMode.length*13)*43758.5; return x-Math.floor(x); };
   PA.intro=true; PA.angle=0; PA.introVel=0; $("#paRing").style.transform="rotateY(0deg)";
@@ -1396,8 +1389,7 @@ function introCinta(){
   cinT.push(setTimeout(()=>{ frs.forEach(el=>el.style.transition=""); PA.intro=false; PA.vel=PA.introVel||-.08; PA.vidDirty=true; PA.shown=-1;
     st.classList.remove("cin-run"); showA(PA.front<0?0:PA.front); },last+80));
 }
-$("#cinSel").addEventListener("click",e=>{ const c=e.target.closest("[data-cin]"); if(!c) return; cinMode=c.dataset.cin;
-  try{localStorage.setItem("bva-cin",cinMode)}catch(_){} introCinta(); });
+
 function renderA(){
   let it=workItems(); if(!it.length){ $("#paRing").innerHTML=""; return; }
   while(it.length<14) it=it.concat(it);
