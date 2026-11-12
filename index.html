@@ -207,15 +207,24 @@ body:not(.v-inici) .h-sel{display:none}
 .intro-on.settle .it{display:none}
 .it-wrap{display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2vw,24px);opacity:0;transition:opacity .9s ease}
 .t-in .it-wrap,.t-out .it-wrap{opacity:1}
-.it-name{position:relative;font-weight:600;text-transform:uppercase;line-height:.86;letter-spacing:-.045em;font-size:clamp(3.4rem,13vw,12.5rem);color:#f3eee6}
-.it-name .ln{display:block;white-space:nowrap}
-.it-name .ch{display:inline-block;white-space:pre;transform:translate3d(calc(var(--o) * .24em),0,0);transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
-.t-in .it-name .ch,.t-out .it-name .ch{transform:none}
+.it-name{position:relative;font-family:var(--display);font-weight:500;text-transform:uppercase;line-height:.9;letter-spacing:-.045em;font-size:clamp(2.4rem,9.2vw,10.5rem);color:#f3eee6;white-space:nowrap}
+.it-name .w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .02em .04em}
+.it-name .wi{display:inline-block}
+/* A · Lletres: les lletres es barregen i es fixen (com "PRODUCTS") */
+.it[data-v="a"] .wi{opacity:0}
+.t-in .it[data-v="a"] .wi,.t-out .it[data-v="a"] .wi{opacity:1}
+/* B · Màscara: cada paraula puja des de sota una línia */
+.it[data-v="b"] .wi{transform:translate3d(0,105%,0);transition:transform 1.1s cubic-bezier(.16,1,.3,1)}
+.it[data-v="b"] .w:nth-child(2) .wi{transition-delay:.12s}.it[data-v="b"] .w:nth-child(3) .wi{transition-delay:.24s}
+.t-in .it[data-v="b"] .wi,.t-out .it[data-v="b"] .wi{transform:none}
+/* C · Enfocament: entra desenfocat i obert, i enfoca */
+.it[data-v="c"] .it-name{filter:blur(18px);letter-spacing:.12em;opacity:0;transition:filter 1.5s cubic-bezier(.2,.8,.2,1),letter-spacing 1.6s cubic-bezier(.2,.8,.2,1),opacity .8s ease}
+.t-in .it[data-v="c"] .it-name,.t-out .it[data-v="c"] .it-name{filter:none;letter-spacing:-.045em;opacity:1}
 .half{display:block;transition:transform .7s cubic-bezier(.75,0,.25,1)}
-.half.top{clip-path:inset(0 0 50% 0)}
-.half.bot{position:absolute;inset:0;clip-path:inset(50% 0 0 0)}
-.t-out .half.top{transform:translate3d(0,-85vh,0)}
-.t-out .half.bot{transform:translate3d(0,85vh,0)}
+.half.h-up{clip-path:inset(0 0 50% 0)}
+.half.h-dn{position:absolute;inset:0;clip-path:inset(50% 0 0 0)}
+.t-out .half.h-up{transform:translate3d(0,-85vh,0)}
+.t-out .half.h-dn{transform:translate3d(0,85vh,0)}
 .it-tag{color:rgba(255,255,255,.82);letter-spacing:.18em}
 .t-out .it-tag{opacity:0;transition:opacity .15s}
 .flash{position:absolute;inset:0;background:#fff;opacity:0}
@@ -361,11 +370,18 @@ body:not(.v-inici) .h-sel{display:none}
 }
 
 /* lightbox */
-.lb{position:fixed;inset:0;z-index:180;background:rgba(8,8,8,.94);display:none;place-items:center;padding:60px var(--gut);cursor:zoom-out}
+.lb{position:fixed;inset:0;z-index:180;background:#0a0a0a;display:none;place-items:center;padding:60px calc(var(--gut) + 72px);cursor:zoom-out}
+@media (max-width:720px){.lb{padding:60px var(--gut) 80px}}
 .lb.on{display:grid}
 .lb img{width:auto;height:auto;max-width:100%;max-height:84vh;object-fit:contain}
 .lb .mono{position:absolute;color:#f1efea}
 .lb .x{top:16px;right:var(--gut)}.lb .cnt{top:16px;left:var(--gut)}
+.lb-a{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border:1px solid rgba(241,239,234,.35);border-radius:50%;color:#f1efea;font-family:var(--mono);font-size:16px;cursor:pointer;transition:background .25s,border-color .25s}
+.lb-a:hover{background:#f1efea;color:#121212;border-color:#f1efea}
+.lb-a.l{left:var(--gut)}.lb-a.r{right:var(--gut)}
+.lb.one .lb-a{display:none}
+.lb img{transition:opacity .2s ease}.lb img.chg{opacity:0}
+@media (max-width:720px){.lb-a{top:auto;bottom:18px;transform:none;width:44px;height:44px}}
 
 /* ============ SOBRE MI ============ */
 .about{display:grid;grid-template-columns:1fr 1fr;gap:20px}
@@ -490,7 +506,7 @@ body:not(.v-inici) .h-sel{display:none}
   </div>
 </div>
 
-<div class="lb" id="lb"><span class="mono cnt" id="lbCnt"></span><span class="mono x" data-i18n="lb.close">Tancar ✕</span><img id="lbImg" alt=""></div>
+<div class="lb" id="lb"><span class="mono cnt" id="lbCnt"></span><span class="mono x" data-i18n="lb.close">Tancar ✕</span><img id="lbImg" alt=""><button class="lb-a l" id="lbPrev" aria-label="Anterior">←</button><button class="lb-a r" id="lbNext" aria-label="Següent">→</button></div>
 
 <div class="page">
   <header class="top mono">
@@ -975,10 +991,11 @@ document.addEventListener("keydown",e=>{
 /* ============ INTRO ============ */
 const introEl=$("#intro"), itTitle=$("#itTitle");
 let introRunning=false, introToken=0, introTimers=[];
+const itMode="a";   /* intro escollida: Lletres */
 function buildTitle(){
-  const line=w=>{const ch=[...w],c=(ch.length-1)/2;return `<span class="ln">${ch.map((x,i)=>`<span class="ch" style="--o:${(i-c).toFixed(1)}">${x}</span>`).join("")}</span>`;};
-  const name=line("Boi Vidal")+line("Albert");
-  itTitle.innerHTML=`<div class="it-wrap"><div class="it-name"><span class="half top">${name}</span><span class="half bot">${name}</span></div><p class="it-tag mono">${t("hero.roles")}</p></div>`;
+  $("#it").dataset.v=itMode;
+  const name=["Boi","Vidal","Albert"].map(w=>`<span class="w"><span class="wi">${w}</span></span>`).join(" ");
+  itTitle.innerHTML=`<div class="it-wrap"><div class="it-name"><span class="half h-up">${name}</span><span class="half h-dn">${name}</span></div><p class="it-tag mono">${t("hero.roles")}</p></div>`;
 }
 function endIntro(){
   introToken++; introTimers.forEach(clearTimeout); introTimers=[];
@@ -1010,7 +1027,7 @@ function playIntro(){
     requestAnimationFrame(()=>{ if(token!==introToken) return;
       bc.remove("intro-wait");
       const at=(ms,fn)=>introTimers.push(setTimeout(()=>{ if(token===introToken) fn(); },ms));
-      at(80,()=>bc.add("t-in"));
+      at(80,()=>{ bc.add("t-in"); if(itMode==="a") $$("#itTitle .wi").forEach((el,i)=>setTimeout(()=>scramble(el,el.textContent,900),(i%3)*140)); });
       at(2150,()=>{ bc.remove("t-in"); bc.add("t-out"); try{soft.currentTime=sharp.currentTime}catch(_){} });
       at(2850,()=>{                                   /* el vídeo s'encaixa al fotograma actiu de la tira */
         bc.add("settle");
@@ -1024,6 +1041,7 @@ function playIntro(){
 }
 addEventListener("resize",()=>{ if(introRunning) endIntro(); sizeHome(); HC.snap=true; hcKick(); setRing(); });
 $("#replay").addEventListener("click",playIntro);
+
 
 /* ============ MENÚ: anell de projectes ============ */
 const menu=$("#menu"), ring=$("#ring");
@@ -1121,11 +1139,17 @@ function renderProject(id){
 
 /* ============ LIGHTBOX ============ */
 const lb=$("#lb");
-function openLb(list,i){ lbList=list; lbI=i; lbShow(); lb.classList.add("on"); }
-function lbShow(){ $("#lbImg").src=lbList[lbI]; $("#lbCnt").textContent=`${pad(lbI+1)}/${pad(lbList.length)}`; }
+function openLb(list,i){ lbList=list; lbI=i; $("#lbImg").removeAttribute("src"); $("#lbImg").classList.remove("chg"); lbShow(); lb.classList.add("on"); }
+function lbShow(){ const im=$("#lbImg"); lb.classList.toggle("one",lbList.length<2);
+  if(!im.getAttribute("src")){ im.src=lbList[lbI]; } else { im.classList.add("chg"); setTimeout(()=>{ im.src=lbList[lbI]; const done=()=>im.classList.remove("chg"); if(im.complete) done(); else im.onload=done; },160); }
+  $("#lbCnt").textContent=`${pad(lbI+1)}/${pad(lbList.length)}`; }
 function lbStep(d){ lbI=(lbI+d+lbList.length)%lbList.length; lbShow(); }
 function closeLb(){ lb.classList.remove("on"); }
-lb.addEventListener("click",closeLb);
+lb.addEventListener("click",e=>{ if(e.target.closest(".lb-a")||e.target.id==="lbImg") return; closeLb(); });
+$("#lbPrev").addEventListener("click",()=>lbStep(-1)); $("#lbNext").addEventListener("click",()=>lbStep(1));
+$("#lbImg").addEventListener("click",()=>lbStep(1));
+let lbX=null; lb.addEventListener("touchstart",e=>lbX=e.touches[0].clientX,{passive:true});
+lb.addEventListener("touchend",e=>{ if(lbX===null) return; const dx=e.changedTouches[0].clientX-lbX; if(Math.abs(dx)>40) lbStep(dx<0?1:-1); lbX=null; },{passive:true});
 
 /* ============ FOTO / BTS / SOBRE ============ */
 /* arrossegar genèric (separa clic d'arrossegament) */
