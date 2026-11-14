@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Boi Vidal Albert</title>
 <meta name="description" content="Cinematographer, camera operator and camera assistant, based in Barcelona and available worldwide.">
-<script>/* tema abans de pintar, per evitar un flaix clar */(function(){try{var th=localStorage.getItem("bva-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"),d="b",l="c";document.documentElement.dataset.theme=th;document.documentElement.dataset.dk=d;document.documentElement.dataset.lt=l;document.documentElement.dataset.tf="c";document.documentElement.dataset.ty=localStorage.getItem("bva-ty")||"a";}catch(e){}})();</script>
+<script>/* tema abans de pintar, per evitar un flaix clar */(function(){try{var th=localStorage.getItem("bva-theme")||"light",d="b",l="c";document.documentElement.dataset.theme=th;document.documentElement.dataset.dk=d;document.documentElement.dataset.lt=l;document.documentElement.dataset.tf="c";document.documentElement.dataset.ty="a";}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Jost:wght@400..600&family=Outfit:wght@400..600&family=Urbanist:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -68,6 +68,11 @@ html[data-tf="c"]{--tf:"Urbanist",sans-serif;--tw:600;--tt:none;--tls:-.03em;--t
 html[data-tf] .lead{letter-spacing:-.01em!important;line-height:1.12}
 /* A · Títols: Urbanist només als titulars, una mica més de pes; la resta igual (Inter + mono) */
 html[data-ty="a"]{--tw:600}
+/* tota la web en Urbanist (text, menú, etiquetes i dades) */
+:root,html[data-ty]{--display:"Urbanist",sans-serif;--mono:"Urbanist",sans-serif}
+body{font-weight:500}
+.mono{font-size:11.5px;letter-spacing:.06em;font-weight:600}
+.hud,#paTc,#taTc,.osd{font-variant-numeric:tabular-nums}
 /* B · Família: Urbanist a tot el text (titulars, menú, cos); el mono es queda només per a les dades tècniques */
 html[data-ty="b"]{--display:"Urbanist",sans-serif;--tw:500}
 html[data-ty="b"] body{font-weight:500}
@@ -530,6 +535,36 @@ body:not(.v-inici) .h-sel{display:none}
   .pb-bot{grid-template-columns:1fr auto}.pb-meta{display:none}
 }
 
+/* ============ TREBALLS · PESTANYES (ref. selector de pestanyes de l'iOS antic) ============ */
+:root{--tbbar:#e7e8e6;--tbink:#1a1a1a}
+html[data-theme="dark"]{--tbbar:#2b2621;--tbink:#eee4d1}
+[data-view="treballs"] .pad{padding-bottom:0}
+.wk{position:relative;height:calc(100svh - 205px);min-height:440px;overflow:hidden;user-select:none;touch-action:pan-x}
+.tb{position:absolute;left:50%;top:0;width:var(--cw);border-radius:7px;overflow:hidden;background:var(--tbbar);cursor:pointer;
+  box-shadow:0 -10px 28px -8px rgba(0,0,0,.35);transform-origin:50% 0;will-change:transform;backface-visibility:hidden}
+.tb-bar{position:relative;height:30px;display:flex;align-items:center;justify-content:center;color:var(--tbink);font-weight:600;font-size:13px;letter-spacing:-.01em}
+.tb-x{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:20px;height:20px;font-size:16px;line-height:1;color:var(--tbink);opacity:.55}
+.tb-x:hover{opacity:1}
+.tb-n{position:absolute;right:12px;font-size:10px;opacity:.5;letter-spacing:.06em}
+.tb-pic{position:relative;aspect-ratio:16/9;background:#111;overflow:hidden}
+.tb-pic img,.tb-pic video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tb[data-id="el-nino-de-las-flores"] .tb-pic img,.tb[data-id="el-nino-de-las-flores"] .tb-pic video{scale:1.08}
+.tb.gone{pointer-events:none}
+.tb-pill{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;background:var(--tbbar);color:#d4402b;font-weight:600;font-size:15px;
+  padding:12px 34px;border-radius:12px;box-shadow:0 10px 30px -10px rgba(0,0,0,.4);white-space:nowrap}
+.tb-pill:hover{filter:brightness(1.05)}
+.tb-heart{position:absolute;right:22px;bottom:18px;z-index:50;width:40px;height:40px;color:#e0362c;opacity:0;transform:scale(.4);transition:opacity .3s,transform .5s cubic-bezier(.2,1.6,.4,1)}
+.tb-heart.on{opacity:1;transform:none}
+.tb-open{position:fixed;z-index:160;border-radius:7px;overflow:hidden;background:var(--tbbar);transition:all .55s cubic-bezier(.65,0,.2,1)}
+.tb-open .tb-pic{height:calc(100% - 30px);aspect-ratio:auto}
+/* C · Mosaic: graella plana de pestanyes */
+.wk[data-wk="c"]{overflow-y:auto;height:auto;min-height:0;padding:10px 0 90px}
+.mz{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.mz .tb{position:relative;left:auto;width:auto;transform:none;transform-origin:50% 50%;box-shadow:0 14px 30px -18px rgba(0,0,0,.45);transition:transform .5s cubic-bezier(.2,.7,.2,1),opacity .5s,box-shadow .4s}
+.mz .tb:hover{box-shadow:0 26px 40px -20px rgba(0,0,0,.5)}
+.mz .tb.pre{opacity:0;transform:translateY(60px) rotateX(30deg) scale(.9)}
+@media (max-width:720px){ .mz{grid-template-columns:1fr} .tb-pill{font-size:13px;padding:10px 22px} }
+
 /* ============ RESPONSIVE ============ */
 #menuBtn{display:none}
 @media (max-width:720px){ #menuBtn{display:inline} }
@@ -555,6 +590,9 @@ body:not(.v-inici) .h-sel{display:none}
 </head>
 <body class="intro-on intro-wait">
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="grainy" x="-10%" y="-20%" width="120%" height="140%">
+  <feTurbulence type="fractalNoise" baseFrequency=".95" numOctaves="2" seed="4" result="n"/>
+  <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
 <div class="bg" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><canvas class="glow" id="glow"></canvas><span class="dots"></span><span class="cols"></span><canvas class="sand" id="sand"></canvas><span class="vig"></span></div>
 <div class="grain" aria-hidden="true"></div>
 
@@ -631,7 +669,8 @@ body:not(.v-inici) .h-sel{display:none}
         </div>
         <div class="rule"></div>
 
-        <div class="grid mono wstage on" id="grid" data-w="grid"></div>
+        <div class="wk" id="wk" data-wk="a"></div>
+        <div class="grid mono wstage" id="grid" data-w="grid" hidden></div>
         <p class="empty mono muted" id="empty" data-i18n="work.empty"></p>
       </div>
     </section>
@@ -714,7 +753,7 @@ body:not(.v-inici) .h-sel{display:none}
 
   <footer class="foot mono">
     <span>© 2026 Boi Vidal Albert</span>
-    <span class="fx-wrap"><span class="fx" id="tySel"><span class="muted">Sistema:</span><button data-ty="a">A · Títols</button><button data-ty="b">B · Família</button><button data-ty="c">C · Fitxa</button></span><button class="muted" id="replay" data-i18n="replay"></button></span>
+    <button class="muted" id="replay" data-i18n="replay"></button>
     <span class="r"><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a><a href="https://vimeo.com/" target="_blank" rel="noopener">Vimeo</a><a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a></span>
   </footer>
 </div>
@@ -724,7 +763,7 @@ body:not(.v-inici) .h-sel{display:none}
    TEXTOS (CA / ES / EN) — portats de la v1
    ============================================================ */
 const I18N = {
- ca:{ "gl.label":"Cursor:","gl.a":"Atracció","gl.b":"Canvi de to","gl.c":"Llum","lt.label":"Clar:","lt.a":"Glacera","lt.b":"Hora blava","lt.c":"Boira","dk.label":"Fosc:","dk.a":"Negatiu","dk.b":"Projecció","dk.c":"Laboratori","cin.label":"Entrada","cin.bob":"Bobinat","cin.fil":"Enfilat","cin.dis":"Dispersió","home.projects":"projectes","home.e1":"Índex","home.e2":"Diari","home.e3":"Partida","home.more":"Llegir més — Sobre mi →","home.lead":"Director de fotografia, operador i ajudant de càmera. Barcelona, disponible arreu.","home.cta":"Veure treballs →","home.role":"Director de fotografia","home.hintC":"Mou el visor · clica per veure els treballs","home.sel":"Portada:","home.visor":"Visor","fx.label":"Fons:","ph.va":"Revelat","ph.vb":"Obturador","ph.vc":"Moviola","f.format":"Format","ph.tira":"Tira","ph.slide":"Diapositiva","ph.sheet":"Full de contactes","ph.hint.tira":"Passa per sobre · scroll lateral · clica per ampliar","ph.lede":"Fotogrames i fotografia fixa dels rodatges. Una selecció marcada amb llapis gras, com es feia sobre els fulls de contactes.","ph.roll":"Rotllo","ph.auto":"Auto","ph.pause":"Pausa","ph.desc":"Fotogrames i fotografia fixa · 135 · digital i analògic · Barcelona","nav.work":"Treballs","nav.photos":"Fotografies","nav.about":"Sobre mi","nav.contact":"Contacte",
+ ca:{ "tb.close":"Tancar","tb.tab":"pestanya","tb.tabs":"pestanyes","tb.reopen":"Reobrir les pestanyes","gl.label":"Cursor:","gl.a":"Atracció","gl.b":"Canvi de to","gl.c":"Llum","lt.label":"Clar:","lt.a":"Glacera","lt.b":"Hora blava","lt.c":"Boira","dk.label":"Fosc:","dk.a":"Negatiu","dk.b":"Projecció","dk.c":"Laboratori","cin.label":"Entrada","cin.bob":"Bobinat","cin.fil":"Enfilat","cin.dis":"Dispersió","home.projects":"projectes","home.e1":"Índex","home.e2":"Diari","home.e3":"Partida","home.more":"Llegir més — Sobre mi →","home.lead":"Director de fotografia, operador i ajudant de càmera. Barcelona, disponible arreu.","home.cta":"Veure treballs →","home.role":"Director de fotografia","home.hintC":"Mou el visor · clica per veure els treballs","home.sel":"Portada:","home.visor":"Visor","fx.label":"Fons:","ph.va":"Revelat","ph.vb":"Obturador","ph.vc":"Moviola","f.format":"Format","ph.tira":"Tira","ph.slide":"Diapositiva","ph.sheet":"Full de contactes","ph.hint.tira":"Passa per sobre · scroll lateral · clica per ampliar","ph.lede":"Fotogrames i fotografia fixa dels rodatges. Una selecció marcada amb llapis gras, com es feia sobre els fulls de contactes.","ph.roll":"Rotllo","ph.auto":"Auto","ph.pause":"Pausa","ph.desc":"Fotogrames i fotografia fixa · 135 · digital i analògic · Barcelona","nav.work":"Treballs","nav.photos":"Fotografies","nav.about":"Sobre mi","nav.contact":"Contacte",
   "menu":"Menú","menu.close":"Tancar ✕","replay":"▶ Tornar a veure la intro",
   "hint.home":"(Scroll / ↑↓) · Clica per obrir",
   "hero.roles":"Director de fotografia · Operador de càmera · Ajudant de càmera","hero.loc":"Barcelona — disponible arreu",
@@ -743,7 +782,7 @@ const I18N = {
   "back":"(Tornar)","sheet.frames":"Frames","sheet.loop":"Loop","sheet.next":"Següent projecte","slide":"Llisca →",
   "spec.role":"Rol","spec.dir":"Direcció","spec.prod":"Producció","spec.cam":"Càmera","spec.lens":"Òptiques","spec.format":"Format","spec.ratio":"Ràtio","spec.year":"Any",
   "lb.close":"Tancar ✕","tag.set":"Foto · Boi al set","bts.soon":"Foto BTS · pròximament","still":"Fotograma" },
- es:{ "gl.label":"Cursor:","gl.a":"Atracción","gl.b":"Cambio de tono","gl.c":"Luz","lt.label":"Claro:","lt.a":"Glaciar","lt.b":"Hora azul","lt.c":"Niebla","dk.label":"Oscuro:","dk.a":"Negativo","dk.b":"Proyección","dk.c":"Laboratorio","cin.label":"Entrada","cin.bob":"Bobinado","cin.fil":"Enhebrado","cin.dis":"Dispersión","home.projects":"proyectos","home.e1":"Índice","home.e2":"Diario","home.e3":"Partida","home.more":"Leer más — Sobre mí →","home.lead":"Director de fotografía, operador y ayudante de cámara. Barcelona, disponible en todo el mundo.","home.cta":"Ver trabajos →","home.role":"Director de fotografía","home.hintC":"Mueve el visor · clica para ver los trabajos","home.sel":"Portada:","home.visor":"Visor","fx.label":"Fondo:","ph.va":"Revelado","ph.vb":"Obturador","ph.vc":"Moviola","f.format":"Formato","ph.tira":"Tira","ph.slide":"Diapositiva","ph.sheet":"Hoja de contactos","ph.hint.tira":"Pasa por encima · scroll lateral · clica para ampliar","ph.lede":"Fotogramas y fotografía fija de los rodajes. Una selección marcada con lápiz graso, como se hacía sobre las hojas de contactos.","ph.roll":"Rollo","ph.auto":"Auto","ph.pause":"Pausa","ph.desc":"Fotogramas y fotografía fija · 135 · digital y analógico · Barcelona","nav.work":"Trabajos","nav.photos":"Fotografías","nav.about":"Sobre mí","nav.contact":"Contacto",
+ es:{ "tb.close":"Cerrar","tb.tab":"pestaña","tb.tabs":"pestañas","tb.reopen":"Reabrir las pestañas","gl.label":"Cursor:","gl.a":"Atracción","gl.b":"Cambio de tono","gl.c":"Luz","lt.label":"Claro:","lt.a":"Glaciar","lt.b":"Hora azul","lt.c":"Niebla","dk.label":"Oscuro:","dk.a":"Negativo","dk.b":"Proyección","dk.c":"Laboratorio","cin.label":"Entrada","cin.bob":"Bobinado","cin.fil":"Enhebrado","cin.dis":"Dispersión","home.projects":"proyectos","home.e1":"Índice","home.e2":"Diario","home.e3":"Partida","home.more":"Leer más — Sobre mí →","home.lead":"Director de fotografía, operador y ayudante de cámara. Barcelona, disponible en todo el mundo.","home.cta":"Ver trabajos →","home.role":"Director de fotografía","home.hintC":"Mueve el visor · clica para ver los trabajos","home.sel":"Portada:","home.visor":"Visor","fx.label":"Fondo:","ph.va":"Revelado","ph.vb":"Obturador","ph.vc":"Moviola","f.format":"Formato","ph.tira":"Tira","ph.slide":"Diapositiva","ph.sheet":"Hoja de contactos","ph.hint.tira":"Pasa por encima · scroll lateral · clica para ampliar","ph.lede":"Fotogramas y fotografía fija de los rodajes. Una selección marcada con lápiz graso, como se hacía sobre las hojas de contactos.","ph.roll":"Rollo","ph.auto":"Auto","ph.pause":"Pausa","ph.desc":"Fotogramas y fotografía fija · 135 · digital y analógico · Barcelona","nav.work":"Trabajos","nav.photos":"Fotografías","nav.about":"Sobre mí","nav.contact":"Contacto",
   "menu":"Menú","menu.close":"Cerrar ✕","replay":"▶ Volver a ver la intro",
   "hint.home":"(Scroll / ↑↓) · Clica para abrir",
   "hero.roles":"Director de fotografía · Operador de cámara · Ayudante de cámara","hero.loc":"Barcelona — disponible en todo el mundo",
@@ -762,7 +801,7 @@ const I18N = {
   "back":"(Volver)","sheet.frames":"Frames","sheet.loop":"Loop","sheet.next":"Siguiente proyecto","slide":"Desliza →",
   "spec.role":"Rol","spec.dir":"Dirección","spec.prod":"Producción","spec.cam":"Cámara","spec.lens":"Ópticas","spec.format":"Formato","spec.ratio":"Ratio","spec.year":"Año",
   "lb.close":"Cerrar ✕","tag.set":"Foto · Boi en el set","bts.soon":"Foto BTS · próximamente","still":"Fotograma" },
- en:{ "gl.label":"Cursor:","gl.a":"Attract","gl.b":"Hue shift","gl.c":"Light","lt.label":"Light:","lt.a":"Glacier","lt.b":"Blue hour","lt.c":"Mist","dk.label":"Dark:","dk.a":"Negative","dk.b":"Projection","dk.c":"Darkroom","cin.label":"Intro","cin.bob":"Reel","cin.fil":"Thread","cin.dis":"Scatter","home.projects":"projects","home.e1":"Index","home.e2":"Paper","home.e3":"Split","home.more":"Read more — About →","home.lead":"Cinematographer, camera operator and camera assistant. Barcelona, available worldwide.","home.cta":"See the work →","home.role":"Cinematographer","home.hintC":"Move the viewfinder · click to see the work","home.sel":"Home:","home.visor":"Viewfinder","fx.label":"Background:","ph.va":"Develop","ph.vb":"Shutter","ph.vc":"Moviola","f.format":"Format","ph.tira":"Strip","ph.slide":"Slide","ph.sheet":"Contact sheet","ph.hint.tira":"Hover · scroll sideways · click to enlarge","ph.lede":"Stills and set photography from the shoots. A selection marked in grease pencil, the way it was done on contact sheets.","ph.roll":"Roll","ph.auto":"Auto","ph.pause":"Pause","ph.desc":"Stills and set photography · 135 · digital and analog · Barcelona","nav.work":"Work","nav.photos":"Photography","nav.about":"About","nav.contact":"Contact",
+ en:{ "tb.close":"Close","tb.tab":"tab","tb.tabs":"tabs","tb.reopen":"Reopen tabs","gl.label":"Cursor:","gl.a":"Attract","gl.b":"Hue shift","gl.c":"Light","lt.label":"Light:","lt.a":"Glacier","lt.b":"Blue hour","lt.c":"Mist","dk.label":"Dark:","dk.a":"Negative","dk.b":"Projection","dk.c":"Darkroom","cin.label":"Intro","cin.bob":"Reel","cin.fil":"Thread","cin.dis":"Scatter","home.projects":"projects","home.e1":"Index","home.e2":"Paper","home.e3":"Split","home.more":"Read more — About →","home.lead":"Cinematographer, camera operator and camera assistant. Barcelona, available worldwide.","home.cta":"See the work →","home.role":"Cinematographer","home.hintC":"Move the viewfinder · click to see the work","home.sel":"Home:","home.visor":"Viewfinder","fx.label":"Background:","ph.va":"Develop","ph.vb":"Shutter","ph.vc":"Moviola","f.format":"Format","ph.tira":"Strip","ph.slide":"Slide","ph.sheet":"Contact sheet","ph.hint.tira":"Hover · scroll sideways · click to enlarge","ph.lede":"Stills and set photography from the shoots. A selection marked in grease pencil, the way it was done on contact sheets.","ph.roll":"Roll","ph.auto":"Auto","ph.pause":"Pause","ph.desc":"Stills and set photography · 135 · digital and analog · Barcelona","nav.work":"Work","nav.photos":"Photography","nav.about":"About","nav.contact":"Contact",
   "menu":"Menu","menu.close":"Close ✕","replay":"▶ Replay intro",
   "hint.home":"(Scroll / ↑↓) · Click to open",
   "hero.roles":"Cinematographer · Camera operator · Camera assistant","hero.loc":"Barcelona — available worldwide",
@@ -1003,7 +1042,7 @@ function renderFilters(){
   rg.insertAdjacentHTML("beforeend",[["all",t("f.all")],...ROLES.map(k=>[k,roleName(k)])].map(([k,v])=>`<button class="chip${filt.role===k?" on":""}" data-v="${k}">${v}</button>`).join(""));
 }
 $$(".fgroup[data-key]").forEach(g=>g.addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(!c) return;
-  filt[g.dataset.key]=c.dataset.v; renderFilters(); applyFilters(); }));
+  filt[g.dataset.key]=c.dataset.v; renderFilters(); applyFilters(); renderWk(); }));
 function renderGrid(){
   $("#grid").innerHTML=PROJECTS.map(p=>`
     <a class="card" href="#projecte/${p.id}" data-type="${p.type}" data-roles="${p.roles.join(",")}">
@@ -1256,7 +1295,7 @@ function applyLang(){
   document.documentElement.lang=lang;
   $$("[data-i18n]").forEach(el=>{ clearInterval(el._scr); el._scr=0; el.textContent=t(el.dataset.i18n); });
   $$(".lang button").forEach(b=>b.classList.toggle("on",b.dataset.lang===lang));
-  renderFilters(); renderGrid(); renderPhotos(); renderBts(); renderAbout(); setMeta(); if(typeof renderW==='function'&&PA) renderW();
+  renderFilters(); renderGrid(); renderPhotos(); renderBts(); renderAbout(); setMeta(); if(typeof renderW==='function'&&PA) renderW(); if(typeof renderWk==='function'&&view==="treballs") renderWk();
   if(view==="projecte") renderProject(location.hash.split("/")[1]);
 }
 $(".lang").addEventListener("click",e=>{ const b=e.target.closest("[data-lang]"); if(!b) return;
@@ -1507,7 +1546,7 @@ addEventListener("pointermove",e=>{ SAND.mx=e.clientX; SAND.my=e.clientY; if(!SA
 
 /* ============ MODE FOSC ============ */
 const RT=document.documentElement;
-let theme=(()=>{ try{const t=localStorage.getItem("bva-theme"); if(t) return t;}catch(_){} return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"; })();
+let theme=(()=>{ try{const t=localStorage.getItem("bva-theme"); if(t==="dark"||t==="light") return t;}catch(_){} return "light"; })();   /* de sortida, mode clar */
 const dk="b";   /* mode fosc escollit: Projecció */
 const lt="c";   /* mode clar escollit: Boira */
 function applyTheme(){
@@ -1582,12 +1621,114 @@ glStart();
 
 /* ---- selector temporal de tipografies ---- */
 const tf="c";   /* tipografia escollida: Urbanist */
-let ty="a"; try{const v=localStorage.getItem("bva-ty"); if(["a","b","c"].includes(v)) ty=v;}catch(_){}
-function applyTf(){ RT.dataset.tf=tf; RT.dataset.ty=ty; $$("#tySel [data-ty]").forEach(b=>b.classList.toggle("on",b.dataset.ty===ty));
+const ty="a";   /* sistema escollit: Títols */
+function applyTf(){ RT.dataset.tf=tf; RT.dataset.ty=ty;
   requestAnimationFrame(()=>{ if(view==="inici") fitA(); }); }
-$("#tySel").addEventListener("click",e=>{ const b=e.target.closest("[data-ty]"); if(!b) return; ty=b.dataset.ty; try{localStorage.setItem("bva-ty",ty)}catch(_){} applyTf();
-  scrambleIn($$(".view.on .big span, .view.on h1, #paTitle"),40); });
 applyTf();
+
+/* ============ TREBALLS · 3 PROPOSTES TIPUS PESTANYES ============
+   A Pestanyes: pila inclinada que es recorre amb scroll (com Safari a l'iOS 7); la × tanca la pestanya.
+   B Rolodex: les pestanyes giren al voltant d'un cilindre; la del davant reprodueix el loop.
+   C Mosaic: graella plana de pestanyes que entren d'una en una i s'inclinen sota el cursor.
+   En totes, clicar una pestanya l'amplia a pantalla completa i obre el treball. */
+const wkMode="a";   /* vista escollida: Pestanyes */
+const TB={tabs:[],els:[],y:0,ty:0,cur:0,tc:0,raf:0,closed:new Set(),hov:-1,drag:null};
+function tbHTML(e,i){ return `<div class="tb" data-i="${i}" data-id="${e.p.id}"><div class="tb-bar"><button class="tb-x" aria-label="Tancar">×</button><span class="tb-t">${e.p.title}</span><span class="tb-n">${t("sheet.loop").toUpperCase()} ${pad(e.k+1)}</span></div>
+  <div class="tb-pic"><img src="${e.poster}" alt="" draggable="false"><video muted loop playsinline preload="none" data-src="${e.v.replace(/\.mp4$/,"-m.mp4")}"></video></div></div>`; }
+function tbPlay(el,on){ const v=el&&$("video",el); if(!v) return; if(on){ if(!v.src) v.src=v.dataset.src; v.play().catch(()=>{}); } else v.pause(); }
+function tbPill(){ const n=TB.tabs.length-TB.closed.size, pl=$("#tbPill"); if(!pl) return;
+  pl.textContent=n?`${t("tb.close")} ${n} ${n===1?t("tb.tab"):t("tb.tabs")}`:t("tb.reopen"); }
+function renderWk(){
+  cancelAnimationFrame(TB.raf); const box=$("#wk"); box.dataset.wk=wkMode;
+  TB.tabs=ENTRIES.filter(e=>matchP(e.p)); TB.closed=new Set(); TB.y=TB.ty=0; TB.cur=TB.tc=0; TB.hov=-1;
+  if(!TB.tabs.length){ box.innerHTML=""; return; }
+  if(wkMode==="c"){
+    box.innerHTML=`<div class="mz">${TB.tabs.map(tbHTML).join("")}</div>`;
+    TB.els=$$(".tb",box); TB.els.forEach((el,i)=>{ el.classList.add("pre"); el.style.transitionDelay=(i*70)+"ms"; });
+    requestAnimationFrame(()=>requestAnimationFrame(()=>TB.els.forEach(el=>el.classList.remove("pre"))));
+    setTimeout(()=>TB.els.forEach(el=>el.style.transitionDelay=""),1200);
+    TB.els.forEach(el=>{ el.addEventListener("pointermove",e=>{ const r=el.getBoundingClientRect(), x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+        el.style.transform=`perspective(900px) rotateY(${(x*10).toFixed(2)}deg) rotateX(${(-y*10).toFixed(2)}deg) translateY(-6px)`; tbPlay(el,true); });
+      el.addEventListener("pointerleave",()=>{ el.style.transform=""; tbPlay(el,false); }); });
+  } else {
+    box.innerHTML=TB.tabs.map(tbHTML).join("")+`<button class="tb-pill" id="tbPill"></button><svg class="tb-heart" id="tbHeart" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2 0 3.6 1.1 4.4 2.6.8-1.5 2.5-2.6 4.4-2.6 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z"/></svg>`;
+    TB.els=$$(".tb",box); tbPill(); tbSize();
+    TB.y=0; TB.ty=0; TB.cur=0; TB.t0=performance.now()+120;   /* entrada: una pestanya plana que s'encongeix i obre la pila */
+    TB.els.forEach(el=>{ const tt=$(".tb-t",el); if(tt) setTimeout(()=>scramble(tt,tt.textContent,520),400+(+el.dataset.i)*90); });
+    $("#tbPill").style.opacity="0"; setTimeout(()=>{ const pl=$("#tbPill"); if(pl){ pl.style.transition="opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)"; pl.style.opacity=""; } },1500);
+    TB.raf=requestAnimationFrame(tbLoop);
+  }
+}
+function tbSize(){ const box=$("#wk");
+  if(wkMode!=="c"){ const top=box.getBoundingClientRect().top+$('[data-view="treballs"]').scrollTop-$('[data-view="treballs"]').getBoundingClientRect().top;
+    box.style.height=Math.max(380,$('[data-view="treballs"]').clientHeight-top-6)+"px"; } else box.style.height="";
+  const W=box.clientWidth, H=box.clientHeight;
+  const cw=wkMode==="b"?Math.min(W*.86,(H*.5)*16/9,820):Math.min(W*.82,760); box.style.setProperty("--cw",cw+"px"); TB.cw=cw; TB.H=H; }
+function tbLoop(){
+  TB.raf=requestAnimationFrame(tbLoop); if(view!=="treballs") return;
+  const open=TB.els.filter((_,i)=>!TB.closed.has(i)), n=open.length, cw=TB.cw, ch=cw*9/16+30, H=TB.H;
+  if(wkMode==="a"){
+    const gap=Math.min(ch*.36,150), max=Math.max(0,(n-1)*gap-H*.45);
+    TB.ty=Math.max(-40,Math.min(max+40,TB.ty)); if(!TB.drag) TB.ty+=((TB.ty<0?0:TB.ty>max?max:TB.ty)-TB.ty)*.12;
+    TB.y+=(TB.ty-TB.y)*.14; let k=0;
+    const it=TB.t0?(performance.now()-TB.t0)/1000:9; if(it>2.2) TB.t0=0;
+    const W=$("#wk").clientWidth, full=Math.min(1.5,(W*.96)/cw), ease=q=>1-Math.pow(1-q,4);
+    TB.els.forEach((el,i)=>{ if(TB.closed.has(i)) return;
+      const y=k*gap-TB.y+20, lift=i===TB.hov?-26:0, z=k*2, rx=i===TB.hov?-24:-34;
+      if(it<2.2){                                  /* entrada */
+        const q=ease(Math.max(0,Math.min(1,(it-.15-k*.09)/1.05)));
+        const y0=Math.max(0,(H-ch*full)/2), s0=k===0?full:full*.96;
+        const yy=y0+(y-y0)*q, sc=s0+(1-s0)*q, r=rx*q;
+        el.style.transform=`translateX(-50%) perspective(1400px) translate3d(0,${yy.toFixed(1)}px,${z}px) rotateX(${r.toFixed(2)}deg) scale(${sc.toFixed(4)})`;
+        el.style.opacity=k===0?1:Math.min(1,q*2.2).toFixed(3); el.style.zIndex=k===0?999:k+1; el.style.transition="none";
+        if(k===0&&!el._intro){ el._intro=1; tbPlay(el,true); } if(k===0&&q>.98&&el._intro===1){ el._intro=2; tbPlay(el,false); }
+      } else {
+        el.style.transform=`translateX(-50%) perspective(1400px) translate3d(0,${(y+lift).toFixed(1)}px,${z}px) rotateX(${rx}deg)`;
+        el.style.opacity=""; el.style.zIndex=k+1; el.style.transition="transform .35s cubic-bezier(.2,.7,.2,1)";
+      }
+      k++; });
+  }
+  if(wkMode==="b"){
+    TB.tc=Math.max(0,Math.min(n-1,TB.tc)); if(!TB.drag) TB.tc+=(Math.round(TB.tc)-TB.tc)*.12;
+    TB.cur+=(TB.tc-TB.cur)*.1; const R=ch*1.25; let k=0;
+    TB.els.forEach((el,i)=>{ if(TB.closed.has(i)) return;
+      const d=k-TB.cur, a=Math.max(-80,Math.min(80,d*24)), vis=Math.abs(d)<3.4;
+      el.style.transform=`translateX(-50%) perspective(1600px) translate3d(0,${(H*.42-ch/2).toFixed(1)}px,${(-R).toFixed(1)}px) rotateX(${(-a).toFixed(2)}deg) translateZ(${R.toFixed(1)}px)`;
+      el.style.opacity=vis?Math.max(0,1-Math.abs(d)*.22).toFixed(3):0; el.style.zIndex=100-Math.round(Math.abs(d)*10); el.style.transition="";
+      const front=Math.abs(d)<.5; if(front!==el._front){ el._front=front; tbPlay(el,front); } k++; });
+  }
+}
+function tbClose(i){ const el=TB.els[i]; if(!el||TB.closed.has(i)) return; el.classList.add("gone");
+  el.style.transition="transform .45s cubic-bezier(.6,0,.4,1),opacity .4s"; el.style.transform+=" translateX(-130%)"; el.style.opacity="0";
+  setTimeout(()=>{ TB.closed.add(i); tbPill(); },380); }
+function tbOpen(i){ const el=TB.els[i]; if(!el) return; const r=el.getBoundingClientRect(), id=el.dataset.id;
+  const c=el.cloneNode(true); c.className="tb-open"; c.removeAttribute("style"); Object.assign(c.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px"});
+  const v0=$("video",el), v1=$("video",c); if(v0&&v0.src&&v1){ v1.src=v0.src; try{v1.currentTime=v0.currentTime}catch(_){} v1.play().catch(()=>{}); }
+  document.body.appendChild(c); void c.offsetWidth;
+  Object.assign(c.style,{left:"0px",top:"0px",width:innerWidth+"px",height:innerHeight+"px",borderRadius:"0px"});
+  setTimeout(()=>{ location.hash="projecte/"+id; },520); setTimeout(()=>{ c.style.opacity="0"; setTimeout(()=>c.remove(),450); },700); }
+const wkBox=$("#wk");
+wkBox.addEventListener("click",e=>{
+  const x=e.target.closest(".tb-x"); if(x){ e.stopPropagation(); tbClose(+x.closest(".tb").dataset.i); return; }
+  if(e.target.closest("#tbPill")){
+    if(TB.closed.size===TB.tabs.length){ TB.closed=new Set(); TB.els.forEach(el=>{ el.classList.remove("gone"); el.style.opacity=""; }); TB.y=-200; tbPill(); $("#tbHeart").classList.remove("on"); }
+    else { TB.els.forEach((el,i)=>setTimeout(()=>tbClose(i),i*90)); setTimeout(()=>$("#tbHeart").classList.add("on"),TB.els.length*90+400); }
+    return; }
+  if(TB.dragMoved) return;
+  const tb=e.target.closest(".tb"); if(!tb) return; const i=+tb.dataset.i;
+  if(wkMode==="b"){ const order=TB.els.map((_,k)=>k).filter(k=>!TB.closed.has(k)), pos=order.indexOf(i); if(Math.abs(pos-TB.cur)>.5){ TB.tc=pos; return; } }
+  tbOpen(i); });
+wkBox.addEventListener("pointerover",e=>{ if(wkMode!=="a") return; const tb=e.target.closest(".tb"); const i=tb?+tb.dataset.i:-1; if(i===TB.hov) return;
+  if(TB.hov>=0) tbPlay(TB.els[TB.hov],false); TB.hov=i; if(i>=0) tbPlay(tb,true); });
+wkBox.addEventListener("pointerleave",()=>{ if(TB.hov>=0) tbPlay(TB.els[TB.hov],false); TB.hov=-1; });
+wkBox.addEventListener("wheel",e=>{ if(wkMode==="c") return; e.preventDefault(); if(wkMode==="a") TB.ty+=e.deltaY*.9; else TB.tc+=Math.sign(e.deltaY)*(Math.abs(e.deltaY)>40?1:.34); },{passive:false});
+wkBox.addEventListener("pointerdown",e=>{ if(wkMode==="c"||e.target.closest(".tb-x,#tbPill")) return; TB.drag={y:e.clientY,ty:TB.ty,tc:TB.tc}; TB.dragMoved=false; });
+addEventListener("pointermove",e=>{ if(!TB.drag) return; const dy=e.clientY-TB.drag.y; if(Math.abs(dy)>5) TB.dragMoved=true;
+  if(wkMode==="a") TB.ty=TB.drag.ty-dy*1.3; else TB.tc=TB.drag.tc-dy/120; });
+addEventListener("pointerup",()=>{ TB.drag=null; setTimeout(()=>TB.dragMoved=false,0); });
+document.addEventListener("keydown",e=>{ if(view!=="treballs"||wkMode!=="b") return; if(e.key==="ArrowDown") TB.tc++; if(e.key==="ArrowUp") TB.tc--; if(e.key==="Enter") tbOpen(TB.els.findIndex((_,i)=>!TB.closed.has(i))+Math.round(TB.cur)); });
+addEventListener("resize",()=>{ if(view==="treballs") tbSize(); });
+
 
 /* ============ ROUTER ============ */
 let view="";
@@ -1603,6 +1744,8 @@ function route(){
   if(view==="inici"){ const fresh=prev&&prev!=="inici"&&!introRunning; if(fresh&&!reduce) $("#wCinta").classList.add("cin-run");
     requestAnimationFrame(()=>{ sizeA(); fitA(); startW(); if(fresh) introCinta(); }); } else stopW();
   if(prev!==view&&!introRunning) sandIn();   /* entrada Gota a cada secció */
+  if(view==="treballs"&&prev!=="treballs"){ renderWk(); $('[data-view="treballs"]').scrollTop=0; }
+  if(prev==="treballs"&&view!=="treballs"){ $$("#wk video").forEach(v=>v.pause()); cancelAnimationFrame(TB.raf); }
   if(view==="fotografies"){ startPh(); if(prev!=="fotografies") introTira(); } else stopPh();
   if(prev!==view&&!introRunning){ const V=$(".view.on");
     scrambleIn($$("h1 span[data-i18n], h1[data-i18n], .fgroup b, .p-top a, .label span, .row > span.muted, .sh-intro .mono span, .contact .mono span",V),35);
