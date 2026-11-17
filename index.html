@@ -576,6 +576,41 @@ html[data-theme="dark"]{--tbbar:#2b2621;--tbink:#eee4d1}
   .view[data-wh="b"] .fgroup b{width:auto;border:0;padding:0;margin:0 4px 0 0}
   .view[data-wh="b"] .wk{border-left:0}
 }
+/* ---- filtres com a carpetes i arxius (Escriptori) ---- */
+#filters .chip{opacity:1}
+#filters .chip.on::before,#filters .chip.on::after{content:none}
+#filters .fi-ic svg,#filters .fi-chev svg{width:100%;height:100%;display:block;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linejoin:round;stroke-linecap:round}
+#filters .fi-c{font-style:normal;font-size:10px;opacity:.5;letter-spacing:.04em}
+#filters .chip.nil{opacity:.35}
+#filters .fi-path{display:none}
+#filters .fi-ls>div{min-height:0;overflow:hidden}
+#filters.fi-in .chip{animation:fiIn .5s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i)*45ms)}
+@keyframes fiIn{from{opacity:0;transform:translateX(-12px)}}
+/* Escriptori: icones de carpeta i arxiu, amb la ruta a dalt com al Finder */
+#filters[data-fi="c"]{gap:22px}
+#filters[data-fi="c"] .fi-path{display:block;width:100%;font-size:11px;letter-spacing:.02em;padding:8px 10px;border:1px solid var(--line);border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+#filters[data-fi="c"] .fi-path b{font-weight:500;color:var(--ink)}
+#filters[data-fi="c"] .fi-car{display:inline-block;width:6px;height:12px;margin-left:2px;vertical-align:-2px;background:var(--ink);animation:fiCar 1s steps(1) infinite}
+@keyframes fiCar{50%{opacity:0}}
+#filters[data-fi="c"] .fi-hd{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 0 7px;margin:0 0 6px}
+#filters[data-fi="c"] .fi-ls,#filters[data-fi="c"] .fi-ls>div{width:100%}
+#filters[data-fi="c"] .fi-ls>div{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 4px}
+#filters[data-fi="c"] .chip{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px 2px;border-radius:7px;color:var(--ink);text-align:center;transition:background .25s}
+#filters[data-fi="c"] .chip .fi-ic{width:38px;height:38px;transition:transform .4s cubic-bezier(.2,1.5,.4,1)}
+#filters[data-fi="c"] .chip .fi-ic svg{stroke-width:1}
+#filters[data-fi="c"] .chip .fi-n{font-size:10.5px;line-height:1.15;padding:1px 5px;border-radius:4px;word-break:break-word}
+#filters[data-fi="c"] .chip .fi-c{position:absolute;top:4px;right:calc(50% - 26px);font-size:9px;opacity:.6}
+#filters[data-fi="c"] .chip:hover .fi-ic{transform:translateY(-3px) scale(1.06)}
+#filters[data-fi="c"] .chip.on{background:color-mix(in srgb,var(--ink) 8%,transparent)}
+#filters[data-fi="c"] .chip.on .fi-n{background:var(--ink);color:var(--paper)}
+#filters[data-fi="c"] .chip.on .fi-ic svg{fill:color-mix(in srgb,var(--ink) 12%,transparent)}
+@media (max-width:720px){
+  #filters[data-fi] .fgroup{flex-direction:column;align-items:flex-start}
+  #filters[data-fi] .fi-hd{width:auto}
+  #filters[data-fi="c"] .fi-ls>div{grid-template-columns:repeat(5,1fr)}
+  #filters[data-fi="c"] .chip .fi-ic{width:30px;height:30px}
+  #filters[data-fi="c"] .chip .fi-n{font-size:9.5px;word-break:normal;padding:1px 3px}
+}
 /* C · Mosaic: graella plana de pestanyes */
 .wk[data-wk="c"]{overflow-y:auto;height:auto;min-height:0;padding:10px 0 90px}
 .mz{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
@@ -1135,11 +1170,26 @@ menu.addEventListener("click",e=>{ if(e.target.closest("a")) closeMenu(); });
 
 /* ============ TREBALLS ============ */
 const filt={type:"all",role:"all"};
+/* ---- filtres de Treballs: Escriptori (icones de carpeta/arxiu i ruta) ---- */
+const FI_SVG={fold:'<svg viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.3l2 2.2h8.7A1.5 1.5 0 0 1 21 8.7v8.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>',
+  open:'<svg viewBox="0 0 24 24"><path d="M3 17.5v-11A1.5 1.5 0 0 1 4.5 5h4.3l2 2.2h7.2a1.5 1.5 0 0 1 1.5 1.5V10.5"/><path d="M3.2 18.3 5.8 11.6A1.5 1.5 0 0 1 7.2 10.6h13.1a1 1 0 0 1 .94 1.33L18.9 18a1.5 1.5 0 0 1-1.42 1H4.6a1.5 1.5 0 0 1-1.4-.7z"/></svg>',
+  file:'<svg viewBox="0 0 24 24"><path d="M6.5 3h7.8L18.5 7.2V19.5A1.5 1.5 0 0 1 17 21H6.5A1.5 1.5 0 0 1 5 19.5v-15A1.5 1.5 0 0 1 6.5 3z"/><path d="M14 3v4.5h4.5"/></svg>',
+  chev:'<svg viewBox="0 0 24 24"><path d="M9.5 6.5 15 12l-5.5 5.5"/></svg>'};
+const fiMode="c";
+function fiCount(key,k){ return ENTRIES.filter(e=>key==="type"
+  ?((k==="all"||e.p.type===k)&&(filt.role==="all"||e.p.roles.includes(filt.role)))
+  :((k==="all"||e.p.roles.includes(k))&&(filt.type==="all"||e.p.type===filt.type))).length; }
 function renderFilters(){
-  const tg=$('.fgroup[data-key="type"]'), rg=$('.fgroup[data-key="role"]');
-  $$(".chip",tg).forEach(c=>c.remove()); $$(".chip",rg).forEach(c=>c.remove());
-  tg.insertAdjacentHTML("beforeend",[["all",t("f.all")],...TYPE_KEYS.map(k=>[k,t("type."+k)])].map(([k,v])=>`<button class="chip${filt.type===k?" on":""}" data-v="${k}">${v}</button>`).join(""));
-  rg.insertAdjacentHTML("beforeend",[["all",t("f.all")],...ROLES.map(k=>[k,roleName(k)])].map(([k,v])=>`<button class="chip${filt.role===k?" on":""}" data-v="${k}">${v}</button>`).join(""));
+  const F=$("#filters"); F.dataset.fi=fiMode;
+  [["type",[["all",t("f.all")],...TYPE_KEYS.map(k=>[k,t("type."+k)])]],["role",[["all",t("f.all")],...ROLES.map(k=>[k,roleName(k)])]]].forEach(([key,items])=>{
+    const g=$(`.fgroup[data-key="${key}"]`);
+    const ic=k=>(key==="role"&&k!=="all"&&fiMode!=="b")?FI_SVG.file:(filt[key]===k?FI_SVG.open:FI_SVG.fold);
+    g.innerHTML=`<b class="fi-hd">${fiMode==="a"?`<i class="fi-chev">${FI_SVG.chev}</i><i class="fi-ic">${g.classList.contains("closed")?FI_SVG.fold:FI_SVG.open}</i>`:""}<span>${t("f."+key)}</span></b>`
+      +`<div class="fi-ls"><div>${items.map(([k,v],i)=>{ const n=fiCount(key,k);
+        return `<button class="chip${filt[key]===k?" on":""}${n?"":" nil"}" data-v="${k}" style="--i:${i}"><i class="fi-ic">${ic(k)}</i><span class="fi-n">${v}</span><em class="fi-c">${pad(n)}</em></button>`; }).join("")}</div></div>`; });
+  let P=$("#fiPath"); if(!P){ F.insertAdjacentHTML("afterbegin",'<div class="fi-path" id="fiPath"></div>'); P=$("#fiPath"); }
+  const nm=key=>filt[key]==="all"?"":`<b>/${(key==="type"?t("type."+filt[key]):roleName(filt[key])).toLowerCase().replace(/\s*\/\s*/g,"-")}</b>`;
+  P.innerHTML=`~/${t("work.title").toLowerCase()}${nm("type")}${nm("role")}<i class="fi-car"></i>`;
 }
 $$(".fgroup[data-key]").forEach(g=>g.addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(!c) return;
   filt[g.dataset.key]=c.dataset.v; renderFilters(); applyFilters(); renderWk(); }));
@@ -1881,7 +1931,7 @@ function route(){
   if(prev==="treballs"&&view!=="treballs"){ $$("#wk video").forEach(v=>v.pause()); cancelAnimationFrame(TB.raf); }
   if(view==="fotografies"){ startPh(); if(prev!=="fotografies") introTira(); } else stopPh();
   if(prev!==view&&!introRunning){ const V=$(".view.on");
-    scrambleIn($$("h1 span[data-i18n], h1[data-i18n], .fgroup b, .p-top a, .label span, .row > span.muted, .sh-intro .mono span, .contact .mono span",V),35);
+    scrambleIn($$("h1 span[data-i18n], h1[data-i18n], .fgroup .fi-hd span, .p-top a, .label span, .row > span.muted, .sh-intro .mono span, .contact .mono span",V),35);
     cascade($$(".chip, .row, .card, .links a",V).slice(0,30),35); }
   closeMenu(); hdClose(); renderHd(); if(prev&&prev!==view) scramble($("#hdLbl"),hdName(view),420);
 }
