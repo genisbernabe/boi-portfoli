@@ -557,6 +557,25 @@ html[data-theme="dark"]{--tbbar:#2b2621;--tbink:#eee4d1}
 .tb-heart.on{opacity:1;transform:none}
 .tb-open{position:fixed;z-index:160;border-radius:7px;overflow:hidden;background:var(--tbbar);transition:all .55s cubic-bezier(.65,0,.2,1)}
 .tb-open .tb-pic{height:calc(100% - 30px);aspect-ratio:auto}
+/* ---- capçalera de Treballs: Columna ---- */
+/* títol i filtres en una columna lateral, pestanyes a la resta */
+.view[data-wh="b"] .pad{display:grid;grid-template-columns:clamp(190px,18vw,270px) 1fr;column-gap:clamp(18px,2.6vw,44px);align-items:start}
+.view[data-wh="b"] .head{grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;gap:40px;margin:14px 0 0}
+.view[data-wh="b"] .head .big{font-size:clamp(38px,4.4vw,66px)!important}
+.view[data-wh="b"] .filters{gap:30px;width:100%}
+.view[data-wh="b"] .fgroup{flex-direction:column;align-items:flex-start;gap:8px;width:100%}
+.view[data-wh="b"] .fgroup b{width:100%;border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:3px}
+.view[data-wh="b"] .rule{display:none}
+.view[data-wh="b"] .wk{grid-column:2;grid-row:1;border-left:1px solid var(--line)}
+.view[data-wh="b"] #grid,.view[data-wh="b"] #empty{grid-column:2}
+@media (max-width:720px){
+  .view[data-wh="b"] .pad{display:block}
+  .view[data-wh="b"] .head{gap:12px;margin:0 0 12px}
+  .view[data-wh="b"] .filters{gap:6px}
+  .view[data-wh="b"] .fgroup{flex-direction:row;flex-wrap:wrap;align-items:center;gap:4px 12px}
+  .view[data-wh="b"] .fgroup b{width:auto;border:0;padding:0;margin:0 4px 0 0}
+  .view[data-wh="b"] .wk{border-left:0}
+}
 /* C · Mosaic: graella plana de pestanyes */
 .wk[data-wk="c"]{overflow-y:auto;height:auto;min-height:0;padding:10px 0 90px}
 .mz{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
@@ -743,7 +762,7 @@ body.hd-open[data-hdm="c"] .top{color:#f1efea}
       <div class="pad">
         <div class="head">
           <h1 class="big"><span data-i18n="work.title"></span><sup id="count"></sup></h1>
-          <div class="filters mono">
+          <div class="filters mono" id="filters">
             <div class="fgroup" data-key="type"><b data-i18n="f.type"></b></div>
             <div class="fgroup" data-key="role"><b data-i18n="f.role"></b></div>
           </div>
@@ -1712,9 +1731,11 @@ applyTf();
    B Rolodex: les pestanyes giren al voltant d'un cilindre; la del davant reprodueix el loop.
    C Mosaic: graella plana de pestanyes que entren d'una en una i s'inclinen sota el cursor.
    En totes, clicar una pestanya l'amplia a pantalla completa i obre el treball. */
-const wkMode="a";   /* vista escollida: Pestanyes */
+const wkMode="a";
+/* capçalera de Treballs escollida: Columna (títol i filtres a l'esquerra) */
+const whMode="b"; $('[data-view="treballs"]').dataset.wh=whMode;
 const TB={tabs:[],els:[],y:0,ty:0,cur:0,tc:0,raf:0,closed:new Set(),hov:-1,drag:null};
-function tbHTML(e,i){ return `<div class="tb" data-i="${i}" data-id="${e.p.id}"><div class="tb-bar"><button class="tb-x" aria-label="Tancar">×</button><span class="tb-t">${e.p.title}</span><span class="tb-n">${t("sheet.loop").toUpperCase()} ${pad(e.k+1)}</span></div>
+function tbHTML(e,i){ return `<div class="tb" data-i="${i}" data-id="${e.p.id}"><div class="tb-bar"><span class="tb-t">${e.p.title}</span><span class="tb-n">${t("sheet.loop").toUpperCase()} ${pad(e.k+1)}</span></div>
   <div class="tb-pic"><img src="${e.poster}" alt="" draggable="false"><video muted loop playsinline preload="none" data-src="${e.v.replace(/\.mp4$/,"-m.mp4")}"></video></div></div>`; }
 function tbPlay(el,on){ const v=el&&$("video",el); if(!v) return; if(on){ if(!v.src) v.src=v.dataset.src; v.play().catch(()=>{}); } else v.pause(); }
 function tbPill(){ const n=TB.tabs.length-TB.closed.size, pl=$("#tbPill"); if(!pl) return;
@@ -1732,11 +1753,10 @@ function renderWk(){
         el.style.transform=`perspective(900px) rotateY(${(x*10).toFixed(2)}deg) rotateX(${(-y*10).toFixed(2)}deg) translateY(-6px)`; tbPlay(el,true); });
       el.addEventListener("pointerleave",()=>{ el.style.transform=""; tbPlay(el,false); }); });
   } else {
-    box.innerHTML=TB.tabs.map(tbHTML).join("")+`<button class="tb-pill" id="tbPill"></button><svg class="tb-heart" id="tbHeart" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2 0 3.6 1.1 4.4 2.6.8-1.5 2.5-2.6 4.4-2.6 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z"/></svg>`;
+    box.innerHTML=TB.tabs.map(tbHTML).join("");
     TB.els=$$(".tb",box); tbPill(); tbSize();
     TB.y=0; TB.ty=0; TB.cur=0; TB.t0=performance.now()+120;   /* entrada: una pestanya plana que s'encongeix i obre la pila */
     TB.els.forEach(el=>{ const tt=$(".tb-t",el); if(tt) setTimeout(()=>scramble(tt,tt.textContent,520),400+(+el.dataset.i)*90); });
-    $("#tbPill").style.opacity="0"; setTimeout(()=>{ const pl=$("#tbPill"); if(pl){ pl.style.transition="opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)"; pl.style.opacity=""; } },1500);
     TB.raf=requestAnimationFrame(tbLoop);
   }
 }
@@ -1744,7 +1764,7 @@ function tbSize(){ const box=$("#wk");
   if(wkMode!=="c"){ const top=box.getBoundingClientRect().top+$('[data-view="treballs"]').scrollTop-$('[data-view="treballs"]').getBoundingClientRect().top;
     box.style.height=Math.max(380,$('[data-view="treballs"]').clientHeight-top-6)+"px"; } else box.style.height="";
   const W=box.clientWidth, H=box.clientHeight;
-  const cw=wkMode==="b"?Math.min(W*.86,(H*.5)*16/9,820):Math.min(W*.82,760); box.style.setProperty("--cw",cw+"px"); TB.cw=cw; TB.H=H; }
+  const cw=wkMode==="b"?Math.min(W*.86,(H*.5)*16/9,820):Math.min(W*({a:.86,b:.9,c:.84}[whMode]||.82),{a:960,b:900,c:1020}[whMode]||760); box.style.setProperty("--cw",cw+"px"); TB.cw=cw; TB.H=H; }
 function tbLoop(){
   TB.raf=requestAnimationFrame(tbLoop); if(view!=="treballs") return;
   const open=TB.els.filter((_,i)=>!TB.closed.has(i)), n=open.length, cw=TB.cw, ch=cw*9/16+30, H=TB.H;
@@ -1761,7 +1781,7 @@ function tbLoop(){
         const y0=Math.max(0,(H-ch*full)/2), s0=k===0?full:full*.96;
         const yy=y0+(y-y0)*q, sc=s0+(1-s0)*q, r=rx*q;
         el.style.transform=`translateX(-50%) perspective(1400px) translate3d(0,${yy.toFixed(1)}px,${z}px) rotateX(${r.toFixed(2)}deg) scale(${sc.toFixed(4)})`;
-        el.style.opacity=k===0?1:Math.min(1,q*2.2).toFixed(3); el.style.zIndex=k===0?999:k+1; el.style.transition="none";
+        el.style.opacity=k===0?1:Math.min(1,q*2.2).toFixed(3); el.style.zIndex=(k===0&&q<.6)?999:k+1; el.style.transition="none";
         if(k===0&&!el._intro){ el._intro=1; tbPlay(el,true); } if(k===0&&q>.98&&el._intro===1){ el._intro=2; tbPlay(el,false); }
       } else {
         el.style.transform=`translateX(-50%) perspective(1400px) translate3d(0,${(y+lift).toFixed(1)}px,${z}px) rotateX(${rx}deg)`;
@@ -1790,11 +1810,6 @@ function tbOpen(i){ const el=TB.els[i]; if(!el) return; const r=el.getBoundingCl
   setTimeout(()=>{ location.hash="projecte/"+id; },520); setTimeout(()=>{ c.style.opacity="0"; setTimeout(()=>c.remove(),450); },700); }
 const wkBox=$("#wk");
 wkBox.addEventListener("click",e=>{
-  const x=e.target.closest(".tb-x"); if(x){ e.stopPropagation(); tbClose(+x.closest(".tb").dataset.i); return; }
-  if(e.target.closest("#tbPill")){
-    if(TB.closed.size===TB.tabs.length){ TB.closed=new Set(); TB.els.forEach(el=>{ el.classList.remove("gone"); el.style.opacity=""; }); TB.y=-200; tbPill(); $("#tbHeart").classList.remove("on"); }
-    else { TB.els.forEach((el,i)=>setTimeout(()=>tbClose(i),i*90)); setTimeout(()=>$("#tbHeart").classList.add("on"),TB.els.length*90+400); }
-    return; }
   if(TB.dragMoved) return;
   const tb=e.target.closest(".tb"); if(!tb) return; const i=+tb.dataset.i;
   if(wkMode==="b"){ const order=TB.els.map((_,k)=>k).filter(k=>!TB.closed.has(k)), pos=order.indexOf(i); if(Math.abs(pos-TB.cur)>.5){ TB.tc=pos; return; } }
@@ -1803,7 +1818,7 @@ wkBox.addEventListener("pointerover",e=>{ if(wkMode!=="a") return; const tb=e.ta
   if(TB.hov>=0) tbPlay(TB.els[TB.hov],false); TB.hov=i; if(i>=0) tbPlay(tb,true); });
 wkBox.addEventListener("pointerleave",()=>{ if(TB.hov>=0) tbPlay(TB.els[TB.hov],false); TB.hov=-1; });
 wkBox.addEventListener("wheel",e=>{ if(wkMode==="c") return; e.preventDefault(); if(wkMode==="a") TB.ty+=e.deltaY*.9; else TB.tc+=Math.sign(e.deltaY)*(Math.abs(e.deltaY)>40?1:.34); },{passive:false});
-wkBox.addEventListener("pointerdown",e=>{ if(wkMode==="c"||e.target.closest(".tb-x,#tbPill")) return; TB.drag={y:e.clientY,ty:TB.ty,tc:TB.tc}; TB.dragMoved=false; });
+wkBox.addEventListener("pointerdown",e=>{ if(wkMode==="c") return; TB.drag={y:e.clientY,ty:TB.ty,tc:TB.tc}; TB.dragMoved=false; });
 addEventListener("pointermove",e=>{ if(!TB.drag) return; const dy=e.clientY-TB.drag.y; if(Math.abs(dy)>5) TB.dragMoved=true;
   if(wkMode==="a") TB.ty=TB.drag.ty-dy*1.3; else TB.tc=TB.drag.tc-dy/120; });
 addEventListener("pointerup",()=>{ TB.drag=null; setTimeout(()=>TB.dragMoved=false,0); });
